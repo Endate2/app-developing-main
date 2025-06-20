@@ -1,0 +1,402 @@
+body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #000;
+      touch-action: pan-y;
+      -webkit-text-size-adjust: none;
+      text-size-adjust: none;
+    }
+    .container {
+      max-width: 100%;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      padding-bottom: 70px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .app-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .content-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .calendar-section, .favorites-section {
+      flex: 1;
+      min-width: 0;
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+    }
+    .popular-channels {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-top: 10px;
+    }
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .popular-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .popular-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  white-space: nowrap; /* Запрещаем перенос текста */
+  overflow: hidden; /* Скрываем текст, который не помещается */
+}
+
+.calendar-header > div:first-child {
+  font-size: 3vw;
+  max-font-size: 14px;
+  letter-spacing: 1.5px; /* Добавляем немного пространства между днями */
+}
+
+.calendar-nav {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0; /* Запрещаем сжатие навигационных кнопок */
+}
+    .calendar-nav-button {
+      background: none;
+      border: none;
+      font-size: 15px;
+      padding: 0;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      font-size: 12px;
+    }
+    .calendar-day-header {
+      text-align: center;
+      color: #707579;
+      padding: 2px 0;
+    }
+    .calendar-day {
+      background-color: #f9f9f9;
+      border-radius: 6px;
+      padding: 2px;
+      text-align: center;
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .calendar-day-number {
+      font-size: 12px;
+    }
+    .calendar-day-active {
+      background-color: #0088cc;
+      color: white;
+    }
+    .calendar-day-event {
+      width: 4px;
+      height: 4px;
+      background-color: #0088cc;
+      border-radius: 50%;
+      margin: 2px auto 0;
+    }
+    .calendar-day-active .calendar-day-event {
+      background-color: white;
+    }
+    .channel-item {
+      display: flex;
+      align-items: center;
+      padding: 8px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+    }
+    .channel-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background-color: #f0f0f0;
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #707579;
+      font-weight: bold;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+    .channel-avatar-Profil {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #f0f0f0;
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #707579;
+      font-weight: bold;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+    .channel-name {
+      font-weight: 500;
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-around;
+      background-color: #fff;
+      padding: 10px 0;
+      border-top: 1px solid #f0f0f0;
+    }
+    .nav-item {
+      font-size: 11px;
+      color: #707579;
+      text-align: center;
+    }
+    .nav-item.active {
+      color: #0088cc;
+    }
+
+    @media (max-width: 400px) {
+      .content-row {
+        flex-direction: column;
+      }
+    }
+.nav-item a {
+    color: inherit;         /* Наследует цвет текста от .nav-item */
+    text-decoration: none;  /* Убирает подчёркивание */
+    display: block;         /* Занимает всю ширину родителя */
+    width: 100%;           /* Растягивает на всю ширину */
+    height: 100%;          /* Растягивает на всю высоту */
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: #f5f5f7;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: #f5f5f7;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.app-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1d1d1f;
+}
+
+.calendar-section {
+    width: 100%;
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.month-year {
+    font-size: 16px;
+    font-weight: 500;
+    color: #1d1d1f;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.nav-button {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    background: #f5f5f7;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 2px;
+    width: 100%;
+}
+
+.day-header {
+    text-align: center;
+    padding: 8px 0;
+    font-size: 12px;
+    color: #86868b;
+    text-transform: uppercase;
+}
+
+.calendar-day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 300;
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    min-height: 40px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.current-day {
+    background: #0071e3 !important;
+    color: white;
+    border-color: transparent !important;
+}
+
+.other-month {
+    color: #86868b;
+    background: #fbfbfd;
+}
+
+.popular-channels {
+    margin-top: 20px;
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.popular-grid {
+    display: grid;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.channel-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+}
+
+.channel-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f5f5f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bottom-nav {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    padding: 10px;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-around;
+}
+
+.nav-item a {
+    text-decoration: none;
+    color: #1d1d1f;
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+        gap: 15px;
+    }
+
+    .calendar-day {
+        font-size: 12px;
+        min-height: 35px;
+    }
+
+    .nav-button {
+        width: 28px;
+        height: 28px;
+    }
+}

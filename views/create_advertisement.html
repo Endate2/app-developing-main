@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Календарь и каналы</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/styles-chanelpage.css">
+  <style>
+    /* Дополнительные стили для формы предложения */
+    .offer-form {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 15px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 5px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .form-textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      min-height: 100px;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+
+    .submit-button {
+      width: 100%;
+      padding: 12px;
+      background-color: #0088cc;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    .price-input-container {
+      position: relative;
+    }
+
+    .price-input-container::after {
+      content: "₽";
+      position: absolute;
+      right: 10px;
+      top: 35px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Новый блок с информацией о канале -->
+  <div class="channel-info-section">
+    <div class="channel-info-container">
+      <div class="channel-avatar-large">
+      </div>
+      <div class="channel-details">
+        <div class="channel-title"></div>
+        <div class="channel-subscribers"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-row">
+    <!-- Календарь -->
+    <div class="favorites-section">
+      <div class="section-title">Описание канала</div>
+      <div class="channel-info-block">
+
+        <div class="channel-meta">
+          <div class="channel-description">
+            Футбольные трансляции и аналитика. Лучшие моменты матчей,
+            эксклюзивные интервью и прогнозы на игры.
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="calendar-section">
+      <div class="section-title">Статистика канала</div>
+
+
+      <div class="calendar-grid">
+      </div>
+    </div>
+  </div>
+
+  <div class="ad-price-container">
+    <div class="section-title">Длительность размещения</div>
+    <div class="duration-selector">
+      <div class="duration-option active">24 часа</div>
+      <div class="duration-option">3 дня</div>
+      <div class="duration-option">7 дней</div>
+    </div>
+  </div>
+
+  <!-- Блок с информацией о цене -->
+  <div class="offer-form">
+    <div class="section-title-2">Ваше предложение</div>
+
+    <div class="form-group">
+      <label class="form-label">Ваша цена за размещение</label>
+      <div class="price-input-container">
+        <input type="number" class="form-input" id="offer-price" placeholder="Введите сумму">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Комментарий к предложению</label>
+      <textarea class="form-textarea" id="offer-comment" placeholder="Опишите ваше предложение (необязательно)"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Длительность размещения</label>
+      <div class="duration-selector">
+        <div class="duration-option active">24 часа</div>
+        <div class="duration-option">3 дня</div>
+        <div class="duration-option">7 дней</div>
+      </div>
+    </div>
+
+    <button class="submit-button" id="submit-offer">Выставить предложение</button>
+  </div>
+
+
+</div>
+
+<!-- Нижняя навигация -->
+<div class="bottom-nav">
+  <div class="nav-item">
+    <a href="index.html">Профиль</a>
+  </div>
+  <div class="nav-item active">
+    <a href="reklama.html">Реклама</a>
+  </div>
+  <div class="nav-item">
+    <a href="history.html">Уведомления</a>
+  </div>
+</div>
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Обработчик для выбора длительности
+    const durationOptions = document.querySelectorAll('.duration-option');
+    durationOptions.forEach(option => {
+      option.addEventListener('click', function() {
+        durationOptions.forEach(opt => opt.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+    // Обработчик кнопки "Выставить предложение"
+    document.getElementById('submit-offer').addEventListener('click', function() {
+      const price = document.getElementById('offer-price').value;
+      const comment = document.getElementById('offer-comment').value;
+      const duration = document.querySelector('.duration-option.active').textContent;
+
+      if (!price) {
+        alert('Пожалуйста, укажите цену');
+        return;
+      }
+
+      // Здесь можно добавить отправку данных на сервер
+      submitOffer(price, comment, duration);
+    });
+  });
+
+  function submitOffer(price, comment, duration) {
+    // В реальном приложении здесь будет AJAX-запрос к серверу
+    console.log('Отправка предложения:', {
+      price: price,
+      comment: comment,
+      duration: duration
+    });
+
+    alert('Ваше предложение успешно отправлено!');
+    // Можно добавить перенаправление или обновление интерфейса
+  }
+</script>
+<script src="/js/backend-create_advertisement.js"></script>
+
+</body>
+</html>

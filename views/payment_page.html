@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Календарь и каналы</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/styles-chanelpage.css">
+</head>
+<body>
+<div class="container">
+
+  <!-- Новый блок с информацией о канале -->
+  <div class="channel-info-section">
+    <div class="channel-info-container">
+      <div class="channel-avatar-large">
+      </div>
+      <div class="channel-details">
+        <div class="channel-title"></div>
+        <div class="channel-subscribers"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-row">
+    <!-- Календарь -->
+    <div class="favorites-section">
+      <div class="section-title">Описание канала</div>
+      <div class="channel-info-block">
+
+        <div class="channel-meta">
+          <div class="channel-description">
+            Футбольные трансляции и аналитика. Лучшие моменты матчей,
+            эксклюзивные интервью и прогнозы на игры.
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="calendar-section">
+      <div class="section-title">Статистика канала</div>
+
+
+      <div class="calendar-grid">
+      </div>
+    </div>
+  </div>
+
+  <div class="ad-price-container">
+    <div class="section-title">Длительность размещения</div>
+    <div class="duration-selector">
+      <div class="duration-option active">24 часа</div>
+      <div class="duration-option">3 дня</div>
+      <div class="duration-option">7 дней</div>
+    </div>
+  </div>
+
+  <!-- Блок с информацией о цене -->
+  <div class="ad-price-container">
+    <div class="section-title">Стоимость рекламы</div>
+
+    <div class="price-item">
+      <span class="price-label">Цена за пост</span>
+      <span class="price-value">5 000 ₽</span>
+    </div>
+
+    <div class="price-item">
+      <span class="price-label">Длительность</span>
+      <span class="price-value">24 часа</span>
+    </div>
+
+    <div class="price-item">
+      <span class="price-label">Комиссия сервиса</span>
+      <span class="price-value">500 ₽</span>
+    </div>
+
+    <div class="total-price">Итого: 5 500 ₽</div>
+
+    <button class="purchase-button">Разместить рекламу</button>
+  </div>
+
+
+</div>
+
+<!-- Нижняя навигация -->
+<div class="bottom-nav">
+  <div class="nav-item">
+    <a href="index.html">Профиль</a>
+  </div>
+  <div class="nav-item active">
+    <a href="reklama.html">Реклама</a>
+  </div>
+  <div class="nav-item">
+    <a href="history.html">Уведомления</a>
+  </div>
+</div>
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Обработчик для выбора длительности
+    const durationOptions = document.querySelectorAll('.duration-option');
+    durationOptions.forEach(option => {
+      option.addEventListener('click', function() {
+        durationOptions.forEach(opt => opt.classList.remove('active'));
+        this.classList.add('active');
+        document.querySelector('.price-item:nth-child(2) .price-value').textContent =
+                this.textContent;
+      });
+    });
+
+    // Обработчик кнопки "Разместить рекламу"
+    document.querySelector('.purchase-button').addEventListener('click', function() {
+      const duration = document.querySelector('.duration-option.active').textContent;
+      const amount = 0.1; // Сумма в рублях (можете сделать динамической)
+
+      // Инициируем оплату через Crypto Bot
+      initiateCryptoPayment(amount.toString(), duration);
+    });
+  });
+
+  async function initiateCryptoPayment(amount, duration) {
+    try {
+      const response = await fetch('/api/create-crypto-invoice', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: amount,
+          duration: duration
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.ok) {
+        window.open(data.result.pay_url, '_blank');
+      } else {
+        alert('Ошибка Crypto Bot: ' + (data.error || 'Неизвестная ошибка'));
+      }
+    } catch (error) {
+      console.error('Ошибка:', error);
+      alert('Ошибка при создании платежа: ' + error.message);
+    }
+  }
+</script>
+<script src="/js/backend-channelpage-user.js"></script>
+
+</body>
+</html>

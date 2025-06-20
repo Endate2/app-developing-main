@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Календарь и каналы</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <link rel="stylesheet" href="/css/styles-index.css">
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="app-title">Запланированная реклама</div>
+    <div class="channel-avatar-Profil">L2</div>
+  </div>
+
+  <div class="content-row">
+    <!-- Календарь -->
+    <div class="calendar-section">
+      <div class="calendar-header">
+        <div class="month-year">Сентябрь 2023</div>
+        <div class="nav-buttons">
+          <button class="nav-button" id="prevMonth">‹</button>
+          <button class="nav-button" id="nextMonth">›</button>
+        </div>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+
+
+  </div>
+
+  <!-- Избраннiutiое -->
+  <div class="favorites-section">
+    <div class="section-title">Избранные каналы</div>
+    <div id="channels-list">
+
+    </div>
+  </div>
+</div>
+
+<!-- Популярные каналы -->
+<div class="popular-channels">
+  <div class="section-title">ПОПУЛЯРНЫЕ КАНАЛЫ</div>
+
+  <div class="popular-grid">
+    <div class="popular-group">
+      <div class="channel-item">
+        <div class="channel-avatar">L2</div>
+        <div class="channel-name">СНАМЕТ L2</div>
+      </div>
+
+      <div class="channel-item">
+        <div class="channel-avatar">L4</div>
+        <div class="channel-name">СНАМЕТ L4</div>
+      </div>
+    </div>
+
+    <div class="popular-group">
+      <div class="channel-item">
+        <div class="channel-avatar">L5</div>
+        <div class="channel-name">СНАМЕТ L4 1</div>
+      </div>
+
+      <div class="channel-item">
+        <div class="channel-avatar">1</div>
+        <div class="channel-name">СНАМЕТ 1</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Нижняя навигация -->
+
+<div class="bottom-nav">
+  <div class="nav-item active">
+    <a href="index.html">Профиль</a>
+  </div>
+  <div class="nav-item">
+    <a href="reklama.html">Реклама</a>
+  </div>
+  <div class="nav-item">
+    <a href="history.html">Уведомления</a>
+  </div>
+</div>
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script src="/js/backend-index.js"></script>
+<script src="/kalendari/index-kalendari.js"></script>
+</body>
+</html>

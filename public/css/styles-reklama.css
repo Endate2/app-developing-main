@@ -1,0 +1,281 @@
+ body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #000;
+      touch-action: pan-y;
+    }
+
+    .container {
+      max-width: 100%;
+      padding: 16px;
+      padding-bottom: 70px;
+    }
+
+    /* Хедер */
+    .header {
+  display: flex;
+  justify-content: center; /* Центрируем содержимое */
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative; /* Для позиционирования кнопки закрытия */
+}
+ .channel-avatar {
+     width: 50px;
+     height: 50px;
+     border-radius: 50%;
+     background-color: #f0f0f0;
+     margin-right: 10px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     color: #707579;
+     font-weight: bold;
+     font-size: 11px;
+     flex-shrink: 0;
+ }
+    .logo {
+      width: 32px;
+      height: 32px;
+      background-color: #0088cc;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    .mode-switcher {
+  display: flex;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  padding: 2px;
+  margin: 0 auto; /* Дополнительное центрирование */
+}
+
+    .mode-button {
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      background: none;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .mode-button.active {
+      background-color: white;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .close-button {
+  position: absolute; /* Абсолютное позиционирование */
+  right: 0; /* Размещаем справа */
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f0f0f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+    /* Блок каналов */
+    .channels-section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .channel-button {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background-color: #f9f9f9;
+      border: none;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      text-align: left;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .channel-button:active {
+      background-color: #f0f0f0;
+    }
+
+    .channel-info {
+      flex-grow: 1;
+    }
+
+    .channel-name {
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .channel-subs {
+      color: #707579;
+      font-size: 12px;
+    }
+
+    /* Нижняя навигация */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-around;
+      background-color: #fff;
+      padding: 12px 0;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .nav-button {
+      border: none;
+      background: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #707579;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-button.active {
+      color: #0088cc;
+      background-color: #f0f0f0;
+    }
+    .nav-item a {
+  color: inherit;         /* Наследует цвет текста от .nav-item */
+  text-decoration: none;  /* Убирает подчёркивание */
+  display: block;         /* Занимает всю ширину родителя */
+  width: 100%;           /* Растягивает на всю ширину */
+  height: 100%;          /* Растягивает на всю высоту */
+}
+    /* Новые стили для секции добавления канала */
+    .add-channel-section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .add-channel-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .add-channel-description {
+      color: #707579;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .add-channel-button {
+      background-color: #0088cc;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-weight: 500;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.2s;
+    }
+
+    .add-channel-button:active {
+      background-color: #0077b3;
+    }
+    .nav-item {
+      font-size: 11px;
+      color: #707579;
+      text-align: center;
+    }
+    .nav-item.active {
+      color: #0088cc;
+    }
+     .section-title {
+      font-weight: 600;
+      margin-bottom: 12px;
+      font-size: 18px;
+    }
+
+    .channel-button {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      width: 100%;
+      border: none;
+      background: #fff;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      text-align: left;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .channel-info {
+      flex-grow: 1;
+    }
+
+    .channel-name {
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    .channel-subs {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .add-channel-title {
+      font-weight: 600;
+      margin-top: 20px;
+      margin-bottom: 8px;
+    }
+
+    .add-channel-description {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 12px;
+    }
+
+    .add-channel-btn {
+      width: 100%;
+      padding: 12px;
+      background: #0088cc;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+    }

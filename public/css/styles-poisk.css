@@ -1,0 +1,184 @@
+body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #000;
+      touch-action: pan-y;
+    }
+
+    .container {
+      max-width: 100%;
+      padding: 16px;
+      padding-bottom: 120px;
+    }
+
+    /* Строка поиска */
+    .search-bar {
+      margin-bottom: 20px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 10px;
+      background-color: white;
+      font-size: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* Секции с каналами */
+    .section {
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-link {
+      font-size: 14px;
+      color: #0088cc;
+      text-decoration: none;
+    }
+
+    /* Горизонтальный скролл каналов (для трендов) */
+    .channels-scroll {
+      display: flex;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      gap: 12px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Вертикальный список (для топа дня) */
+    .channels-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .channel-card {
+      background-color: white;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Стиль для горизонтальных карточек */
+    .channel-card.horizontal {
+      display: flex;
+      align-items: center;
+      min-width: 160px;
+    }
+
+    .channel-card.horizontal .channel-image {
+      width: 50px;
+      height: 50px;
+      margin-right: 12px;
+      margin-bottom: 0;
+    }
+
+    /* Стиль для вертикальных карточек */
+    .channel-card.vertical {
+      display: block;
+    }
+
+    .channel-card.vertical .channel-image {
+      width: 100%;
+      height: 120px;
+      margin-bottom: 8px;
+    }
+
+    .channel-image {
+      background-color: #e1e3e6;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #707579;
+      font-size: 24px;
+    }
+
+    .channel-name {
+      font-weight: 500;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .channel-stats {
+      font-size: 12px;
+      color: #707579;
+    }
+
+    /* Нижняя навигация */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-around;
+      background-color: #fff;
+      padding: 12px 0;
+      border-top: 1px solid #f0f0f0;
+      z-index: 100;
+    }
+
+    .nav-item {
+      font-size: 14px;
+      color: #707579;
+      text-align: center;
+    }
+
+    .nav-item.active {
+      color: #0088cc;
+    }
+
+    .nav-item a {
+      color: inherit;
+      text-decoration: none;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .nav-item.active {
+      color: #0088cc;
+    }
+    mode-switcher {
+  display: flex;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  padding: 2px;
+  margin: 0 auto; /* Дополнительное центрирование */
+}
+
+    .mode-button {
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      background: none;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .mode-button.active {
+      background-color: white;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .header {
+  display: flex;
+  justify-content: center; /* Центрируем содержимое */
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative; /* Для позиционирования кнопки закрытия */
+}
