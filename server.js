@@ -12,17 +12,17 @@ const paymentService = require('./paymentService');
 const app = express();
 const PORT = 80;
 
-// Инициализация базы данных
+
 initDB();
 
-// Настройка статических файлов
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Установка движка шаблонов
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 
-// Маршруты
+
 app.use('/', router);
 
 app.post('/api/create-crypto-invoice', express.json(), async (req, res) => {
@@ -35,7 +35,7 @@ app.post('/api/create-crypto-invoice', express.json(), async (req, res) => {
     }
 });
 
-// Создание HTTP-сервера и WebSocket
+
 const server = http.createServer(app);
 const io = socketIo(server, {
     cors: {
@@ -44,10 +44,10 @@ const io = socketIo(server, {
     }
 });
 
-// Настройка WebSocket
+
 setupSocket(io);
 
-// Запуск бота
+
 bot.launch();
 
 app.get('/payment', (req, res) => {
@@ -60,7 +60,7 @@ app.get('/create_advertisement', (req, res) => {
 
 app.post('/api/crypto-pay-webhook', express.json(), async (req, res) => {
     try {
-        const data = req.body.payload;  // основной объект с данными платежа
+        const data = req.body.payload;
         const status = data.status;
 
         if (status === 'paid') {

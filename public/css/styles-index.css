@@ -31,7 +31,7 @@ body {
       gap: 10px;
       margin-bottom: 16px;
     }
-    .calendar-section, .favorites-section {
+    .calendar-section, .favorites-section,.notifications-section {
       flex: 1;
       min-width: 0;
       background-color: #fff;

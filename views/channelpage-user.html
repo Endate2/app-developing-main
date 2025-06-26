@@ -85,27 +85,10 @@
     <a href="reklama.html">Реклама</a>
   </div>
   <div class="nav-item">
-    <a href="history.html">Уведомления</a>
+    <a href="notification.html">Уведомления</a>
   </div>
 </div>
 <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-<script>
-  // Добавляем обработчик для звездочки
-  document.addEventListener('DOMContentLoaded', function() {
-    const favoriteIcon = document.getElementById('favorite-icon');
-
-    favoriteIcon.addEventListener('click', function() {
-      this.classList.toggle('far');
-      this.classList.toggle('fas');
-      this.classList.toggle('active');
-
-      // Здесь можно добавить логику для сохранения в избранное
-      const isFavorite = this.classList.contains('fas');
-      console.log('Channel is now', isFavorite ? 'favorited' : 'unfavorited');
-      // В будущем здесь будет вызов API для сохранения в избранное
-    });
-  });
-</script>
 <script src="/js/backend-channelpage-user.js"></script>
 <script src="/kalendari/kalendari.js"></script>
 </body>

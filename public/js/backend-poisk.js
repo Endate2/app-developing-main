@@ -19,7 +19,7 @@ const elements = {
     header: document.querySelector('.header')
 };
 
-// Поиск каналов
+
 function handleSearch(query) {
     const results = allChannels.filter(channel =>
         channel.name.toLowerCase().includes(query.toLowerCase())
@@ -38,7 +38,7 @@ function handleSearch(query) {
         : '<div class="no-results">Ничего не найдено</div>';
 }
 
-// Обработчики событий
+
 elements.searchInput.addEventListener('input', (e) => handleSearch(e.target.value));
 
 elements.searchInput.addEventListener('focus', () => {
@@ -57,7 +57,7 @@ document.querySelector('.back-button').addEventListener('click', () => {
     elements.searchInput.value = '';
 });
 
-// Клики по карточкам
+
 document.addEventListener('click', (e) => {
     const card = e.target.closest('.channel-card');
     if (card) {
@@ -66,7 +66,6 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Обработчики для кнопок режимов (как в оригинале)
 document.getElementById('buy-mode').addEventListener('click', function() {
     if (!this.classList.contains('active')) {
         window.location.href = 'poisk.html';
@@ -79,7 +78,6 @@ document.getElementById('sell-mode').addEventListener('click', function() {
     }
 });
 
-// Инициализация Telegram
 Telegram.WebApp.ready();
 Telegram.WebApp.expand();
 Telegram.WebApp.setHeaderColor('#ffffff');

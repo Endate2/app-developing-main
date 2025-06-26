@@ -27,6 +27,11 @@ router.get('/channelpage-user.html', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'channelpage-user.html'));
 });
 
+router.get('/notification.html', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'notification.html'));
+});
+
+
 router.get('/channelpage-owner.html', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'channelpage-owner.html'));
 });
@@ -67,16 +72,46 @@ router.get('/api/reklama', async (req, res) => {
     try {
         const channelId = req.query.id;
         const price = req.query.price;
-        const day = '1905-02-19';
-        const id = 1;
+        const day = req.query.day;
         await pool.query(
-            'INSERT INTO advertisements (id, date_of_advertisement, price, channel_id) VALUES ($1, $2, $3,$4)',
-            [id, day, price, channelId]
+            'INSERT INTO advertisements (date_of_advertisement, price, channel_id) VALUES ($1, $2, $3)',
+            [day, price, channelId]
         );
 
         res.json({ success: true, message: 'Реклама успешно добавлена' });
     } catch (err) {
         console.error('Error fetching channel:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+router.get('/api/favourites', async (req, res) => {
+    try {
+        const channelId = req.query.id;
+        const userID = req.query.userID;
+
+        const checkResult = await pool.query(
+            'SELECT * FROM favourites WHERE user_id = $1 AND channel_id = $2',
+            [userID, channelId]
+        );
+
+        if (checkResult.rows.length > 0) {
+
+            await pool.query(
+                'DELETE FROM favourites WHERE user_id = $1 AND channel_id = $2',
+                [userID, channelId]
+            );
+            res.json({ success: true, message: 'Удалено из избранного' });
+        } else {
+
+            await pool.query(
+                'INSERT INTO favourites (user_id, channel_id) VALUES ($1, $2)',
+                [userID, channelId]
+            );
+            res.json({ success: true, message: 'Добавлено в избранное' });
+        }
+    } catch (err) {
+        console.error('Error handling favourites:', err);
         res.status(500).json({ error: 'Internal server error' });
     }
 });

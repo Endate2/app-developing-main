@@ -10,7 +10,7 @@ let currentDate = new Date();
 function generateCalendar() {
     calendarGrid.innerHTML = '';
 
-    // Заголовки дней
+
     ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].forEach(day => {
         const dayElement = document.createElement('div');
         dayElement.className = 'day-header';
@@ -18,17 +18,17 @@ function generateCalendar() {
         calendarGrid.appendChild(dayElement);
     });
 
-    // Расчет дней
+
     const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
     const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
     const startDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
 
-    // Пустые ячейки
+
     for(let i = 0; i < startDay; i++) {
         createDayElement('', true);
     }
 
-    // Основные дни
+
     for(let day = 1; day <= lastDay.getDate(); day++) {
         const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
         const isCurrent = isToday(date);
@@ -36,7 +36,7 @@ function generateCalendar() {
         createDayElement(day, false, isCurrent, hasEvent);
     }
 
-    // Обновление заголовка
+
     monthYear.textContent = currentDate.toLocaleDateString('ru-RU', {
         month: 'long',
         year: 'numeric'
@@ -70,7 +70,7 @@ function handleDayClick(day) {
     window.location.href = `/payment?channel_id=${channelId}`;
 }
 
-// Навигация
+
 prevButton.addEventListener('click', () => {
     currentDate.setMonth(currentDate.getMonth() - 1);
     generateCalendar();
@@ -81,10 +81,10 @@ nextButton.addEventListener('click', () => {
     generateCalendar();
 });
 
-// Инициализация
+
 generateCalendar();
 
-// Адаптация при ресайзе
+
 window.addEventListener('resize', () => {
     calendarGrid.style.width = '100%';
     document.querySelectorAll('.calendar-day').forEach(day => {

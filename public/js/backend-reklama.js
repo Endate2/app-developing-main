@@ -1,13 +1,13 @@
 Telegram.WebApp.ready();
 Telegram.WebApp.expand();
 
-// Получаем user_id из Telegram WebApp
+
 const userId = Telegram.WebApp.initDataUnsafe.user?.id;
 
-// Подключаемся к серверу
+
 const socket = io(window.location.origin);
 
-// Обработчики переключения режимов
+
 document.getElementById('buy-mode').addEventListener('click', function() {
     if (!this.classList.contains('active')) {
         localStorage.setItem('last_mode', 'buy');
@@ -22,7 +22,7 @@ document.getElementById('sell-mode').addEventListener('click', function() {
     }
 });
 
-// Функция для безопасной работы с LocalStorage
+
 function safeLocalStorage(method, key, value) {
     try {
         if (method === 'get') {
@@ -44,7 +44,7 @@ function safeLocalStorage(method, key, value) {
     }
 }
 
-// Функция для добавления канала в UI
+
 function addChannelToUI(channel) {
     const channelsList = document.getElementById("channels-list");
 
@@ -64,7 +64,7 @@ function addChannelToUI(channel) {
     `;
 
     channelButton.addEventListener('click', () => {
-        // Сохраняем данные канала для быстрого доступа
+
         safeLocalStorage('set', `channel_${channel.id}`, {
             id: channel.id,
             name: channel.name,
@@ -76,9 +76,9 @@ function addChannelToUI(channel) {
     channelsList.appendChild(channelButton);
 }
 
-// Инициализация при загрузке страницы
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Восстанавливаем активный режим
+
     const lastMode = safeLocalStorage('get', 'last_mode');
     if (lastMode === 'buy') {
         document.getElementById('buy-mode').classList.add('active');
@@ -86,19 +86,19 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('sell-mode').classList.add('active');
     }
 
-    // Показываем кэшированные каналы
+
     const cachedChannels = safeLocalStorage('get', 'cached_channels');
     if (cachedChannels) {
         cachedChannels.forEach(channel => addChannelToUI(channel));
         console.log('Используются кэшированные каналы');
     }
 
-    // Запрашиваем актуальные данные с сервера
+
     if (userId) {
         socket.emit('get_channels', userId);
     }
 
-    // Восстанавливаем активную вкладку навигации
+
     const activeTab = safeLocalStorage('get', 'active_tab') || 'reklama.html';
     document.querySelectorAll('.nav-item').forEach(item => {
         if (item.querySelector('a').getAttribute('href') === activeTab) {
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Обработчики WebSocket
+
 socket.on("connect", () => {
     console.log("Connected to WebSocket server!");
     safeLocalStorage('set', 'websocket_connected', true);
@@ -117,7 +117,7 @@ socket.on("channels_list", (channels) => {
     const channelsList = document.getElementById("channels-list");
     channelsList.innerHTML = '';
 
-    // Сохраняем каналы в LocalStorage
+
     safeLocalStorage('set', 'cached_channels', channels);
 
     channels.forEach(channel => {
@@ -128,7 +128,7 @@ socket.on("channels_list", (channels) => {
 socket.on("channel_added", (channel) => {
     console.log("Новый канал добавлен:", channel);
     if (channel.user_id === userId) {
-        // Обновляем кэш
+
         const cachedChannels = safeLocalStorage('get', 'cached_channels') || [];
         const updatedChannels = [...cachedChannels, channel];
         safeLocalStorage('set', 'cached_channels', updatedChannels);
@@ -142,7 +142,7 @@ socket.on("connect_error", (err) => {
     safeLocalStorage('remove', 'websocket_connected');
 });
 
-// Обработка кликов по навигации
+
 document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', function() {
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
@@ -153,18 +153,18 @@ document.querySelectorAll('.nav-item').forEach(item => {
     });
 });
 
-// Обработка клика по кнопке добавления канала
+
 document.getElementById('add-channel-btn').addEventListener('click', () => {
     Telegram.WebApp.openTelegramLink('https://t.me/your_bot_username?startgroup=true');
 });
 
-// Сохраняем тему Telegram WebApp
+
 Telegram.WebApp.onEvent('themeChanged', (theme) => {
     safeLocalStorage('set', 'tma_theme', theme);
     Telegram.WebApp.setHeaderColor(theme);
 });
 
-// Применяем сохранённую тему при загрузке
+
 const savedTheme = safeLocalStorage('get', 'tma_theme');
 if (savedTheme) {
     Telegram.WebApp.setHeaderColor(savedTheme);

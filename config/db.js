@@ -46,6 +46,11 @@ async function initDB() {
                 price INTEGER,
                 channel_id BIGINT REFERENCES all_channels(id)
             );
+            CREATE TABLE IF NOT EXISTS notifications (
+                id SERIAL PRIMARY KEY,
+                advertisement_id BIGINT REFERENCES advertisements(id),
+                user_id BIGINT REFERENCES users(id)                            
+                );
         `);
         console.log('Database initialized');
     } catch (err) {

@@ -34,6 +34,44 @@ function setupSocket(io) {
                 socket.emit('error', { message: 'Failed to fetch favourite channels' });
             }
         });
+        socket.on('get_notification', async (userId) => {
+            try {
+                console.log("Fetching notifications for user:", userId);
+                const result = await pool.query(`
+                    SELECT
+                        advertisements.date_of_advertisement,
+                        advertisements.price,
+                        advertisements.channel_id,
+                        notifications.id AS notification_id,
+                        all_channels.name AS channel_name
+                    FROM notifications
+                             JOIN advertisements ON notifications.advertisement_id = advertisements.id
+                             JOIN all_channels ON advertisements.channel_id = all_channels.id
+                    WHERE notifications.user_id = $1;
+
+                `, [userId]);
+                console.log("Notifications found:", result.rows);
+                socket.emit('notification_list', result.rows);
+            } catch (err) {
+                console.error('Error fetching notifications:', err);
+                socket.emit('error', { message: 'Failed to fetch notifications' });
+            }
+        });
+        socket.on('get_channel_info', async (channelId) => {
+            try {
+                console.log("Fetching notifications for user:", channelId);
+                const result = await pool.query(`
+                    SELECT name
+                    FROM all_channels
+                    WHERE all_channels.id = $1
+                `, [channelId]);
+                console.log("Notifications found:", result.rows);
+                socket.emit('channel_info_list', result.rows);
+            } catch (err) {
+                console.error('Error fetching notifications:', err);
+                socket.emit('error', { message: 'Failed to fetch notifications' });
+            }
+        });
 
         socket.on('disconnect', () => {
             console.log('Client disconnected');
