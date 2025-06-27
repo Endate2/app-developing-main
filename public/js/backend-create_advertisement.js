@@ -71,9 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const urlParams = new URLSearchParams(window.location.search);
         const channelId = urlParams.get('channel_id');
         const price = document.getElementById('offer-price').value;
-        const comment = document.getElementById('offer-comment').value;
-        const duration = document.querySelector('.duration-option.active')?.textContent;
-
+        const duration = document.getElementById('offer-duration').value;
         if (!price) {
             alert('Пожалуйста, укажите цену');
             return;
@@ -85,12 +83,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
 
-        submitOffer(price,channelId,day)
+        submitOffer(price,channelId,duration,day)
     });
 });
 
-function submitOffer(price,channel_id,day) {
-    fetch(`/api/reklama?id=${channel_id}&price=${price}&day=${day}`);
+function submitOffer(price,channel_id,duration,day) {
+    fetch(`/api/reklama?id=${channel_id}&duration=${duration}&price=${price}&day=${day}`);
 
     alert('Ваше предложение успешно отправлено!');
 

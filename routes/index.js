@@ -68,23 +68,86 @@ router.get('/api/channel', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+router.get('/api/channel-payment-selector', async (req, res) => {
+    try {
+        const channelId = req.query.id;
+        const date = req.query.date;
+        const result = await pool.query(
+            'SELECT ' +
+            '  all_channels.name, ' +
+            '  all_channels.subscribers, ' +
+            '  all_channels.photo_url, ' +
+            '  advertisements.price, ' +
+            '  advertisements.duration, ' +
+            '  advertisements.id AS advertisementID ' +
+            'FROM all_channels ' +
+            'INNER JOIN advertisements ' +
+            '  ON all_channels.id = advertisements.channel_id ' +
+            'WHERE ' +
+            '  all_channels.id = $1 ' +
+            '  AND advertisements.date_of_advertisement = $2;',
+            [channelId, date]
+        );
+        if (result.rows.length > 0) {
+            res.json(result.rows[0]);
+        } else {
+            res.status(404).json({ error: 'Канал не найден' });
+        }
+    } catch (err) {
+        console.error('Error fetching channel:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 router.get('/api/reklama', async (req, res) => {
     try {
         const channelId = req.query.id;
         const price = req.query.price;
         const day = req.query.day;
+        const duration = req.query.duration;
         await pool.query(
-            'INSERT INTO advertisements (date_of_advertisement, price, channel_id) VALUES ($1, $2, $3)',
-            [day, price, channelId]
+            'INSERT INTO advertisements (date_of_advertisement, price,duration, channel_id) VALUES ($1, $2, $3,$4)',
+            [day, price,duration, channelId]
         );
-
         res.json({ success: true, message: 'Реклама успешно добавлена' });
     } catch (err) {
         console.error('Error fetching channel:', err);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-
+router.get('/api/channel-owner', async (req, res) => {
+    try {
+        const channelId = req.query.id;
+        const result = await pool.query(
+            'SELECT users.id\n' +
+            ' FROM all_channels\n' +
+            ' INNER JOIN user_channels  ON all_channels.id = user_channels .channel_id\n' +
+            ' INNER JOIN users ON user_channels.user_id = users.id\n' +
+            ' WHERE all_channels.id = $1;',
+            [channelId]
+        );
+        if (result.rows.length > 0) {
+            res.json(result.rows[0]);
+        } else {
+            res.status(404).json({ error: 'Владелец не найден' });
+        }
+    } catch (err) {
+        console.error('Error fetching channel:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+router.get('/api/create_notification', async (req, res) => {
+    try {
+        const user_id = req.query.id;
+        const advertisementID = req.query.advertisementID;
+        await pool.query(
+            'INSERT INTO notifications (advertisement_id, user_id) VALUES ($1, $2)',
+            [advertisementID, user_id]
+        );
+    } catch (err) {
+        console.error('Error fetching channel:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 router.get('/api/favourites', async (req, res) => {
     try {
         const channelId = req.query.id;

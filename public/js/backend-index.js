@@ -6,7 +6,7 @@ const userId = Telegram.WebApp.initDataUnsafe.user?.id;
 const user = Telegram.WebApp.initDataUnsafe?.user;
 const avatarElement = document.querySelector('.channel-avatar-Profil');
 
-e
+
 function safeLocalStorage(method, key, value) {
     try {
         if (method === 'get') {

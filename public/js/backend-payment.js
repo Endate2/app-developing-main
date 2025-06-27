@@ -1,13 +1,16 @@
-
+// Инициализация Telegram WebApp
 Telegram.WebApp.ready();
 Telegram.WebApp.expand();
 
-
+// Получаем данные пользователя
 const user = Telegram.WebApp.initDataUnsafe?.user;
+const avatarElement = document.querySelector('.channel-avatar-large');
 const urlParams = new URLSearchParams(window.location.search);
 const channelId = urlParams.get('channel_id');
+const userID = urlParams.get('userID');
+let advertisementID = 0;
 
-
+// Подключаемся к серверу
 const socket = io(window.location.origin);
 
 
@@ -29,17 +32,22 @@ document.querySelectorAll('.calendar-day').forEach(day => {
 document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const channelId = urlParams.get('channel_id');
-
+    const day = urlParams.get('date');
     if (channelId) {
         try {
-            const response = await fetch(`/api/channel?id=${channelId}`);
+            const response = await fetch(`/api/channel-payment-selector?id=${channelId}&date=${day}`);
             const channel = await response.json();
 
             if (channel) {
-
+                // Обновляем информацию о канале на странице
+                advertisementID = channel.advertisementID || 0;
+                const dayElement = document.querySelector('.section-title-2')
                 const avatarElement = document.querySelector('.channel-avatar-large');
                 const titleElement = document.querySelector('.channel-title');
                 const subscribersElement = document.querySelector('.channel-subscribers');
+                const descriptionElement = document.querySelector('.channel-description');
+                const priceElement = document.querySelector('.price-value');
+                const durationElement = document.querySelector('.duration-value');
 
 
                 if (channel.photo_url) {
@@ -49,7 +57,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
 
                 titleElement.textContent = channel.name;
+                dayElement.textContent = `Стоимость рекламы на ${day} `;
                 subscribersElement.textContent = `${channel.subscribers.toLocaleString()} подписчиков`;
+                descriptionElement.textContent = 'Описание отсутствует';
+                priceElement.textContent = `${channel.price} `;
+                durationElement.textContent = `${channel.duration}`;
             }
         } catch (error) {
             console.error('Ошибка при загрузке данных канала:', error);
@@ -57,17 +69,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+    const ReklamaButton = document.getElementById('purchase-button');
+
+    ReklamaButton.addEventListener('click', async function() {  // Добавлено `async`
+        try {
+            const response = await fetch(`/api/channel-owner?id=${channelId}`);
+            const user = await response.json();
+            await fetch(`/api/create_notification?id=${user.id}&advertisementID=${advertisementID}`);
+            alert("Мы отправили выше предложение владельцу, в ближайшее время он ответит вам!")
+        } catch (error) {
+            console.error("Ошибка при запросе:", error);
+        }
+    });
+});
 
 
-
-// Запрашиваем данные канала
 if (channelId) {
     socket.emit('get_channel', channelId);
 }
 
-// Получаем данные канала и обновляем интерфейс
 
-// Обработка ошибок
+
+
 socket.on('connect_error', (err) => {
     console.error('Ошибка подключения:', err);
 });

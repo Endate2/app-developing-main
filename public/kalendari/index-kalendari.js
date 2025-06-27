@@ -52,7 +52,8 @@ function createDayElement(day, isOtherMonth, isCurrent = false, hasEvent = false
       `;
 
     if(day) {
-        dayElement.addEventListener('click', () => handleDayClick(day));
+        const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+        dayElement.addEventListener('click', () => handleDayClick(date));
         dayElement.style.cursor = 'pointer';
     }
 
@@ -64,9 +65,15 @@ function isToday(date) {
     return date.toDateString() === today.toDateString();
 }
 
-function handleDayClick(day) {
-    alert("хуй")
+function handleDayClick(date) {
+    const channelId = -1002094592061
+
+    const dateStr = date.toISOString().split('T')[0];
+
+
+    window.location.href = `/payment?channel_id=${channelId}&date=${dateStr}`;
 }
+
 
 // Навигация
 prevButton.addEventListener('click', () => {

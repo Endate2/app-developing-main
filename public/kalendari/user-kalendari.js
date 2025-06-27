@@ -4,7 +4,6 @@ const prevButton = document.getElementById('prevMonth');
 const nextButton = document.getElementById('nextMonth');
 
 
-
 let currentDate = new Date();
 
 function generateCalendar() {
@@ -52,7 +51,9 @@ function createDayElement(day, isOtherMonth, isCurrent = false, hasEvent = false
       `;
 
     if(day) {
-        dayElement.addEventListener('click', () => handleDayClick(day));
+
+        const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+        dayElement.addEventListener('click', () => handleDayClick(date));
         dayElement.style.cursor = 'pointer';
     }
 
@@ -67,6 +68,7 @@ function isToday(date) {
 function handleDayClick(day) {
     const urlParams = new URLSearchParams(window.location.search);
     const channelId = urlParams.get('channel_id');
+    const userID = urlParams.get('userID');
     window.location.href = `/payment?channel_id=${channelId}`;
 }
 
