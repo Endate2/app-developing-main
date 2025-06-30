@@ -8,8 +8,10 @@ bot.on('my_chat_member', async (ctx) => {
     const chatMember = ctx.update.my_chat_member;
     const chat = chatMember.chat;
     const userId = ctx.from.id;
+    const newStatus = chatMember.new_chat_member.status;
+    const oldStatus = chatMember.old_chat_member.status;
 
-    if (chatMember.new_chat_member.status === 'administrator') {
+    if (newStatus === 'administrator') {
         try {
             const chatInfo = await ctx.telegram.getChat(chat.id);
 
@@ -78,6 +80,35 @@ bot.on('my_chat_member', async (ctx) => {
 
         } catch (err) {
             console.error('Error saving channel to DB:', err);
+        }
+    }else if (oldStatus === 'administrator' && newStatus !== 'administrator') {
+        try {
+            await pool.query(
+                'DELETE FROM user_channels WHERE user_id = $1 AND channel_id = $2',
+                [userId, chat.id]
+            );
+
+            const otherUsers = await pool.query(
+                'SELECT 1 FROM user_channels WHERE channel_id = $1',
+                [chat.id]
+            );
+
+            if (otherUsers.rows.length === 0) {
+                await pool.query(
+                    'DELETE FROM all_channels WHERE id = $1',
+                    [chat.id]
+                );
+            }
+            
+            io.emit('channel_removed', {
+                id: chat.id,
+                user_id: userId
+            });
+
+            console.log(`Бот удален из канала: ${chat.title}`);
+
+        } catch (err) {
+            console.error('Error removing channel from DB:', err);
         }
     }
 });

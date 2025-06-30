@@ -1,3 +1,5 @@
+
+
 const calendarGrid = document.getElementById('calendarGrid');
 const monthYear = document.querySelector('.month-year');
 const prevButton = document.getElementById('prevMonth');
@@ -66,12 +68,8 @@ function isToday(date) {
 }
 
 function handleDayClick(date) {
-    const channelId = -1002094592061
-
-    const dateStr = date.toISOString().split('T')[0];
-
-
-    window.location.href = `/payment?channel_id=${channelId}&date=${dateStr}`;
+    const now = new Date();
+    alert(now)
 }
 
 

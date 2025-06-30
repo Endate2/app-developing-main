@@ -53,6 +53,18 @@ router.get('/api/channels', async (req, res) => {
     }
 });
 
+router.get('/api/channels-test', async (req, res) => {
+    try {
+        const result = await pool.query(`
+            SELECT * from all_channels WHERE all_channels .id =  -1002094592061;
+        `);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Error fetching channels:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 router.get('/api/channel', async (req, res) => {
     try {
         const channelId = req.query.id;
@@ -98,6 +110,8 @@ router.get('/api/channel-payment-selector', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+
 router.get('/api/reklama', async (req, res) => {
     try {
         const channelId = req.query.id;
@@ -114,6 +128,8 @@ router.get('/api/reklama', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+
 router.get('/api/channel-owner', async (req, res) => {
     try {
         const channelId = req.query.id;
@@ -135,6 +151,8 @@ router.get('/api/channel-owner', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+
 router.get('/api/create_notification', async (req, res) => {
     try {
         const user_id = req.query.id;
@@ -148,6 +166,25 @@ router.get('/api/create_notification', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+router.get('/api/get-favourites', async (req, res) => {
+    try {
+        const channelId = req.query.id;
+        const userID = req.query.userID;
+        const checkResult = await pool.query(
+            'SELECT * FROM favourites WHERE user_id = $1 AND channel_id = $2',
+            [userID, channelId]
+        );
+        if (checkResult.rows.length > 0) {
+            res.json({ rows: checkResult.rows });
+        } else {
+            res.status(404).json({ error: 'Владелец не найден' });
+        }
+    } catch (err) {
+        console.error('Error fetching channel:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 router.get('/api/favourites', async (req, res) => {
     try {
         const channelId = req.query.id;

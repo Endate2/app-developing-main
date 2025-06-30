@@ -61,15 +61,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     const favoriteIcon = document.getElementById('favorite-icon');
 
-    favoriteIcon.addEventListener('click', function() {
+    try {
+        const response = await fetch(`/api/get-favourites?id=${channelId}&userID=${userID}`);
+        const result = await response.json();
+
+        if (result.rows && result.rows.length > 0) {
+            favoriteIcon.classList.add('fas', 'active');
+            favoriteIcon.classList.remove('far');
+        } else {
+            favoriteIcon.classList.add('far');
+            favoriteIcon.classList.remove('fas', 'active');
+        }
+    } catch (error) {
+        console.error('Ошибка при проверке избранного:', error);
+    }
+
+    favoriteIcon.addEventListener('click', async function() {
         this.classList.toggle('far');
         this.classList.toggle('fas');
         this.classList.toggle('active');
 
-        fetch(`/api/favourites?id=${channelId}&userID=${userID}`);
+        try {
+            await fetch(`/api/favourites?id=${channelId}&userID=${userID}`);
+        } catch (error) {
+            console.error('Ошибка при обновлении избранного:', error);
+        }
     });
 });
 

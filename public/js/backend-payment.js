@@ -37,9 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const response = await fetch(`/api/channel-payment-selector?id=${channelId}&date=${day}`);
             const channel = await response.json();
-
-            if (channel) {
-                // Обновляем информацию о канале на странице
+            if (channel && Object.keys(channel).length > 1) {
                 advertisementID = channel.advertisementID || 0;
                 const dayElement = document.querySelector('.section-title-2')
                 const avatarElement = document.querySelector('.channel-avatar-large');
@@ -62,6 +60,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 descriptionElement.textContent = 'Описание отсутствует';
                 priceElement.textContent = `${channel.price} `;
                 durationElement.textContent = `${channel.duration}`;
+            }else{
+                const dayElement = document.querySelector('.section-title-2')
+                dayElement.textContent = `Нет предложений на ${day} `;
             }
         } catch (error) {
             console.error('Ошибка при загрузке данных канала:', error);

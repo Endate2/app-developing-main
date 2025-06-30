@@ -5,7 +5,6 @@ const http = require('http');
 const socketIo = require('socket.io');
 const { pool, initDB } = require('./config/db');
 const router = require('./routes/index');
-const bot = require('./telegram/bot');
 const { setupSocket } = require('./sockets/index');
 const paymentService = require('./paymentService');
 
@@ -44,10 +43,12 @@ const io = socketIo(server, {
     }
 });
 
+// Экспортируйте io сразу после создания
+module.exports.io = io;
 
+// Затем импортируйте и используйте bot
+const bot = require('./telegram/bot');
 setupSocket(io);
-
-
 bot.launch();
 
 app.get('/payment', (req, res) => {

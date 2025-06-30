@@ -72,7 +72,41 @@ socket.on("favourites_list", (channels) => {
 });
 
 
+async function fetchPopularChannels() {
+    try {
+        const response = await fetch('/api/channels-test'); // Замените на ваш API-эндпоинт
+        const channels = await response.json();
+        renderPopularChannels(channels);
+    } catch (error) {
+        console.error('Error fetching popular channels:', error);
+    }
+}
 
+function renderPopularChannels(channels) {
+    const popularGrid = document.querySelector('.popular-grid .popular-group');
+    popularGrid.innerHTML = '';
+
+    channels.forEach(channel => {
+        const channelItem = document.createElement('div');
+        channelItem.className = 'channel-item';
+
+        const avatarContent = channel.photo_url
+            ? `<img src="${channel.photo_url}" alt="${channel.name}" class="channel-avatar">`
+            : `<div class="channel-avatar">${channel.name.charAt(0)}</div>`;
+
+        channelItem.innerHTML = `
+            <div class="channel-avatar">${avatarContent}</div>
+            <div class="channel-name">${channel.name}</div>
+        `;
+        channelItem.addEventListener('click', () => {
+            window.location.href = `channelpage-user.html?channel_id=${channel.id}&userID=${userId}`;
+        });
+        popularGrid.appendChild(channelItem);
+    });
+}
+
+
+document.addEventListener('DOMContentLoaded', fetchPopularChannels);
 
 function addChannelToUI(channel) {
     const channelsList = document.getElementById("channels-list");

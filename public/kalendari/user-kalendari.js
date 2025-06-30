@@ -65,11 +65,18 @@ function isToday(date) {
     return date.toDateString() === today.toDateString();
 }
 
-function handleDayClick(day) {
-    const urlParams = new URLSearchParams(window.location.search);
-    const channelId = urlParams.get('channel_id');
-    const userID = urlParams.get('userID');
-    window.location.href = `/payment?channel_id=${channelId}`;
+function handleDayClick(date) {
+    const now = new Date();
+    const dateStr = date.toISOString().split('T')[0];
+    const nowStr = now.toISOString().split('T')[0];
+    if (now > date){
+        alert("На данную дату нельзя посмотреть предложения, так как она уже прошла")
+    }else {
+        const urlParams = new URLSearchParams(window.location.search);
+        const channelId = urlParams.get('channel_id');
+        window.location.href = `/payment?channel_id=${channelId}&date=${dateStr}`;
+    }
+
 }
 
 

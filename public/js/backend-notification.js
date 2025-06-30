@@ -80,9 +80,14 @@ function addNotificationToUI(notification) {
 
     notificationElement.innerHTML = `
         <div class="notification-content">
-            <div class="notification-date">Дата: ${notification.date_of_advertisement}</div>
-            <div class="notification-price">Цена: ${notification.price}</div>
-            <div class="notification-channel">Канал ID: ${notification.channel_name}</div>
+            <div class="notification-channel">
+                <span class="notification-label">Канал:</span>
+                <span class="notification-value">${notification.channel_name}</span>
+            </div>
+            <div class="notification-date">
+                <span class="notification-label">Дата размещения:</span>
+                <span class="notification-value">${notification.date_of_advertisement}</span>
+            </div>
         </div>
     `;
 

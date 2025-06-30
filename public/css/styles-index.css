@@ -22,6 +22,46 @@ body {
       align-items: center;
       margin-bottom: 20px;
     }
+    .notification-content{
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        padding: 10px;
+    }
+.notification-item {
+    background-color: #f8f8f8;  /* Светло-серый фон */
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;  /* Серая граница */
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: all 0.2s ease;
+}
+
+.notification-item:hover {
+    background-color: #f0f0f0;  /* Чуть темнее при наведении */
+}
+
+.notification-item:active {
+    transform: scale(0.98);
+    background-color: #e8e8e8;  /* Еще темнее при нажатии */
+}
+
+.notification-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.notification-channel {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+.notification-date {
+    font-size: 14px;
+    color: #666;
+}
     .app-title {
       font-size: 18px;
       font-weight: 600;

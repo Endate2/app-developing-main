@@ -68,9 +68,15 @@ function handleDayClick(date) {
     const urlParams = new URLSearchParams(window.location.search);
     const channelId = urlParams.get('channel_id');
 
+    const now = new Date();
     const dateStr = date.toISOString().split('T')[0];
+    const nowStr = now.toISOString().split('T')[0];
+    if (now > date){
+        alert("На данную дату нельзя добавить предложения, так как она уже прошла")
+    }else {
+        window.location.href = `/create_advertisement?channel_id=${channelId}&date=${dateStr}`;
+    }
 
-    window.location.href = `/create_advertisement?channel_id=${channelId}&date=${dateStr}`;
 }
 
 
