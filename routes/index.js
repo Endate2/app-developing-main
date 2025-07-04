@@ -155,12 +155,16 @@ router.get('/api/channel-owner', async (req, res) => {
 
 router.get('/api/create_notification', async (req, res) => {
     try {
-        const user_id = req.query.id;
+        const user_id_to = req.query.id;
         const advertisementID = req.query.advertisementID;
+        const comment = req.query.comment;
+        const user_id_from = req.query.user;
+        console.log('Received comment:', comment); // Добавьте лог для отладки
         await pool.query(
-            'INSERT INTO notifications (advertisement_id, user_id) VALUES ($1, $2)',
-            [advertisementID, user_id]
+            'INSERT INTO notifications (advertisement_id, user_id_to,comment,user_id_from,id_categorie) VALUES ($1, $2, $3,$4,1)',
+            [advertisementID, user_id_to, comment,user_id_from]
         );
+        res.json({ success: true });
     } catch (err) {
         console.error('Error fetching channel:', err);
         res.status(500).json({ error: 'Internal server error' });

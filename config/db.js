@@ -50,7 +50,14 @@ async function initDB() {
             CREATE TABLE IF NOT EXISTS notifications (
                 id SERIAL PRIMARY KEY,
                 advertisement_id BIGINT REFERENCES advertisements(id),
-                user_id BIGINT REFERENCES users(id)                        
+                user_id_to BIGINT REFERENCES users(id),
+                comment VARCHAR(100),
+                user_id_from BIGINT REFERENCES users(id),
+                id_categorie  BIGINT REFERENCES notification_categories(id)
+                );
+            CREATE TABLE IF NOT EXISTS notification_categories (
+                id SERIAL PRIMARY KEY,
+                description VARCHAR(50)
                 );
         `);
         console.log('Database initialized');

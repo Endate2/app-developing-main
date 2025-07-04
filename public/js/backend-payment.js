@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const response = await fetch(`/api/channel-payment-selector?id=${channelId}&date=${day}`);
             const channel = await response.json();
             if (channel && Object.keys(channel).length > 1) {
-                advertisementID = channel.advertisementID || 0;
+                advertisementID = channel.advertisementid || 0;
                 const dayElement = document.querySelector('.section-title-2')
                 const avatarElement = document.querySelector('.channel-avatar-large');
                 const titleElement = document.querySelector('.channel-title');
@@ -61,8 +61,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 priceElement.textContent = `${channel.price} `;
                 durationElement.textContent = `${channel.duration}`;
             }else{
-                const dayElement = document.querySelector('.section-title-2')
-                dayElement.textContent = `Нет предложений на ${day} `;
+                window.location.href = `no-offers`;
             }
         } catch (error) {
             console.error('Ошибка при загрузке данных канала:', error);
@@ -73,12 +72,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 document.addEventListener('DOMContentLoaded', function() {
     const ReklamaButton = document.getElementById('purchase-button');
 
-    ReklamaButton.addEventListener('click', async function() {  // Добавлено `async`
+    ReklamaButton.addEventListener('click', async function() {
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const comment = document.getElementById('offer-comment').value; // Получаем при клике
         try {
             const response = await fetch(`/api/channel-owner?id=${channelId}`);
             const user = await response.json();
-            await fetch(`/api/create_notification?id=${user.id}&advertisementID=${advertisementID}`);
-            alert("Мы отправили выше предложение владельцу, в ближайшее время он ответит вам!")
+            await fetch(`/api/create_notification?id=${user.id}&user=${userID}&advertisementID=${advertisementID}&comment=${encodeURIComponent(comment)}`);
+            alert("Ваше предложение отправлено!")
         } catch (error) {
             console.error("Ошибка при запросе:", error);
         }

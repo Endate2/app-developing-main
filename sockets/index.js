@@ -42,12 +42,17 @@ function setupSocket(io) {
                         advertisements.date_of_advertisement,
                         advertisements.price,
                         advertisements.channel_id,
+                        advertisements.duration,
+                        notifications.comment,
                         notifications.id AS notification_id,
-                        all_channels.name AS channel_name
+                        all_channels.name AS channel_name,
+                        notifications.id,
+                        notifications.user_id_from,
+                        notifications.id_categorie
                     FROM notifications
                              JOIN advertisements ON notifications.advertisement_id = advertisements.id
                              JOIN all_channels ON advertisements.channel_id = all_channels.id
-                    WHERE notifications.user_id = $1;
+                    WHERE notifications.user_id_to = $1;
 
                 `, [userId]);
                 console.log("Notifications found:", result.rows);
@@ -72,6 +77,62 @@ function setupSocket(io) {
                 socket.emit('error', { message: 'Failed to fetch notifications' });
             }
         });
+
+        socket.on('reject_notification', async ({ userId, notificationId }) => {
+            try {
+                await pool.query('DELETE FROM notifications WHERE id = $1', [notificationId]);
+                console.log(`Notification ${notificationId} rejected by user ${userId}`);
+            } catch (err) {
+                console.error('Error rejecting notification:', err);
+                socket.emit('error', { message: 'Failed to reject notification.' });
+            }
+        });
+        socket.on('accept_notification', async ({ userId, notificationId }) => {
+            try {
+                // Получаем уведомление
+                const notificationResult = await pool.query(`
+                    SELECT * FROM notifications WHERE id = $1;
+                `, [notificationId]);
+
+                if (notificationResult.rowCount === 0) {
+                    socket.emit('error', { message: 'Notification not found.' });
+                    return;
+                }
+                const notification = notificationResult.rows[0];
+
+                if (Number(notification.user_id_to) !== Number(userId)) {
+                    socket.emit('error', { message: 'Not authorized to accept this notification.' });
+                    return;
+                }
+
+                await pool.query(
+                    'INSERT INTO notifications (advertisement_id, user_id_to, user_id_from, id_categorie, comment) VALUES ($1, $2, $3, $4, $5)',
+                    [
+                        notification.advertisement_id,
+                        notification.user_id_from,
+                        notification.user_id_to,
+                        2, // Категория для принятых уведомлений
+                        'Ваше предложение было принято'
+                    ]
+                );
+
+                await pool.query(
+                    'UPDATE notifications SET id_categorie = $1 WHERE id = $2 AND user_id_to = $3',
+                    [2, notificationId, Number(userId)]
+                );
+
+                socket.emit('notification_accepted', {
+                    success: true,
+                    notificationId: notificationId
+                });
+
+            } catch (err) {
+                console.error('Error accepting notification:', err);
+                socket.emit('error', { message: 'Failed to accept notification.' });
+            }
+        });
+
+
 
         socket.on('disconnect', () => {
             console.log('Client disconnected');

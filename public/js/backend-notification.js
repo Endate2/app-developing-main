@@ -77,9 +77,9 @@ function addNotificationToUI(notification) {
 
     const notificationElement = document.createElement("div");
     notificationElement.className = "notification-item";
-
-    notificationElement.innerHTML = `
-        <div class="notification-content">
+    if (Number(notification.id_categorie) === 1){
+        notificationElement.innerHTML = `
+        <div class="notification-content" data-notification-id="${notification.id}">
             <div class="notification-channel">
                 <span class="notification-label">Канал:</span>
                 <span class="notification-value">${notification.channel_name}</span>
@@ -88,11 +88,79 @@ function addNotificationToUI(notification) {
                 <span class="notification-label">Дата размещения:</span>
                 <span class="notification-value">${notification.date_of_advertisement}</span>
             </div>
+            <div class="notification-date">
+                <span class="notification-label">Длительность размещения:</span>
+                <span class="notification-value">${notification.duration}</span>
+            </div>
+            <div class="notification-date">
+                <span class="notification-label">Цена:</span>
+                <span class="notification-value">${notification.price}</span>
+            </div>
+            <div class="notification-date">
+                <span class="notification-label">Комментарий:</span>
+                <span class="notification-value">${notification.comment}</span>
+            </div>
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-accept">Принять</button>
+          <button class="btn btn-reject">Отклонить</button>
         </div>
     `;
+    }else{
+        notificationElement.innerHTML = `
+        <div class="notification-content" data-notification-id="${notification.id}">
+            <div class="notification-channel">
+                <span class="notification-label">Канал:</span>
+                <span class="notification-value">${notification.channel_name}</span>
+            </div>
+            <div class="notification-date">
+                <span class="notification-label">Дата размещения:</span>
+                <span class="notification-value">${notification.date_of_advertisement}</span>
+            </div>
+            <div class="notification-date">
+                <span class="notification-label">Длительность размещения:</span>
+                <span class="notification-value">${notification.duration}</span>
+            </div>
+            <div class="notification-date">
+                <span class="notification-label">Цена:</span>
+                <span class="notification-value">${notification.price}</span>
+            </div>
+            <div class="notification-date">
+                <span class="notification-label">Комментарий:</span>
+                <span class="notification-value">Ваше предложение было принято! Перейдите на страницу сделки.</span>
+            </div>
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-cross">Перейти</button>
+        </div>
+    `;
+    }
+
+
+
 
     notificationsList.appendChild(notificationElement);
 }
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('btn-accept') || e.target.classList.contains('btn-reject')) {
+        const notificationItem = e.target.closest('.notification-item');
+        const notificationId = notificationItem.querySelector('.notification-content').dataset.notificationId;
+
+        if (e.target.classList.contains('btn-reject')) {  // Исправлено с reject_notification на btn-reject
+            socket.emit('reject_notification', { userId, notificationId });  // Отправляем объект с данными
+        } else {
+            socket.emit('accept_notification', { userId, notificationId });
+        }
+
+        notificationItem.remove();
+    }
+});
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('btn-cross')) {
+        window.location.href = `deal`;
+
+    }
+});
 function loadFavouritesFromLocalStorage() {
     const notifications = safeLocalStorage('get', 'notification') || [];
     const notificationsList = document.getElementById("notifications-list");

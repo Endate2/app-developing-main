@@ -66,6 +66,112 @@ body {
       font-size: 18px;
       font-weight: 600;
     }
+.notification-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 1px solid #eaeaea;
+}
+
+.notification-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.channel-avatar {
+    width: 36px;
+    height: 36px;
+    background: #4a76a8;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.channel-info {
+    flex: 1;
+}
+
+.channel-name {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.notification-time {
+    font-size: 12px;
+    color: #888;
+}
+
+.notification-body {
+    margin: 12px 0;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.detail-icon {
+    margin-right: 8px;
+    width: 20px;
+    text-align: center;
+}
+
+.detail-text {
+    color: #555;
+}
+
+.notification-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.action-btn span {
+    margin-right: 6px;
+    font-size: 16px;
+}
+
+.accept-btn {
+    background: #e3f7e8;
+    color: #2e7d32;
+}
+
+.accept-btn:hover {
+    background: #d0f0d6;
+}
+
+.reject-btn {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.reject-btn:hover {
+    background: #ffddde;
+}
     .content-row {
       display: flex;
       gap: 10px;

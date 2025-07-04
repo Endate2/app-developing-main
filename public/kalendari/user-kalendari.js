@@ -74,7 +74,8 @@ function handleDayClick(date) {
     }else {
         const urlParams = new URLSearchParams(window.location.search);
         const channelId = urlParams.get('channel_id');
-        window.location.href = `/payment?channel_id=${channelId}&date=${dateStr}`;
+        const userID = urlParams.get('userID');
+        window.location.href = `/payment?channel_id=${channelId}&date=${dateStr}&userID=${userID}`;
     }
 
 }

@@ -58,6 +58,13 @@ app.get('/payment', (req, res) => {
 app.get('/create_advertisement', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'create_advertisement.html'));
 });
+app.get('/deal', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'deal.html'));
+});
+
+app.get('/no-offers', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'no-offers.html'));
+});
 
 app.post('/api/crypto-pay-webhook', express.json(), async (req, res) => {
     try {
