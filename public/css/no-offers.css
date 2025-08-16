@@ -1,0 +1,32 @@
+.no-offers-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+    text-align: center;
+    padding: 20px;
+}
+.no-offers-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: #ccc;
+}
+.no-offers-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.no-offers-description {
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+.back-button-offers {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}

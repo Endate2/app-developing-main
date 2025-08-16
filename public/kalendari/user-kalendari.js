@@ -1,103 +1,135 @@
-const calendarGrid = document.getElementById('calendarGrid');
-const monthYear = document.querySelector('.month-year');
-const prevButton = document.getElementById('prevMonth');
-const nextButton = document.getElementById('nextMonth');
+// Уникальные идентификаторы для элементов пользовательского календаря
+const userCalendarGrid = document.getElementById('calendarGrid-user');
+const userMonthYear = document.getElementById('month-year-user');
+const userPrevButton = document.getElementById('prevMonth-user');
+const userNextButton = document.getElementById('nextMonth-user');
 
+let userCurrentDate = new Date();
 
-let currentDate = new Date();
+function generateUserCalendar(channelId) {
+    if (!userCalendarGrid) return;
 
-function generateCalendar() {
-    calendarGrid.innerHTML = '';
+    userCalendarGrid.innerHTML = '';
 
-
+    // Заголовки дней недели
     ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].forEach(day => {
         const dayElement = document.createElement('div');
         dayElement.className = 'day-header';
         dayElement.textContent = day;
-        calendarGrid.appendChild(dayElement);
+        userCalendarGrid.appendChild(dayElement);
     });
 
-
-    const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-    const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+    // Расчет дней месяца
+    const firstDay = new Date(userCurrentDate.getFullYear(), userCurrentDate.getMonth(), 1);
+    const lastDay = new Date(userCurrentDate.getFullYear(), userCurrentDate.getMonth() + 1, 0);
     const startDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
 
-
-    for(let i = 0; i < startDay; i++) {
-        createDayElement('', true);
+    // Пустые дни в начале календаря
+    for (let i = 0; i < startDay; i++) {
+        createUserDayElement(channelId, '', true);
     }
 
-
-    for(let day = 1; day <= lastDay.getDate(); day++) {
-        const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-        const isCurrent = isToday(date);
-        const hasEvent = day % 5 === 0;
-        createDayElement(day, false, isCurrent, hasEvent);
+    // Дни месяца
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+        const date = new Date(userCurrentDate.getFullYear(), userCurrentDate.getMonth(), day);
+        const isCurrent = isUserToday(date);
+        const hasEvent = day % 5 === 0; // Пример: отмечаем каждый 5-й день
+        createUserDayElement(channelId, day, false, isCurrent, hasEvent);
     }
 
-
-    monthYear.textContent = currentDate.toLocaleDateString('ru-RU', {
-        month: 'long',
-        year: 'numeric'
-    }).replace(' г.', '');
+    // Обновление заголовка месяца и года
+    if (userMonthYear) {
+        userMonthYear.textContent = userCurrentDate.toLocaleDateString('ru-RU', {
+            month: 'long',
+            year: 'numeric'
+        }).replace(' г.', '');
+    }
 }
 
-function createDayElement(day, isOtherMonth, isCurrent = false, hasEvent = false) {
+function createUserDayElement(channelId, day, isOtherMonth, isCurrent = false, hasEvent = false) {
     const dayElement = document.createElement('div');
     dayElement.className = `calendar-day ${isOtherMonth ? 'other-month' : ''} ${isCurrent ? 'current-day' : ''}`;
     dayElement.innerHTML = `
-        <span>${day}</span>
-        ${hasEvent ? '<div class="event-marker"></div>' : ''}
-      `;
+            <span>${day}</span>
+            ${hasEvent ? '<div class="event-marker"></div>' : ''}
+        `;
 
-    if(day) {
-
-        const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-        dayElement.addEventListener('click', () => handleDayClick(date));
+    if (day) {
+        const date = new Date(userCurrentDate.getFullYear(), userCurrentDate.getMonth(), day);
+        dayElement.addEventListener('click', () => handleUserDayClick(channelId, date));
         dayElement.style.cursor = 'pointer';
     }
 
-    calendarGrid.appendChild(dayElement);
+    if (userCalendarGrid) {
+        userCalendarGrid.appendChild(dayElement);
+    }
 }
 
-function isToday(date) {
+function isUserToday(date) {
     const today = new Date();
     return date.toDateString() === today.toDateString();
 }
 
-function handleDayClick(date) {
-    const now = new Date();
-    const dateStr = date.toISOString().split('T')[0];
-    const nowStr = now.toISOString().split('T')[0];
-    if (now > date){
-        alert("На данную дату нельзя посмотреть предложения, так как она уже прошла")
-    }else {
-        const urlParams = new URLSearchParams(window.location.search);
-        const channelId = urlParams.get('channel_id');
-        const userID = urlParams.get('userID');
-        window.location.href = `/payment?channel_id=${channelId}&date=${dateStr}&userID=${userID}`;
+async function handleUserDayClick(channelId, date) {
+    if (window.Telegram && Telegram.WebApp) {
+        Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    } else if ('vibrate' in navigator) {
+        navigator.vibrate(50);
     }
 
+    const now = new Date();
+    const dateStr = formatUserDateToLocal(date);
+    const nowStr = formatUserDateToLocal(now);
+
+    if (date < now && !isUserSameDay(date, now)) {
+        alert("На данную дату нельзя посмотреть предложения, так как она уже прошла");
+    } else {
+        const response = await fetch(`/api/channel-payment-selector?id=${channelId}&date=${dateStr}`);
+        const channel = await response.json();
+        if (channel && Object.keys(channel).length > 1) {
+            await loadChannelDataPayment(channelId,dateStr);
+            navigateTo('payment');
+        } else {
+            loadNooffers(channelId);
+            navigateTo('no-offers');
+        }
+    }
 }
 
+function formatUserDateToLocal(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
 
-prevButton.addEventListener('click', () => {
-    currentDate.setMonth(currentDate.getMonth() - 1);
-    generateCalendar();
-});
+function isUserSameDay(date1, date2) {
+    return (
+        date1.getFullYear() === date2.getFullYear() &&
+        date1.getMonth() === date2.getMonth() &&
+        date1.getDate() === date2.getDate()
+    );
+}
 
-nextButton.addEventListener('click', () => {
-    currentDate.setMonth(currentDate.getMonth() + 1);
-    generateCalendar();
-});
-
-
-generateCalendar();
-
-
-window.addEventListener('resize', () => {
-    calendarGrid.style.width = '100%';
-    document.querySelectorAll('.calendar-day').forEach(day => {
-        day.style.minWidth = '';
+// Инициализация календаря
+if (userPrevButton && userNextButton) {
+    userPrevButton.addEventListener('click', () => {
+        userCurrentDate.setMonth(userCurrentDate.getMonth() - 1);
+        generateUserCalendar();
     });
+
+    userNextButton.addEventListener('click', () => {
+        userCurrentDate.setMonth(userCurrentDate.getMonth() + 1);
+        generateUserCalendar();
+    });
+}
+
+// Обработчик изменения размера окна
+window.addEventListener('resize', () => {
+    if (userCalendarGrid) {
+        userCalendarGrid.style.width = '100%';
+        document.querySelectorAll('#calendarGrid-user .calendar-day').forEach(day => {
+            day.style.minWidth = '';
+        });
+    }
 });

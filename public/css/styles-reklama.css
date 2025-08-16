@@ -1,281 +1,422 @@
- body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f5f5f5;
-      color: #000;
-      touch-action: pan-y;
-    }
-
-    .container {
-      max-width: 100%;
-      padding: 16px;
-      padding-bottom: 70px;
-    }
-
-    /* Хедер */
-    .header {
-  display: flex;
-  justify-content: center; /* Центрируем содержимое */
-  align-items: center;
-  margin-bottom: 20px;
-  position: relative; /* Для позиционирования кнопки закрытия */
-}
- .channel-avatar {
-     width: 50px;
-     height: 50px;
-     border-radius: 50%;
-     background-color: #f0f0f0;
-     margin-right: 10px;
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     color: #707579;
-     font-weight: bold;
-     font-size: 11px;
-     flex-shrink: 0;
- }
-    .logo {
-      width: 32px;
-      height: 32px;
-      background-color: #0088cc;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-    }
-
-    .mode-switcher {
-  display: flex;
-  background-color: #f0f0f0;
-  border-radius: 8px;
-  padding: 2px;
-  margin: 0 auto; /* Дополнительное центрирование */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #121212;
+    color: #e0e0e0;
+    touch-action: pan-y;
 }
 
-    .mode-button {
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      background: none;
-      font-weight: 500;
-      cursor: pointer;
-    }
-
-    .mode-button.active {
-      background-color: white;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    }
-
-    .close-button {
-  position: absolute; /* Абсолютное позиционирование */
-  right: 0; /* Размещаем справа */
-  width: 32px;
-  height: 32px;
-  border: none;
-  background: #f0f0f0;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  cursor: pointer;
+.container {
+    max-width: 100%;
+    padding: 16px;
+    padding-bottom: 70px;
+    background-color: #121212;
 }
 
-    /* Блок каналов */
-    .channels-section {
-      background-color: white;
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-
-    .section-title {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
-
-    .channel-button {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px;
-      background-color: #f9f9f9;
-      border: none;
-      border-radius: 8px;
-      margin-bottom: 8px;
-      text-align: left;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    .channel-button:active {
-      background-color: #f0f0f0;
-    }
-
-    .channel-info {
-      flex-grow: 1;
-    }
-
-    .channel-name {
-      font-weight: 500;
-      margin-bottom: 4px;
-    }
-
-    .channel-subs {
-      color: #707579;
-      font-size: 12px;
-    }
-
-    /* Нижняя навигация */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: space-around;
-      background-color: #fff;
-      padding: 12px 0;
-      border-top: 1px solid #f0f0f0;
-    }
-
-    .nav-button {
-      border: none;
-      background: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 14px;
-      color: #707579;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .nav-button.active {
-      color: #0088cc;
-      background-color: #f0f0f0;
-    }
-    .nav-item a {
-  color: inherit;         /* Наследует цвет текста от .nav-item */
-  text-decoration: none;  /* Убирает подчёркивание */
-  display: block;         /* Занимает всю ширину родителя */
-  width: 100%;           /* Растягивает на всю ширину */
-  height: 100%;          /* Растягивает на всю высоту */
+.header-reklama {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+    background-color: #1a1a1a;
+    padding: 10px;
+    border-radius: 12px;
 }
-    /* Новые стили для секции добавления канала */
-    .add-channel-section {
-      background-color: white;
-      border-radius: 12px;
-      padding: 16px;
-      margin-top: 16px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      text-align: center;
-    }
 
-    .add-channel-title {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
+.logo {
+    width: 32px;
+    height: 32px;
+    background-color: #007bff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+}
 
-    .add-channel-description {
-      color: #707579;
-      font-size: 14px;
-      margin-bottom: 16px;
-    }
+.mode-switcher {
+    display: none;
+    background-color: #2d2d2d;
+    border-radius: 8px;
+    padding: 2px;
+    margin: 0 auto;
+}
 
-    .add-channel-button {
-      background-color: #0088cc;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 12px 24px;
-      font-weight: 500;
-      cursor: pointer;
-      width: 100%;
-      transition: background-color 0.2s;
-    }
+.mode-button {
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    background: none;
+    font-weight: 500;
+    cursor: pointer;
+    color: #aaa;
+}
 
-    .add-channel-button:active {
-      background-color: #0077b3;
-    }
-    .nav-item {
-      font-size: 11px;
-      color: #707579;
-      text-align: center;
-    }
-    .nav-item.active {
-      color: #0088cc;
-    }
-     .section-title {
-      font-weight: 600;
-      margin-bottom: 12px;
-      font-size: 18px;
-    }
+.mode-button.active {
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+}
 
-    .channel-button {
-      display: flex;
-      align-items: center;
-      padding: 12px;
-      width: 100%;
-      border: none;
-      background: #fff;
-      border-radius: 10px;
-      margin-bottom: 8px;
-      text-align: left;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
+.close-button {
+    position: absolute;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: #2d2d2d;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    color: #aaa;
+}
 
-    .channel-info {
-      flex-grow: 1;
-    }
+.channels-section {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border: 1px solid #333;
+}
 
-    .channel-name {
-      font-weight: bold;
-      margin-bottom: 7px;
-    }
+.section-title-reklama {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #f0f0f0;
+}
 
-    .channel-subs {
-      font-size: 14px;
-      color: #666;
-    }
+.channel-button {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background-color: #2d2d2d;
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    color: #e0e0e0;
+    border: 1px solid #333;
+}
 
-    .add-channel-title {
-      font-weight: 600;
-      margin-top: 20px;
-      margin-bottom: 8px;
-    }
+.channel-button:active {
+    background-color: #252525;
+}
 
-    .add-channel-description {
-      font-size: 14px;
-      color: #666;
-      margin-bottom: 12px;
-    }
+.channel-info {
+    flex-grow: 1;
+}
 
-    .add-channel-btn {
-      width: 100%;
-      padding: 12px;
-      background: #0088cc;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 16px;
-    }
+.channel-name {
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: #f0f0f0;
+}
 
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: white;
-      display: flex;
-      justify-content: space-around;
-      padding: 12px 0;
-      box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
-    }
+.channel-subs {
+    color: #aaa;
+    font-size: 12px;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    background-color: #1a1a1a;
+    padding: 12px 0;
+    border-top: 1px solid #333;
+    z-index: 1000;
+}
+
+.nav-button {
+    border: none;
+    background: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #aaa;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.nav-button.active {
+    color: #007bff;
+    background-color: #252525;
+}
+
+.nav-item a {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.nav-item {
+    font-size: 11px;
+    color: #aaa;
+    text-align: center;
+}
+
+.nav-item.active {
+    color: #007bff;
+}
+
+.add-channel-section {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    text-align: center;
+    border: 1px solid #333;
+}
+
+.add-channel-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #f0f0f0;
+}
+
+.add-channel-description {
+    color: #aaa;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.add-channel-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.2s;
+}
+
+.add-channel-button:active {
+    background-color: #0069d9;
+}
+
+.section-title-reklama {
+    font-weight: 600;
+    margin-bottom: 12px;
+    font-size: 18px;
+    color: #f0f0f0;
+}
+
+.channel-button {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    background: #1e1e1e;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    text-align: left;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #333;
+}
+
+.channel-info {
+    flex-grow: 1;
+}
+
+.channel-name {
+    font-weight: bold;
+    margin-bottom: 7px;
+    color: #f0f0f0;
+}
+
+.channel-subs {
+    font-size: 14px;
+    color: #aaa;
+}
+
+.add-channel-title {
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    color: #f0f0f0;
+}
+
+.add-channel-description {
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 12px;
+}
+
+.add-channel-btn {
+    width: 100%;
+    padding: 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Исправление для прижатия футера к низу */
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex: 1 0 auto;
+}
+/* Стили для контейнера предложений */
+.content-list {
+    margin: 20px 0;
+    width: 100%;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 15px;
+}
+
+/* Стили для карточки предложения */
+.offer-form .offer-form {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Стили для кнопки удаления */
+.delete-button {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 10px;
+    display: block;
+    width: 100%;
+}
+
+/* Отступы для элементов формы */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Общие стили для контейнера */
+#content-list {
+    margin: 20px 0;
+    padding: 0;
+    width: 100%;
+}
+
+/* Стили для карточки предложения */
+.offer-form {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    border: 1px solid #333;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Заголовок с датой */
+.section-title-2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #333;
+}
+
+/* Группы с информацией */
+.form-group {
+    margin-bottom: 15px;
+    padding: 10px 0;
+}
+
+/* Текстовые метки */
+.form-label {
+    display: block;
+    font-size: 16px;
+    color: #ddd;
+    line-height: 1.5;
+}
+
+/* Кнопка удаления */
+.delete-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    max-width: 280px;
+    margin: 10px auto 0;
+    display: block;
+    transition: background-color 0.3s;
+}
+
+.delete-button:hover {
+    background-color: #c0392b;
+}
+
+/* Иконки для элементов (опционально) */
+.form-group::before {
+    content: "•";
+    color: #1a1a1a;
+    margin-right: 8px;
+}
+
+
+
+#content-list {
+    border-top: none;
+}
+
+/* Убираем верхнюю границу у первой карточки */
+.offer-form:first-child {
+    border-top: none;
+}
+
+/* Убираем возможные верхние отступы */
+.section-title-2 {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+/* Альтернативно - если линия от border-top */
+.offer-form {
+    border-top: none;
+}
+.offer-form .form-label {
+    font-size: 15px;
+    font-weight: 400;
+    position: relative;
+    display: inline-block;
+    padding: 0 10px;
+}

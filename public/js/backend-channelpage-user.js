@@ -1,48 +1,17 @@
-// Инициализация Telegram WebApp
-Telegram.WebApp.ready();
-Telegram.WebApp.expand();
-
-// Получаем данные пользователя
-const user = Telegram.WebApp.initDataUnsafe?.user;
-const avatarElement = document.querySelector('.channel-avatar-large');
-const urlParams = new URLSearchParams(window.location.search);
-const channelId = urlParams.get('channel_id');
-const userID = urlParams.get('userID');
-
-// Подключаемся к серверу
-const socket = io(window.location.origin);
-
-
-
-
-document.addEventListener('gesturestart', function(e) {
-    e.preventDefault();
-});
-
-
-document.querySelectorAll('.calendar-day').forEach(day => {
-    day.addEventListener('click', function() {
-        document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('calendar-day-active'));
-        this.classList.add('calendar-day-active');
-    });
-});
-
-
-document.addEventListener('DOMContentLoaded', async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const channelId = urlParams.get('channel_id');
-
+async function loadChannelDataUser(channelId) {
+    generateUserCalendar(channelId)
     if (channelId) {
+        window.socket.emit('get_feedbacks',channelId);
         try {
             const response = await fetch(`/api/channel?id=${channelId}`);
             const channel = await response.json();
 
             if (channel) {
-                // Обновляем информацию о канале на странице
-                const avatarElement = document.querySelector('.channel-avatar-large');
-                const titleElement = document.querySelector('.channel-title');
-                const subscribersElement = document.querySelector('.channel-subscribers');
-                const descriptionElement = document.querySelector('.channel-description');
+                const avatarElement = document.querySelector('.channel-avatar-large-user');
+                const titleElement = document.querySelector('.channel-title-user');
+                const subscribersElement = document.querySelector('.channel-subscribers-user');
+                const descriptionElement = document.querySelector('.channel-description-user');
+                const urlElement = document.querySelector('.channel-url-user');
 
 
                 if (channel.photo_url) {
@@ -54,56 +23,156 @@ document.addEventListener('DOMContentLoaded', async () => {
                 titleElement.textContent = channel.name;
                 subscribersElement.textContent = `${channel.subscribers.toLocaleString()} подписчиков`;
                 descriptionElement.textContent = channel.description || 'Описание отсутствует';
+                if (channel.channel_url) {
+                    urlElement.textContent = channel.channel_url;
+                    urlElement.style.cursor = 'pointer';
+                    urlElement.addEventListener('click', () => {
+                        window.open(channel.channel_url, '_blank');
+                    });
+                }else{
+                    urlElement.textContent = "Канал приватный";
+                }
+                const addReviewBtn = document.getElementById('addReviewBtn');
+                const reviewModal = document.getElementById('reviewModal');
+                const cancelReviewBtn = document.getElementById('cancelReviewBtn');
+                const submitReviewBtn = document.getElementById('submitReviewBtn');
+                const reviewText = document.getElementById('reviewText');
+
+                addReviewBtn.addEventListener('click', function() {
+                    reviewModal.style.display = 'flex';
+                });
+
+                cancelReviewBtn.addEventListener('click', function() {
+                    reviewModal.style.display = 'none';
+                    reviewText.value = '';
+                });
+
+                submitReviewBtn.addEventListener('click', async () => {
+                    const text = reviewText.value.trim();
+                    if (text) {
+                        try {
+                            await fetch('/api/feedback', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ id: channelId, user_id: userId, text: text })
+                            });
+                            reviewText.value = '';
+                            reviewModal.style.display = 'none';
+                            window.socket.emit('get_feedbacks',channelId);
+                        } catch (e) {
+                            console.log('Ошибка добавления запроса')
+                        }
+                    } else {
+                        alert('Пожалуйста, введите текст отзыва');
+                    }
+                });
+                document.getElementById('backButton').addEventListener('click', function() {
+                    navigateTo('search');
+                });
+
+                window.addEventListener('click', function(event) {
+                    if (event.target === reviewModal) {
+                        reviewModal.style.display = 'none';
+                        reviewText.value = '';
+                    }
+                });
+
+
             }
         } catch (error) {
             console.error('Ошибка при загрузке данных канала:', error);
         }
     }
-});
-
-document.addEventListener('DOMContentLoaded', async function() {
-    const favoriteIcon = document.getElementById('favorite-icon');
-
-    try {
-        const response = await fetch(`/api/get-favourites?id=${channelId}&userID=${userID}`);
-        const result = await response.json();
-
-        if (result.rows && result.rows.length > 0) {
-            favoriteIcon.classList.add('fas', 'active');
-            favoriteIcon.classList.remove('far');
-        } else {
-            favoriteIcon.classList.add('far');
-            favoriteIcon.classList.remove('fas', 'active');
-        }
-    } catch (error) {
-        console.error('Ошибка при проверке избранного:', error);
-    }
-
-    favoriteIcon.addEventListener('click', async function() {
-        this.classList.toggle('far');
-        this.classList.toggle('fas');
-        this.classList.toggle('active');
-
-        try {
-            await fetch(`/api/favourites?id=${channelId}&userID=${userID}`);
-        } catch (error) {
-            console.error('Ошибка при обновлении избранного:', error);
-        }
-    });
-});
-
-
-
-if (channelId) {
-    socket.emit('get_channel', channelId);
 }
 
 
 
 
-socket.on('connect_error', (err) => {
-    console.error('Ошибка подключения:', err);
+
+
+
+
+
+
+window.socket.on("connect", () => {
+    console.log("Connected to WebSocket server!");
+
+
+    const hasLocalFeedbacks = loadFeedBacksFromLocalStorage();
+
+
+    if (channelId && !hasLocalFeedbacks) {
+        window.socket.emit('get_feedbacks', channelId);
+    }
+});
+
+
+window.socket.on("feedbacks-list", (feedbacks) => {
+
+    safeLocalStorage('set', 'feedback_channels', feedbacks);
+
+
+    const feedbacksList = document.getElementById("reviewsContainer");
+    feedbacksList.innerHTML = '';
+
+    feedbacks.forEach(feedback => {
+        addChannelToUIUser(feedback);
+    });
 });
 
 
 
+
+
+
+
+
+function addChannelToUIUser(feedback) {
+    const feedbacksList = document.getElementById("reviewsContainer");
+
+
+    const feedback_item = document.createElement("div");
+    feedback_item.className = "review-item";
+
+    feedback_item.innerHTML = `
+        <div class="review-author">${feedback.first_name} (@${feedback.username})</div>
+        <div class="review-text">${feedback.feedback}</div>
+    `;
+
+    const feedbackId = `${feedback.user_id}_${feedback.channel_id}`;
+
+    safeLocalStorage('set', `feedback_${feedbackId}`, {
+        user_id: feedback.user_id,
+        channel_id: feedback.channel_id,
+        username: feedback.username,
+        feedback: feedback.feedback
+    });
+
+    const feedbacks = safeLocalStorage('get', 'feedback_channels') || [];
+    if (!feedbacks.some(fav => fav.user_id === feedback.user_id && fav.channel_id === feedback.channel_id)) {
+        feedbacks.push({
+            user_id: feedback.user_id,
+            channel_id: feedback.channel_id,
+            username: feedback.username,
+            feedback: feedback.feedback
+        });
+        safeLocalStorage('set', 'feedback_channels', feedbacks);
+    }
+
+    feedbacksList.appendChild(feedback_item);
+}
+
+function loadFeedBacksFromLocalStorage() {
+    const feedbacks= safeLocalStorage('get', 'feedback_channels') || [];
+    const feedbacksList = document.getElementById("feedbacks-list");
+
+
+    feedbacksList.innerHTML = '';
+
+
+    feedbacks.forEach(feedback => {
+        addChannelToUIUser(feedback);
+    });
+
+    return feedbacks.length > 0;
+}

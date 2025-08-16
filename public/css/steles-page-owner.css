@@ -1,0 +1,395 @@
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #007bff;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.referral-info-btn {
+    margin-top: 12px;
+    background-color: transparent;
+    border: 1px solid #007bff;
+    color: #007bff;
+    padding: 8px 16px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.referral-info-btn:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.referral-description {
+    /* уже задается inline стилем display:none */
+}
+
+.criteria-section {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    padding: 15px;
+    margin: 15px 0;
+    border: 1px solid #333;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.criteria-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #f0f0f0;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.themes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.theme-item {
+    display: flex;
+    align-items: center;
+    background-color: #2d2d2d;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.theme-item:hover {
+    background-color: #3a3a3a;
+    border-color: #007bff;
+}
+
+.theme-checkbox {
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+    accent-color: #007bff;
+    cursor: pointer;
+}
+
+.theme-label {
+    font-size: 14px;
+    color: #e0e0e0;
+    cursor: pointer;
+}
+
+#set-categories-btn, #delete-categories-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#set-categories-btn:hover, #delete-categories-btn:hover {
+    background-color: #0069d9;
+}
+
+#delete-categories-btn {
+    background-color: #dc3545;
+    margin-top: 10px;
+}
+
+#delete-categories-btn:hover {
+    background-color: #c82333;
+}
+
+.refresh-button {
+    background: none;
+    border: none;
+    color: #007bff;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.refresh-button:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+}
+
+.refresh-button.refreshing {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.refresh-button {
+    position: absolute;
+    right: 15px;
+    top: 8px;
+    background: none;
+    border: none;
+    color: #007bff;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.refresh-button:hover {
+    background-color: #f0f0f0;
+}
+
+.refresh-button.refreshing {
+    animation: spin 1s linear infinite;
+}
+
+.referral-program {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #2d2d2d;
+    border-radius: 8px;
+    border: 1px solid #333;
+    color: white;
+}
+
+.referral-link-container {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.referral-link-input {
+    flex-grow: 1;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    background: #1e1e1e;
+    color: #eee;
+    font-size: 14px;
+    user-select: all;
+}
+
+#copyReferralBtn {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+#copyReferralBtn:hover {
+    background-color: #0069d9;
+}
+
+/* Новый улучшенный стиль для .referral-program и .search-visibility */
+
+.referral-program, .search-visibility {
+    background-color: #2a2a2a;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #eee;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 15px;
+}
+
+.referral-program {
+    flex-direction: column;
+    gap: 12px;
+}
+
+.referral-program > .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #00aaff;
+    margin-bottom: 8px;
+}
+
+.referral-link-container {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.referral-link-input {
+    flex-grow: 1;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1.5px solid #444;
+    background-color: #1e1e1e;
+    color: #ddd;
+    font-size: 14px;
+    user-select: all;
+    transition: border-color 0.3s;
+}
+
+.referral-link-input:focus {
+    outline: none;
+    border-color: #00aaff;
+    background-color: #272727;
+}
+
+#copyReferralBtn {
+    background-color: #00aaff;
+    border: none;
+    color: white;
+    padding: 10px 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    flex-shrink: 0;
+}
+
+#copyReferralBtn:hover {
+    background-color: #008fcc;
+}
+
+.referral-info-btn {
+    align-self: flex-start;
+    margin-top: 6px;
+    background-color: transparent;
+    border: 1.5px solid #00aaff;
+    color: #00aaff;
+    padding: 8px 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 14px;
+}
+
+.referral-info-btn:hover {
+    background-color: #00aaff;
+    color: #fff;
+}
+
+.referral-description {
+    color: #ccc;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 8px;
+}
+
+.search-visibility {
+    padding: 14px 20px;
+    gap: 12px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    user-select: none;
+}
+
+.search-visibility .switch {
+    width: 52px;
+    height: 28px;
+}
+
+.search-visibility .slider {
+    border-radius: 28px;
+}
+
+.search-visibility .slider:before {
+    border-radius: 50%;
+    height: 22px;
+    width: 22px;
+    left: 3px;
+    bottom: 3px;
+}
+
+.search-visibility input:checked + .slider {
+    background-color: #00aaff;
+}
+
+.search-visibility span {
+    font-size: 15px;
+    color: #ddd;
+    font-weight: 600;
+    margin-left: 4px;
+    white-space: nowrap;
+}
+
+/* Адаптивность */
+
+@media (max-width: 480px) {
+    .referral-program, .search-visibility {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .referral-link-container {
+        flex-direction: column;
+    }
+    #copyReferralBtn {
+        width: 100%;
+        padding: 12px 0;
+    }
+    .search-visibility span {
+        margin-left: 0;
+    }
+}

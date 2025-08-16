@@ -3,20 +3,201 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Календарь и каналы</title>
+  <title>PORT ADVERTISEMENT</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link rel="stylesheet" href="/css/styles-index.css">
+  <link rel="stylesheet" href="/css/styles-reklama.css">
+  <link rel="stylesheet" href="/css/styles-poisk.css">
+  <link rel="stylesheet" href="/css/steles-page-owner.css">
+  <link rel="stylesheet" href="/css/new.css">
+  <link rel="stylesheet" href="/css/no-offers.css">
+
 </head>
 <body>
-<div class="container">
+<div id="profile-page" class="page-container active">
   <div class="header">
-    <div class="app-title">Запланированная реклама</div>
+    <div class="app-title">PORT ADVERTISEMENT</div>
     <div class="channel-avatar-Profil">L2</div>
   </div>
 
   <div class="content-row">
-    <!-- Календарь -->
+    <div class="social-networks">
+      <div class="social-network" id="Telegram">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111644.png" alt="Telegram" class="social-avatar">
+        <div class="social-name">Telegram</div>
+      </div>
+      <div class="social-network" id="Git">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111612.png" alt="VK" class="social-avatar">
+        <div class="social-name">Git Hub</div>
+      </div>
+      <div class="social-network" id="Inst">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" class="social-avatar">
+        <div class="social-name">Instagram</div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Добавленная надпись "Дополнительно" -->
+  <div style="margin-top: 20px;text-align: center; margin-bottom: 10px; font-size: 16px; color: white; font-weight: bold;">
+    Дополнительно
+  </div>
+
+  <!-- Новый блок с кнопками -->
+  <div class="action-buttons" style="margin-top: 10px;">
+    <div class="action-button" id = "support">
+      <img src="https://cdn-icons-png.flaticon.com/512/5074/5074539.png"  alt="Support" style="width: 30px; height: 30px;">
+      <div>Обратиться в поддержку</div>
+    </div>
+    <div class="action-button" id = "share">
+      <img src="https://cdn-icons-png.flaticon.com/512/3917/3917567.png"  alt="Share" style="width: 30px; height: 30px;">
+      <div>Поделиться приложением</div>
+    </div>
+    <div class="action-button" id = "userdoc">
+      <img src="https://cdn-icons-png.flaticon.com/512/5069/5069162.png"  alt="Terms" style="width: 30px; height: 30px;">
+      <div>Пользовательское соглашение</div>
+    </div>
+  </div>
+  <div class="action-buttons" style="margin-top: 20px;">
+    <div class="action-button" id = "about">
+      <img src="https://cdn-icons-png.flaticon.com/512/3916/3916979.png" alt="About Project" style="width: 30px; height: 30px;">
+      <div>O проекте</div>
+    </div>
+    <div class="action-button" id = "UserId">
+      <img src="https://cdn-icons-png.flaticon.com/512/3917/3917061.png"  alt="UserId" style="width: 30px; height: 30px;">
+      <div>Узнать UserID</div>
+    </div>
+    <div class="action-button" id = "Screen">
+      <img src="https://cdn-icons-png.flaticon.com/512/3917/3917757.png"  alt="Screen" style="width: 30px; height: 30px;">
+      <div>Добавить на главный экран</div>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="reklama-page" class="page-container">
+  <div class="header-reklama">
+    <div class="mode-switcher">
+      <button class="mode-button" id="buy-mode">Купить</button>
+      <button class="mode-button active" id="sell-mode">Выставить</button>
+    </div>
+  </div>
+  <div class="channels-section">
+    <div class="section-title-reklama">Мои каналы</div>
+    <div id="channels-list">
+    </div>
+  </div>
+
+  <div class="add-channel-section">
+    <div class="add-channel-title">Добавить канал</div>
+    <div class="add-channel-description">
+      Чтобы добавить канал, сделайте бота администратором вашего канала.
+      Если же вы хотите удалить канал из приложения, то просто уберите соответствующие права.
+    </div>
+  </div>
+</div>
+<div id="search-page" class="page-container">
+  <div class="choice-container" id="choice-container">
+    <div class="choice-title">Выберите способ поиска каналов</div>
+    <button class="choice-button" id="btn-by-name">
+      <i class="fas fa-search"></i> По названию
+    </button>
+    <button class="choice-button" id="btn-by-criteria">
+      <i class="fas fa-sliders-h"></i> По критериям
+    </button>
+  </div>
+
+  <div class="search-container" id="search-by-name">
+    <div class="search-title">Поиск по названию</div>
+    <input type="text" class="search-input" id="name-input" placeholder="Введите название канала" />
+    <button class="search-btn" id="search-name-btn">Найти</button>
+    <button class="search-btn back-btn" id="back-from-name">Вернуться назад</button>
+    <div class="poisk-result-channels" id="search-name-results">
+      <!-- Результаты будут вставлены сюда -->
+    </div>
+  </div>
+
+  <div class="search-container" id="search-by-criteria">
+    <div class="search-title">Поиск по критериям</div>
+
+    <div class="criteria-section" id="categories-list">
+      <div class="criteria-title">Тематика каналов</div>
+      <div class="theme-item">
+        <input type="checkbox" id="all-themes" class="theme-checkbox" />
+        <label for="all-themes" class="theme-label">Все тематики</label>
+      </div>
+      <!-- Тематики будут добавлены динамически -->
+    </div>
+
+    <!--<div class="criteria-section">
+      <div class="criteria-title">Количество подписчиков</div>
+      <div class="range-container">
+        <div class="range-values">
+          <span id="min-subs-value">1K</span>
+          <span id="max-subs-value">1M+</span>
+        </div>
+        <input type="range" id="subs-range" min="0" max="100" value="50" />
+      </div>
+    </div>-->
+
+    <div class="criteria-section">
+      <div class="criteria-title">Сортировка по количеству подписчиков</div>
+      <select id="sort-order">
+        <option value="subs-desc">Подписчики (по убыванию)</option>
+        <option value="subs-asc">Подписчики (по возрастанию)</option>
+      </select>
+    </div>
+
+    <button class="search-btn" id="search-criteria-btn">Найти</button>
+    <button class="search-btn back-btn" id="back-from-criteria">Вернуться назад</button>
+    <div class="poisk-result-channels-2" id="search-criteria-results">
+      <!-- Результаты будут вставлены сюда -->
+    </div>
+  </div>
+</div>
+<div id = "owner-page" class="page-container">
+  <div class="header-owner">
+    <div class="app-title-owner">Информация о канале</div>
+    <button id="refreshButton" class="refresh-button">
+      <i class="fas fa-sync-alt"></i>
+    </button>
+  </div>
+
+  <div class="channel-info-section">
+    <div class="channel-info-container">
+      <div class="channel-avatar-large">
+      </div>
+      <div class="channel-details">
+        <div class="channel-title-owner"></div>
+        <div class="channel-subscribers"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-row">
+    <div class="favorites-section">
+      <div class="section-title">Описание канала</div>
+      <div class="channel-info-block">
+        <div class="channel-meta">
+          <div class="channel-description-owner">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="calendar-section">
+      <div class="section-title">Страница канала</div>
+      <div class="channel-meta">
+        <div class="channel-url">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="content-row">
+
     <div class="calendar-section">
       <div class="calendar-header">
         <div class="month-year">Сентябрь 2023</div>
@@ -27,45 +208,316 @@
       </div>
       <div class="calendar-grid" id="calendarGrid"></div>
     </div>
+  </div>
+  <div class="criteria-section" id = "criteria-section">
 
 
   </div>
+  <div class="popular-channels">
 
-  <!-- Избраннiutiое -->
+    <div class="referral-program">
+      <div class="section-title">
+        <i class="fas fa-gift referral-icon"></i> Реферальная программа
+      </div>
+
+      <div class="referral-link-container">
+        <input type="text" readonly id="referralLinkInput" class="referral-link-input" value="https://t.me/your_referral_link" />
+        <button id="copyReferralBtn" class="copy-btn">
+          <i class="fas fa-copy"></i>
+        </button>
+      </div>
+
+        <div class="summary-item">
+        </div>
+      </div>
+
+    <button id="referralInfoBtn" class="referral-info-btn" style="display: block; width: 100%;">
+      <i class="fas fa-info-circle"></i> Подробнее о программе
+    </button>
+
+      <div id="referralDescription" class="referral-details" style="display: none;">
+        <div class="referral-description">
+          <p>Приглашайте владельцев каналов и рекламодателей через вашу персональную ссылку. За каждого приглашенного пользователя, который совершит сделку на платформе, вы получите один бесплатный пост с вашей рекламой.</p>
+          <p><strong>Важно:</strong>цена за пост в канале, в котором вы хотите разместить ваше предложение не должно быть дороже <strong>n рублей</strong>.</p>
+
+
+
+        </div>
+      </div>
+    </div>
+  <div style="
+  height: 1px;
+
+  margin: 10px 0;
+"></div>
+    <div class="search-visibility">
+      <label class="switch">
+        <input type="checkbox" id="searchVisibilityToggle" />
+        <span class="slider round"></span>
+      </label>
+      <span>Показывать канал в поиске</span>
+    </div>
+
+
+
+    <div class="popular-grid">
+
+    </div>
+  </div>
+
+</div>
+
+<div id="create-advertisement-page" class="page-container">
+  <div class="offer-date-section" style="
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 16px 0;
+  border: 1px solid #333;
+">
+    <div class="section-title" style="
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 8px;
+    text-align: center;
+  ">
+      Дата размещения предложения
+    </div>
+    <div class="current-date-display" style="
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  ">
+      <i class="fas fa-calendar" style="color: #fff;"></i>
+      <span id="current-offer-date" style="
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+    "></span>
+    </div>
+  </div>
+
+  <div class="channel-info-section">
+    <div class="channel-info-container">
+      <div class="channel-avatar-large-advertisement">
+      </div>
+      <div class="channel-details">
+        <div class="channel-title-advertisement"></div>
+        <div class="channel-subscribers-advertisement"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-row">
+    <div class="favorites-section">
+      <div class="section-title">Описание канала</div>
+      <div class="channel-info-block">
+        <div class="channel-meta">
+          <div class="channel-description-advertisement">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="calendar-section">
+      <div class="section-title">Страница канала</div>
+      <div class="channel-meta">
+        <div class="channel-url-advertisement">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="offer-form">
+    <div class="section-title-2">Ваше предложение</div>
+    <div class="form-group">
+      <label class="form-label">Ваша цена за размещение</label>
+      <div class="price-input-container">
+        <input type="number" class="form-input" id="offer-price" placeholder="Введите сумму">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Длительность размещения - оставьте пустой, если хотите выложить без удаления</label>
+      <div class="price-input-container">
+        <input type="number" class="form-input" id="offer-duration" placeholder="Введите длительность(в часах)">
+      </div>
+    </div>
+    <button class="submit-button" id="submit-offer">Выставить предложение</button>
+  </div>
+
+  <div id="content-list" class="content-list">
+
+  </div>
+</div>
+<div class="page-container" id = "user-page">
+<div class="header">
+  <div class="app-title">Информация о канале</div>
+  <button id="backButton" style="
+    background-color: #007bff; color: white;
+    border: none; padding: 8px 12px;
+    border-radius: 6px; cursor: pointer;
+    font-size: 14px; margin-top: 10px;">
+    ← Назад
+  </button>
+</div>
+
+<div class="channel-info-section">
+  <div class="channel-info-container">
+    <div class="channel-avatar-large-user">
+    </div>
+    <div class="channel-details">
+      <div class="channel-title-user"></div>
+      <div class="channel-subscribers-user"></div>
+    </div>
+  </div>
+</div>
+
+<div class="content-row">
   <div class="favorites-section">
-    <div class="section-title">Избранные каналы</div>
-    <div id="channels-list">
-
+    <div class="section-title">Описание канала</div>
+    <div class="channel-info-block">
+      <div class="channel-meta">
+        <div class="channel-description-user">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="calendar-section">
+    <div class="section-title">Страница канала</div>
+    <div class="channel-meta">
+      <div class="channel-url-user">
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Популярные каналы -->
-<div class="popular-channels">
-  <div class="section-title">ПОПУЛЯРНЫЕ КАНАЛЫ</div>
-  <div class="popular-grid">
-    <div class="popular-group">
-      <!-- Сюда будут вставляться каналы из БД -->
+  <div class="calendar-section">
+    <div class="calendar-header">
+      <div class="month-year-user" id="month-year-user">Сентябрь 2023</div>
+      <div class="nav-buttons">
+        <button class="nav-button" id="prevMonth-user">‹</button>
+        <button class="nav-button" id="nextMonth-user">›</button>
+      </div>
+    </div>
+    <div class="calendar-grid" id="calendarGrid-user"></div>
+  </div>
+
+<div class="review-section">
+  <div class="section-title">ОТЗЫВЫ</div>
+  <button class="add-review-btn" id="addReviewBtn">
+    <i class="fas fa-plus"></i> Добавить отзыв
+  </button>
+
+  <div class="reviews-container" id="reviewsContainer">
+  </div>
+</div>
+<div class="review-modal" id="reviewModal">
+  <div class="review-modal-content">
+    <h3>Оставить отзыв</h3>
+    <textarea class="review-textarea" id="reviewText" placeholder="Напишите ваш отзыв здесь..."></textarea>
+    <div class="review-buttons">
+      <button class="review-cancel-btn" id="cancelReviewBtn">Отмена</button>
+      <button class="review-submit-btn" id="submitReviewBtn">Отправить</button>
     </div>
   </div>
 </div>
 </div>
+<div class="page-container" id="no-offers-page">
 
-<!-- Нижняя навигация -->
+  <div class="no-offers-container">
+    <div class="no-offers-icon">📅</div>
+    <div class="no-offers-title">Нет доступных предложений</div>
+    <div class="no-offers-description">На выбранную дату нет доступных предложений по рекламе. Попробуйте выбрать другую дату.</div>
+    <a class="back-button-offers" id = "backButton-offers">Вернуться на главную страницу</a>
+  </div>
+</div>
+<div class="page-container" id="payment-page">
+  <div class="channel-info-section">
+    <div class="channel-info-container">
+      <div class="channel-avatar-large-payment">
+      </div>
+      <div class="channel-details">
+        <div class="channel-title-payment"></div>
+        <div class="channel-subscribers-payment"></div>
+      </div>
+    </div>
+  </div>
 
+  <div class="content-row">
+    <div class="favorites-section">
+      <div class="section-title">Описание канала</div>
+      <div class="channel-info-block">
+
+        <div class="channel-meta">
+          <div class="channel-description-payment">
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="calendar-section">
+      <div class="section-title">Страница канала</div>
+      <div class="channel-meta">
+        <div class="channel-url-payment">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class = "content-list-payment" id="content-list-payment">
+
+  </div>
+
+</div>
 <div class="bottom-nav">
-  <div class="nav-item active">
-    <a href="index.html">Профиль</a>
+  <div class="nav-item active" data-page="profile">
+    <a href="#" id="nav-profile">Профиль</a>
   </div>
-  <div class="nav-item">
-    <a href="reklama.html">Реклама</a>
+  <div class="nav-item" data-page="reklama">
+    <a href="#" id="nav-reklama">Реклама</a>
   </div>
-  <div class="nav-item">
-    <a href="notification.html">Уведомления</a>
+  <div class="nav-item" data-page="search">
+    <a href="#" id="nav-notification">Поиск</a>
   </div>
 </div>
-<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/kalendari/owner-kalendari.js"></script>
+<script src="/kalendari/user-kalendari.js"></script>
+<script>
+  window.socket = io(window.location.origin, {
+    reconnection: true,
+    reconnectionAttempts: 5,
+    reconnectionDelay: 1000
+  });
+
+  // Логирование статуса подключения
+  window.socket.on('connect', () => {
+    console.log('WebSocket connected!');
+  });
+
+  window.socket.on('disconnect', () => {
+    console.log('WebSocket disconnected!');
+  });
+  function loadNooffers(channelId){
+    document.getElementById('backButton-offers').addEventListener('click', () => {
+      loadChannelDataUser(channelId);
+
+
+      navigateTo('user');
+    });
+  }
+
+
+</script>
+<script src="/js/backend-payment.js"></script>
+<script src="/js/backend-channelpage-user.js"></script>
 <script src="/js/backend-index.js"></script>
-<script src="/kalendari/index-kalendari.js"></script>
+<script src="/js/backend-create_advertisement.js"></script>
+<script src="/js/new-owner.js"></script>
+<script src="/js/backend-poisk.js"></script>
+
+
 </body>
 </html>

@@ -16,14 +16,15 @@ async function initDB() {
                 name TEXT NOT NULL,
                 subscribers INTEGER DEFAULT 0,
                 photo_url TEXT,
-                created_at TIMESTAMP DEFAULT NOW()
+                channel_url TEXT,
+                description text,
+                in_search BOOLEAN DEFAULT TRUE
             );
 
             CREATE TABLE IF NOT EXISTS users (
                 id BIGINT PRIMARY KEY,
                 username TEXT,
                 first_name TEXT,
-                last_name TEXT,
                 created_at TIMESTAMP DEFAULT NOW()
             );
 
@@ -59,7 +60,28 @@ async function initDB() {
                 id SERIAL PRIMARY KEY,
                 description VARCHAR(50)
                 );
+            CREATE TABLE IF NOT EXISTS  feedback(
+                    user_id BIGINT REFERENCES users(id),
+                    channel_id BIGINT REFERENCES all_channels(id),
+                    feedback VARCHAR(100),
+                    id SERIAL PRIMARY KEY
+                );
+            CREATE TABLE IF NOT EXISTS channel_categories (
+                    id SERIAL PRIMARY KEY,
+                    categorie VARCHAR(50)
+                );
+            CREATE TABLE IF NOT EXISTS channel_category_mapping (
+                channel_id BIGINT REFERENCES all_channels(id),
+                category_id BIGINT REFERENCES channel_categories(id),
+                PRIMARY KEY (channel_id, category_id)
+                );
+            CREATE TABLE IF NOT EXISTS referal (
+                user_id BIGINT PRIMARY KEY REFERENCES users(id),
+                is_referred BOOLEAN DEFAULT FALSE
+                );
+
         `);
+
         console.log('Database initialized');
     } catch (err) {
         console.error('Database initialization error:', err);

@@ -4,9 +4,7 @@ const path = require('path');
 const http = require('http');
 const socketIo = require('socket.io');
 const { pool, initDB } = require('./config/db');
-const router = require('./routes/index');
 const { setupSocket } = require('./sockets/index');
-const paymentService = require('./paymentService');
 
 const app = express();
 const PORT = 80;
@@ -16,23 +14,11 @@ initDB();
 
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
 
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
-
-
-app.use('/', router);
-
-app.post('/api/create-crypto-invoice', express.json(), async (req, res) => {
-    try {
-        const { amount, duration } = req.body;
-        const result = await paymentService.createCryptoInvoice(amount, duration);
-        res.json(result);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
 
 
 const server = http.createServer(app);
@@ -43,49 +29,20 @@ const io = socketIo(server, {
     }
 });
 
-// Экспортируйте io сразу после создания
-module.exports.io = io;
 
-// Затем импортируйте и используйте bot
-const bot = require('./telegram/bot');
-setupSocket(io);
+const initBot = require('./telegram/bot');
+const bot = initBot(io);
 bot.launch();
 
-app.get('/payment', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'payment_page.html'));
-});
 
-app.get('/create_advertisement', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'create_advertisement.html'));
-});
-app.get('/deal', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'deal.html'));
-});
+const router = require('./routes/index')(bot);
+app.use('/', router);
 
-app.get('/no-offers', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'no-offers.html'));
-});
 
-app.post('/api/crypto-pay-webhook', express.json(), async (req, res) => {
-    try {
-        const data = req.body.payload;
-        const status = data.status;
+setupSocket(io);
 
-        if (status === 'paid') {
-            const payloadData = typeof data.payload === 'string' ? JSON.parse(data.payload) : data.payload;
-            const { channel_id, duration } = payloadData;
 
-            await paymentService.postToChannel();
 
-            console.log(`Оплата успешна. Канал: ${channel_id}, длительность: ${duration}`);
-        }
-
-        res.status(200).send('OK');
-    } catch (error) {
-        console.error('Ошибка обработки вебхука:', error);
-        res.status(500).json({ error: error.message });
-    }
-});
 
 
 server.listen(PORT, () => {

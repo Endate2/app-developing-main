@@ -1,49 +1,58 @@
 body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f5f5f5;
-      color: #000;
-      touch-action: pan-y;
-      -webkit-text-size-adjust: none;
-      text-size-adjust: none;
-    }
-    .container {
-      max-width: 100%;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      box-sizing: border-box;
-      padding-bottom: 70px;
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .notification-content{
-        display: flex;
-        align-items: center;
-        gap: 40px;
-        padding: 10px;
-    }
-.notification-item {
-    background-color: #f8f8f8;  /* Светло-серый фон */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #121212;
+    color: #e0e0e0;
+    touch-action: pan-y;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+}
+
+.container {
+    max-width: 100%;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding-bottom: 70px;
+    background-color: #121212;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: #1a1a1a;
+    padding: 10px;
     border-radius: 12px;
-    border: 1px solid #e0e0e0;  /* Серая граница */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.notification-content{
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    padding: 10px;
+}
+
+.notification-item {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    border: 1px solid #333;
     padding: 16px;
     margin-bottom: 12px;
     transition: all 0.2s ease;
 }
 
 .notification-item:hover {
-    background-color: #f0f0f0;  /* Чуть темнее при наведении */
+    background-color: #252525;
 }
 
 .notification-item:active {
     transform: scale(0.98);
-    background-color: #e8e8e8;  /* Еще темнее при нажатии */
+    background-color: #1a1a1a;
 }
 
 .notification-content {
@@ -55,24 +64,27 @@ body {
 .notification-channel {
     font-size: 16px;
     font-weight: 500;
-    color: #333;
+    color: #f0f0f0;
 }
 
 .notification-date {
     font-size: 14px;
-    color: #666;
+    color: #aaa;
 }
-    .app-title {
-      font-size: 18px;
-      font-weight: 600;
-    }
+
+.app-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #f0f0f0;
+}
+
 .notification-card {
-    background: #ffffff;
+    background: #1e1e1e;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: 16px;
     margin-bottom: 12px;
-    border: 1px solid #eaeaea;
+    border: 1px solid #333;
 }
 
 .notification-header {
@@ -102,7 +114,7 @@ body {
     margin: 0;
     font-size: 16px;
     font-weight: 600;
-    color: #333;
+    color: #f0f0f0;
 }
 
 .notification-time {
@@ -125,10 +137,11 @@ body {
     margin-right: 8px;
     width: 20px;
     text-align: center;
+    color: #aaa;
 }
 
 .detail-text {
-    color: #555;
+    color: #e0e0e0;
 }
 
 .notification-actions {
@@ -156,264 +169,395 @@ body {
 }
 
 .accept-btn {
-    background: #e3f7e8;
-    color: #2e7d32;
+    background: #2e7d32;
+    color: white;
 }
 
 .accept-btn:hover {
-    background: #d0f0d6;
+    background: #3e8e41;
 }
 
 .reject-btn {
-    background: #ffebee;
-    color: #c62828;
+    background: #c62828;
+    color: white;
 }
 
 .reject-btn:hover {
-    background: #ffddde;
+    background: #d32f2f;
 }
-    .content-row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-    .calendar-section, .favorites-section,.notifications-section {
-      flex: 1;
-      min-width: 0;
-      background-color: #fff;
-      border-radius: 12px;
-      padding: 12px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      box-sizing: border-box;
-    }
-    .popular-channels {
-      background-color: #fff;
-      border-radius: 12px;
-      padding: 12px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      margin-top: 10px;
-    }
-    .section-title {
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 10px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .popular-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .popular-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .calendar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  white-space: nowrap; /* Запрещаем перенос текста */
-  overflow: hidden; /* Скрываем текст, который не помещается */
+
+.notification-item {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    border: 1px solid #333;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.notification-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.notification-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.notification-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.notification-label {
+    font-weight: 500;
+    color: #aaa;
+    min-width: 120px;
+    font-size: 14px;
+}
+
+.notification-value {
+    color: #e0e0e0;
+    font-weight: 400;
+    flex: 1;
+    font-size: 14px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    justify-content: center;
+}
+
+.btn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.btn-accept {
+    background-color: #4CAF50;
+}
+
+.btn-accept:hover {
+    background-color: #3e8e41;
+}
+
+.btn-reject {
+    background-color: #f44336;
+}
+
+.btn-reject:hover {
+    background-color: #d32f2f;
+}
+
+.btn-cross {
+    background-color: #2196F3;
+}
+
+.btn-cross:hover {
+    background-color: #0b7dda;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #333;
+}
+
+.notification-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #f0f0f0;
+}
+
+.notification-status {
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.status-pending {
+    background-color: #333;
+    color: #ffc107;
+}
+
+.status-accepted {
+    background-color: #2d2d2d;
+    color: #4CAF50;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.new-notification {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.content-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.calendar-section, .favorites-section, .notifications-section {
+    flex: 1;
+    min-width: 0;
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    border: 1px solid #333;
+}
+
+.popular-channels {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+    border: 1px solid #333;
+}
+
+.section-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #f0f0f0;
+}
+
+.popular-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.popular-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #f0f0f0;
 }
 
 .calendar-header > div:first-child {
-  font-size: 3vw;
-  max-font-size: 14px;
-  letter-spacing: 1.5px; /* Добавляем немного пространства между днями */
+    font-size: 3vw;
+    max-font-size: 14px;
+    letter-spacing: 1.5px;
+    color: #f0f0f0;
 }
 
 .calendar-nav {
-  display: flex;
-  gap: 8px;
-  flex-shrink: 0; /* Запрещаем сжатие навигационных кнопок */
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
 }
-    .calendar-nav-button {
-      background: none;
-      border: none;
-      font-size: 15px;
-      padding: 0;
-    }
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
-      font-size: 12px;
-    }
-    .calendar-day-header {
-      text-align: center;
-      color: #707579;
-      padding: 2px 0;
-    }
-    .calendar-day {
-      background-color: #f9f9f9;
-      border-radius: 6px;
-      padding: 2px;
-      text-align: center;
-      aspect-ratio: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .calendar-day-number {
-      font-size: 12px;
-    }
-    .calendar-day-active {
-      background-color: #0088cc;
-      color: white;
-    }
-    .calendar-day-event {
-      width: 4px;
-      height: 4px;
-      background-color: #0088cc;
-      border-radius: 50%;
-      margin: 2px auto 0;
-    }
-    .calendar-day-active .calendar-day-event {
-      background-color: white;
-    }
-    .channel-item {
-      display: flex;
-      align-items: center;
-      padding: 8px;
-      background-color: #f9f9f9;
-      border-radius: 8px;
-    }
-    .channel-avatar {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background-color: #f0f0f0;
-      margin-right: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #707579;
-      font-weight: bold;
-      font-size: 11px;
-      flex-shrink: 0;
-    }
-    .channel-avatar-Profil {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: #f0f0f0;
-      margin-right: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #707579;
-      font-weight: bold;
-      font-size: 11px;
-      flex-shrink: 0;
-    }
-    .channel-name {
-      font-weight: 500;
-      font-size: 13px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: space-around;
-      background-color: #fff;
-      padding: 10px 0;
-      border-top: 1px solid #f0f0f0;
-    }
-    .nav-item {
-      font-size: 11px;
-      color: #707579;
-      text-align: center;
-    }
-    .nav-item.active {
-      color: #0088cc;
-    }
 
-    @media (max-width: 400px) {
-      .content-row {
+.calendar-nav-button {
+    background: none;
+    border: none;
+    font-size: 15px;
+    padding: 0;
+    color: #e0e0e0;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    font-size: 12px;
+}
+
+.calendar-day-header {
+    text-align: center;
+    color: #aaa;
+    padding: 2px 0;
+}
+
+.calendar-day {
+    background-color: #2d2d2d;
+    border-radius: 6px;
+    padding: 2px;
+    text-align: center;
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #e0e0e0;
+}
+
+.calendar-day-number {
+    font-size: 12px;
+}
+
+.calendar-day-active {
+    background-color: #007bff;
+    color: white;
+}
+
+.calendar-day-event {
+    width: 4px;
+    height: 4px;
+    background-color: #007bff;
+    border-radius: 50%;
+    margin: 2px auto 0;
+}
+
+.calendar-day-active .calendar-day-event {
+    background-color: white;
+}
+
+.channel-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    background-color: #2d2d2d;
+    border-radius: 8px;
+}
+
+.channel-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: #333;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-weight: bold;
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+.channel-avatar-Profil {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #333;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-weight: bold;
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+.channel-name {
+    font-weight: 500;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #e0e0e0;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    background-color: #1a1a1a;
+    padding: 10px 0;
+    border-top: 1px solid #333;
+    z-index: 1000;
+}
+
+.nav-item {
+    font-size: 11px;
+    color: #aaa;
+    text-align: center;
+}
+
+.nav-item.active {
+    color: #007bff;
+}
+
+@media (max-width: 400px) {
+    .content-row {
         flex-direction: column;
-      }
     }
+}
+
 .nav-item a {
-    color: inherit;         /* Наследует цвет текста от .nav-item */
-    text-decoration: none;  /* Убирает подчёркивание */
-    display: block;         /* Занимает всю ширину родителя */
-    width: 100%;           /* Растягивает на всю ширину */
-    height: 100%;          /* Растягивает на всю высоту */
-}
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    color: inherit;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    height: 100%;
 }
 
-.container {
-    width: 100%;
-    min-height: 100vh;
+.social-networks {
+    display: flex;
+    justify-content: space-around;
     padding: 15px;
+    width: 100%;
+}
+
+.social-network {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    background: #f5f5f7;
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 10px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    width: 30%;
 }
 
-.container {
-    width: 100%;
-    min-height: 100vh;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    background: #f5f5f7;
+.social-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 10%;
+    margin-bottom: 8px;
+    background-color: transparent; /* Прозрачный фон */
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+.social-name {
+    font-size: 12px;
+    text-align: center;
+    color: #aaa;
 }
 
-.app-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #1d1d1f;
-}
-
+/* Дополнительные стили для календаря */
 .calendar-section {
     width: 100%;
-    background: white;
+    background: #1e1e1e;
     border-radius: 12px;
     padding: 15px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #333;
 }
 
 .calendar-header {
@@ -426,7 +570,7 @@ body {
 .month-year {
     font-size: 16px;
     font-weight: 500;
-    color: #1d1d1f;
+    color: #f0f0f0;
 }
 
 .nav-buttons {
@@ -439,9 +583,10 @@ body {
     height: 32px;
     border: none;
     border-radius: 50%;
-    background: #f5f5f7;
+    background: #2d2d2d;
     cursor: pointer;
     transition: background 0.2s;
+    color: #e0e0e0;
 }
 
 .calendar-grid {
@@ -455,7 +600,7 @@ body {
     text-align: center;
     padding: 8px 0;
     font-size: 12px;
-    color: #86868b;
+    color: #aaa;
     text-transform: uppercase;
 }
 
@@ -465,12 +610,13 @@ body {
     justify-content: center;
     font-size: 14px;
     font-weight: 300;
-    background: #fff;
-    border: 1px solid #f0f0f0;
+    background: #2d2d2d;
+    border: 1px solid #333;
     border-radius: 8px;
     min-height: 40px;
     cursor: pointer;
     transition: all 0.2s;
+    color: #e0e0e0;
 }
 
 .current-day {
@@ -480,16 +626,17 @@ body {
 }
 
 .other-month {
-    color: #86868b;
-    background: #fbfbfd;
+    color: #888;
+    background: #252525;
 }
 
 .popular-channels {
     margin-top: 20px;
-    background: white;
+    background: #1e1e1e;
     border-radius: 12px;
     padding: 15px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #333;
 }
 
 .popular-grid {
@@ -503,31 +650,34 @@ body {
     align-items: center;
     gap: 10px;
     padding: 10px;
+    background-color: #2d2d2d;
+    border-radius: 8px;
 }
 
 .channel-avatar {
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: #f5f5f7;
+    background: #333;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #aaa;
 }
 
 .bottom-nav {
     position: sticky;
     bottom: 0;
-    background: white;
+    background: #1a1a1a;
     padding: 10px;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid #333;
     display: flex;
     justify-content: space-around;
 }
 
 .nav-item a {
     text-decoration: none;
-    color: #1d1d1f;
+    color: #aaa;
 }
 
 @media (max-width: 480px) {
@@ -546,3 +696,57 @@ body {
         height: 28px;
     }
 }
+/* Исправление для прижатия футера к низу */
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex: 1 0 auto;
+}
+
+.bottom-nav {
+    flex-shrink: 0;
+}
+/* Убираем синий цвет для посещенных ссылок в навигации */
+.bottom-nav .nav-item a:visited {
+    color: inherit !important;
+}
+
+
+.bottom-nav .nav-item {
+    font-size: 11px;
+    text-align: center;
+    color: #aaa; /* Серый цвет для всех вкладок */
+}
+
+.bottom-nav .nav-item a {
+    color: #aaa !important; /* Серый цвет для текста ссылок */
+    text-decoration: none; /* Убираем подчеркивание */
+    -webkit-tap-highlight-color: transparent; /* Убираем подсветку при тапе */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.bottom-nav .nav-item.active {
+    color: #aaa !important; /* Синий только для активной вкладки */
+}
+
+.bottom-nav .nav-item.active a {
+    color: #aaa !important; /* Синий для текста активной ссылки */
+}
+
+/* Убираем все изменения цвета при различных состояниях */
+.bottom-nav .nav-item a:link,
+.bottom-nav .nav-item a:visited,
+.bottom-nav .nav-item a:hover,
+.bottom-nav .nav-item a:active {
+    color: #aaa !important; /* Всегда серый для неактивных */
+}
+

@@ -2,25 +2,27 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5;
-    color: #000;
+    background-color: #121212;
+    color: #e0e0e0;
     touch-action: pan-y;
     -webkit-text-size-adjust: none;
     text-size-adjust: none;
 }
+
 .ad-price-container {
-    background-color: #fff;
+    background-color: #1e1e1e;
     border-radius: 12px;
     padding: 15px;
     margin-top: 15px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #333;
 }
 
 .price-item {
     display: flex;
     justify-content: space-between;
     padding: 10px 0;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid #333;
 }
 
 .price-item:last-child {
@@ -29,18 +31,19 @@ body {
 
 .price-label {
     font-size: 14px;
-    color: #666;
+    color: #aaa;
 }
 
 .price-value {
     font-size: 14px;
     font-weight: 600;
+    color: #e0e0e0;
 }
 
 .total-price {
     font-size: 18px;
     font-weight: bold;
-    color: #0088cc;
+    color: #007bff;
     margin-top: 10px;
     text-align: right;
 }
@@ -48,7 +51,7 @@ body {
 .purchase-button {
     width: 100%;
     padding: 12px;
-    background-color: #0088cc;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -68,15 +71,18 @@ body {
     flex: 1;
     text-align: center;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #333;
     border-radius: 8px;
     cursor: pointer;
+    background-color: #2d2d2d;
+    color: #e0e0e0;
 }
 
 .duration-option.active {
-    border-color: #0088cc;
-    background-color: #f0f8ff;
+    border-color: #007bff;
+    background-color: #004085;
 }
+
 .container {
     max-width: 100%;
     padding: 16px;
@@ -84,38 +90,51 @@ body {
     flex-direction: column;
     box-sizing: border-box;
     padding-bottom: 70px;
+    background-color: #121212;
 }
+
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    background-color: #1a1a1a;
+    padding: 10px;
+    border-radius: 12px;
 }
+
 .app-title {
     font-size: 18px;
     font-weight: 600;
+    color: #f0f0f0;
 }
+
 .content-row {
     display: flex;
     gap: 10px;
     margin-bottom: 16px;
 }
+
 .calendar-section, .favorites-section {
     flex: 1;
     min-width: 0;
-    background-color: #fff;
+    background-color: #1e1e1e;
     border-radius: 12px;
     padding: 12px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
+    border: 1px solid #333;
 }
+
 .popular-channels {
-    background-color: #fff;
+    background-color: #1e1e1e;
     border-radius: 12px;
     padding: 12px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     margin-top: 10px;
+    border: 1px solid #333;
 }
+
 .section-title {
     font-size: 15px;
     font-weight: 600;
@@ -123,7 +142,9 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: #f0f0f0;
 }
+
 .section-title-2 {
     font-size: 15px;
     font-weight: 600;
@@ -131,56 +152,67 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: #f0f0f0;
 }
+
 .popular-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
+
 .popular-group {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
+
 .calendar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
-    white-space: nowrap; /* Запрещаем перенос текста */
-    overflow: hidden; /* Скрываем текст, который не помещается */
+    white-space: nowrap;
+    overflow: hidden;
+    color: #f0f0f0;
 }
 
 .calendar-header > div:first-child {
     font-size: 3vw;
     max-font-size: 14px;
-    letter-spacing: 1.5px; /* Добавляем немного пространства между днями */
+    letter-spacing: 1.5px;
+    color: #f0f0f0;
 }
 
 .calendar-nav {
     display: flex;
     gap: 8px;
-    flex-shrink: 0; /* Запрещаем сжатие навигационных кнопок */
+    flex-shrink: 0;
 }
+
 .calendar-nav-button {
     background: none;
     border: none;
     font-size: 15px;
     padding: 0;
+    color: #e0e0e0;
 }
+
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 4px;
     font-size: 12px;
 }
+
 .calendar-day-header {
     text-align: center;
-    color: #707579;
+    color: #aaa;
     padding: 2px 0;
 }
+
 .calendar-day {
-    background-color: #f9f9f9;
+    background-color: #2d2d2d;
     border-radius: 6px;
     padding: 2px;
     text-align: center;
@@ -188,66 +220,77 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    color: #e0e0e0;
 }
+
 .calendar-day-number {
     font-size: 12px;
 }
+
 .calendar-day-active {
-    background-color: #0088cc;
+    background-color: #007bff;
     color: white;
 }
+
 .calendar-day-event {
     width: 4px;
     height: 4px;
-    background-color: #0088cc;
+    background-color: #007bff;
     border-radius: 50%;
     margin: 2px auto 0;
 }
+
 .calendar-day-active .calendar-day-event {
     background-color: white;
 }
+
 .channel-item {
     display: flex;
     align-items: center;
     padding: 8px;
-    background-color: #f9f9f9;
+    background-color: #2d2d2d;
     border-radius: 8px;
 }
+
 .channel-avatar {
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    background-color: #f0f0f0;
+    background-color: #333;
     margin-right: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #707579;
+    color: #aaa;
     font-weight: bold;
     font-size: 11px;
     flex-shrink: 0;
 }
+
 .channel-avatar-Profil {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: #f0f0f0;
+    background-color: #333;
     margin-right: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #707579;
+    color: #aaa;
     font-weight: bold;
     font-size: 11px;
     flex-shrink: 0;
 }
+
 .channel-name {
     font-weight: 500;
     font-size: 13px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: #e0e0e0;
 }
+
 .bottom-nav {
     position: fixed;
     bottom: 0;
@@ -255,17 +298,20 @@ body {
     right: 0;
     display: flex;
     justify-content: space-around;
-    background-color: #fff;
+    background-color: #1a1a1a;
     padding: 10px 0;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid #333;
+    z-index: 1000;
 }
+
 .nav-item {
     font-size: 11px;
-    color: #707579;
+    color: #aaa;
     text-align: center;
 }
+
 .nav-item.active {
-    color: #0088cc;
+    color: #007bff;
 }
 
 @media (max-width: 400px) {
@@ -273,19 +319,21 @@ body {
         flex-direction: column;
     }
 }
+
 .nav-item a {
-    color: inherit;         /* Наследует цвет текста от .nav-item */
-    text-decoration: none;  /* Убирает подчёркивание */
-    display: block;         /* Занимает всю ширину родителя */
-    width: 100%;           /* Растягивает на всю ширину */
-    height: 100%;          /* Растягивает на всю высоту */
+    color: inherit;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    height: 100%;
 }
-/* Стили для блока информации о канале */
+
 .channel-info-section {
     padding: 15px;
-    background-color: #f8f8f8;
+    background-color: #1e1e1e;
     border-radius: 10px;
     margin-bottom: 20px;
+    border: 1px solid #333;
 }
 
 .channel-info-container {
@@ -293,7 +341,6 @@ body {
     align-items: center;
     gap: 15px;
 }
-
 
 .channel-details {
     display: flex;
@@ -304,19 +351,21 @@ body {
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 5px;
+    color: #f0f0f0;
 }
 
 .channel-subscribers {
     font-size: 14px;
-    color: #666;
+    color: #aaa;
 }
-/* Стили для блока описания канала */
+
 .channel-description-section {
     padding: 15px;
-    background-color: #ffffff;
+    background-color: #1e1e1e;
     border-radius: 12px;
     margin-bottom: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #333;
 }
 
 .channel-info-block {
@@ -342,25 +391,27 @@ body {
 .channel-meta {
     flex: 1;
 }
+
 .channel-avatar {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: #f0f0f0;
+    background-color: #333;
     margin-right: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #707579;
+    color: #aaa;
     font-weight: bold;
     font-size: 11px;
     flex-shrink: 0;
 }
+
 .channel-name-main {
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 8px;
-    color: #333;
+    color: #f0f0f0;
 }
 
 .channel-stats {
@@ -368,23 +419,24 @@ body {
     gap: 15px;
     margin-bottom: 12px;
     font-size: 14px;
-    color: #666;
+    color: #aaa;
 }
 
 .channel-description {
     font-size: 15px;
     line-height: 1.4;
-    color: #444;
+    color: #e0e0e0;
     padding: 10px;
-    background-color: #f8f8f8;
+    background-color: #2d2d2d;
     border-radius: 8px;
 }
-/* Стили для формы расчета */
+
 .ad-calculation-form {
     margin-top: 20px;
     padding: 15px;
-    background-color: #f8f8f8;
+    background-color: #1e1e1e;
     border-radius: 10px;
+    border: 1px solid #333;
 }
 
 .form-group {
@@ -395,15 +447,17 @@ body {
     display: block;
     margin-bottom: 5px;
     font-weight: 500;
-    color: #333;
+    color: #f0f0f0;
 }
 
 .form-control {
     width: 80%;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #333;
     border-radius: 5px;
     font-size: 14px;
+    background-color: #2d2d2d;
+    color: #e0e0e0;
 }
 
 .radio-group {
@@ -416,6 +470,7 @@ body {
     display: flex;
     align-items: center;
     gap: 5px;
+    color: #e0e0e0;
 }
 
 .calculate-btn {
@@ -435,96 +490,51 @@ body {
     background-color: #3a6698;
 }
 
-/* Для элементов выбора даты и времени */
 input[type="date"], input[type="time"] {
     height: 40px;
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+    border: 1px solid #333;
 }
 
 select {
     height: 40px;
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+    border: 1px solid #333;
 }
+
 .favorite-star {
     position: absolute;
     top: 20px;
     right: 20px;
     cursor: pointer;
     font-size: 24px;
-    color: #ccc;
+    color: #555;
 }
 
 .favorite-star .fas,
 .favorite-star .active {
-    color: #ffc107; /* желтый цвет для активной звезды */
+    color: #ffc107;
 }
 
 .channel-info-container {
     position: relative;
 }
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-
-.container {
-    width: 100%;
-    min-height: 100vh;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    background: #f5f5f7;
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.container {
-    width: 100%;
-    min-height: 100vh;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    background: #f5f5f7;
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
 
 .app-title {
     font-size: 18px;
     font-weight: 600;
-    color: #1d1d1f;
+    color: #f0f0f0;
 }
 
 .calendar-section {
     width: 100%;
-    background: white;
+    background: #1e1e1e;
     border-radius: 12px;
     padding: 15px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #333;
 }
 
 .calendar-header {
@@ -537,7 +547,7 @@ select {
 .month-year {
     font-size: 16px;
     font-weight: 500;
-    color: #1d1d1f;
+    color: #f0f0f0;
 }
 
 .nav-buttons {
@@ -550,9 +560,10 @@ select {
     height: 32px;
     border: none;
     border-radius: 50%;
-    background: #f5f5f7;
+    background: #2d2d2d;
     cursor: pointer;
     transition: background 0.2s;
+    color: #e0e0e0;
 }
 
 .calendar-grid {
@@ -566,7 +577,7 @@ select {
     text-align: center;
     padding: 8px 0;
     font-size: 12px;
-    color: #86868b;
+    color: #aaa;
     text-transform: uppercase;
 }
 
@@ -576,12 +587,13 @@ select {
     justify-content: center;
     font-size: 14px;
     font-weight: 300;
-    background: #fff;
-    border: 1px solid #f0f0f0;
+    background: #2d2d2d;
+    border: 1px solid #333;
     border-radius: 8px;
     min-height: 40px;
     cursor: pointer;
     transition: all 0.2s;
+    color: #e0e0e0;
 }
 
 .current-day {
@@ -591,16 +603,17 @@ select {
 }
 
 .other-month {
-    color: #86868b;
-    background: #fbfbfd;
+    color: #888;
+    background: #252525;
 }
 
 .popular-channels {
     margin-top: 20px;
-    background: white;
+    background: #1e1e1e;
     border-radius: 12px;
     padding: 15px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #333;
 }
 
 .popular-grid {
@@ -614,31 +627,34 @@ select {
     align-items: center;
     gap: 10px;
     padding: 10px;
+    background-color: #2d2d2d;
+    border-radius: 8px;
 }
 
 .channel-avatar {
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: #f5f5f7;
+    background: #333;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #aaa;
 }
 
 .bottom-nav {
     position: sticky;
     bottom: 0;
-    background: white;
+    background: #1a1a1a;
     padding: 10px;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid #333;
     display: flex;
     justify-content: space-around;
 }
 
 .nav-item a {
     text-decoration: none;
-    color: #1d1d1f;
+    color: #aaa;
 }
 
 @media (max-width: 480px) {
@@ -657,3 +673,294 @@ select {
         height: 28px;
     }
 }
+
+.offer-form {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    display: block;
+    font-size: 14px;
+    color: #f0f0f0;
+    margin-bottom: 5px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+}
+
+.form-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    font-size: 14px;
+    min-height: 100px;
+    resize: vertical;
+    box-sizing: border-box;
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.delete-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.price-input-container {
+    position: relative;
+}
+
+.price-input-container::after {
+    position: absolute;
+    right: 10px;
+    top: 35px;
+    color: #aaa;
+}
+/* Исправление для прижатия футера к низу */
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex: 1 0 auto;
+}
+
+.bottom-nav {
+    flex-shrink: 0;
+    position: relative; /* Изменяем fixed на relative */
+}
+/* Убираем синий цвет для посещенных ссылок в навигации */
+.bottom-nav .nav-item a:visited {
+    color: inherit !important;
+}
+
+
+.bottom-nav .nav-item {
+    font-size: 11px;
+    text-align: center;
+    color: #aaa; /* Серый цвет для всех вкладок */
+}
+
+.bottom-nav .nav-item a {
+    color: #aaa !important; /* Серый цвет для текста ссылок */
+    text-decoration: none; /* Убираем подчеркивание */
+    -webkit-tap-highlight-color: transparent; /* Убираем подсветку при тапе */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.bottom-nav .nav-item.active {
+    color: #aaa !important; /* Синий только для активной вкладки */
+}
+
+.bottom-nav .nav-item.active a {
+    color: #aaa !important; /* Синий для текста активной ссылки */
+}
+
+/* Убираем все изменения цвета при различных состояниях */
+.bottom-nav .nav-item a:link,
+.bottom-nav .nav-item a:visited,
+.bottom-nav .nav-item a:hover,
+.bottom-nav .nav-item a:active {
+    color: #aaa !important; /* Всегда серый для неактивных */
+}
+/* Реферальная программа */
+.referral-program {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 20px;
+    border: 1px solid #333;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.referral-icon {
+    color: #ff6b6b;
+    margin-right: 10px;
+}
+
+.referral-summary {
+    display: flex;
+    justify-content: space-around;
+    margin: 15px 0;
+    gap: 10px;
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #2d2d2d;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    flex: 1;
+    min-width: 120px;
+}
+
+.summary-item i {
+    font-size: 20px;
+    color: #4da6ff;
+    margin-bottom: 5px;
+}
+
+.referral-link-container {
+    display: flex;
+    gap: 10px;
+}
+
+.referral-link-input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.copy-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    width: 45px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+}
+
+.copy-btn:hover {
+    background-color: #0069d9;
+}
+
+
+
+.referral-details {
+    margin-top: 15px;
+    color: #aaa;
+    font-size: 14px;
+    line-height: 1.5;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; max-height: 0; }
+    to { opacity: 1; max-height: 1000px; }
+}
+
+.referral-list {
+    padding-left: 20px;
+    margin: 15px 0;
+}
+
+.referral-list li {
+    margin-bottom: 8px;
+    position: relative;
+}
+
+.referral-list li:before {
+    content: "•";
+    color: #4da6ff;
+    position: absolute;
+    left: -15px;
+}
+
+.referral-stats {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.stat-card {
+    flex: 1;
+    background: #252525;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #333;
+}
+
+.stat-value {
+    font-weight: bold;
+    font-size: 16px;
+    color: #4da6ff;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #888;
+}
+.referral-info-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 12px; /* Аналогично кнопке копирования */
+    height: 40px; /* Такая же высота */
+    background-color: #2d2d2d;
+    border: 1px solid #4da6ff;
+    color: #4da6ff;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%; /* Такая же ширина как у контейнера */
+    box-sizing: border-box;
+    margin-top: 10px;
+}
+.referral-info-btn:hover {
+    background-color: rgba(77, 166, 255, 0.1);
+}
+
+
+

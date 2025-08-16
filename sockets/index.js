@@ -2,7 +2,6 @@ const { pool } = require('../config/db');
 
 function setupSocket(io) {
     io.on('connection', (socket) => {
-        console.log('New client connected');
 
         socket.on('get_channels', async (userId) => {
             try {
@@ -17,51 +16,41 @@ function setupSocket(io) {
                 console.error('Error fetching channels:', err);
             }
         });
+        
 
         socket.on('get_favourites', async (userId) => {
             try {
-                console.log("Fetching favourites for user:", userId);
                 const result = await pool.query(`
                     SELECT ac.*
                     FROM all_channels ac
                     JOIN favourites f ON ac.id = f.channel_id
                     WHERE f.user_id = $1
                 `, [userId]);
-                console.log("Favourites found:", result.rows);
                 socket.emit('favourites_list', result.rows);
             } catch (err) {
-                console.error('Error fetching favourite channels:', err);
                 socket.emit('error', { message: 'Failed to fetch favourite channels' });
             }
         });
-        socket.on('get_notification', async (userId) => {
-            try {
-                console.log("Fetching notifications for user:", userId);
-                const result = await pool.query(`
-                    SELECT
-                        advertisements.date_of_advertisement,
-                        advertisements.price,
-                        advertisements.channel_id,
-                        advertisements.duration,
-                        notifications.comment,
-                        notifications.id AS notification_id,
-                        all_channels.name AS channel_name,
-                        notifications.id,
-                        notifications.user_id_from,
-                        notifications.id_categorie
-                    FROM notifications
-                             JOIN advertisements ON notifications.advertisement_id = advertisements.id
-                             JOIN all_channels ON advertisements.channel_id = all_channels.id
-                    WHERE notifications.user_id_to = $1;
 
-                `, [userId]);
-                console.log("Notifications found:", result.rows);
-                socket.emit('notification_list', result.rows);
+        socket.on('get_feedbacks', async (channelId) => {
+            try {
+                const result = await pool.query(`
+                    SELECT f.feedback,
+                           u.id AS user_id,
+                           u.username,
+                           u.first_name
+                    FROM feedback f
+                             JOIN users u ON f.user_id = u.id
+                    WHERE f.channel_id = $1;
+                `, [channelId]);
+                socket.emit('feedbacks-list', result.rows);
             } catch (err) {
-                console.error('Error fetching notifications:', err);
-                socket.emit('error', { message: 'Failed to fetch notifications' });
+                console.error('Error fetching channels:', err);
             }
+
         });
+
+
         socket.on('get_channel_info', async (channelId) => {
             try {
                 console.log("Fetching notifications for user:", channelId);
@@ -78,59 +67,51 @@ function setupSocket(io) {
             }
         });
 
-        socket.on('reject_notification', async ({ userId, notificationId }) => {
+        socket.on('get_advertisements', async (day, channelId) => {
             try {
-                await pool.query('DELETE FROM notifications WHERE id = $1', [notificationId]);
-                console.log(`Notification ${notificationId} rejected by user ${userId}`);
-            } catch (err) {
-                console.error('Error rejecting notification:', err);
-                socket.emit('error', { message: 'Failed to reject notification.' });
-            }
-        });
-        socket.on('accept_notification', async ({ userId, notificationId }) => {
-            try {
-                // Получаем уведомление
-                const notificationResult = await pool.query(`
-                    SELECT * FROM notifications WHERE id = $1;
-                `, [notificationId]);
-
-                if (notificationResult.rowCount === 0) {
-                    socket.emit('error', { message: 'Notification not found.' });
-                    return;
-                }
-                const notification = notificationResult.rows[0];
-
-                if (Number(notification.user_id_to) !== Number(userId)) {
-                    socket.emit('error', { message: 'Not authorized to accept this notification.' });
-                    return;
-                }
-
-                await pool.query(
-                    'INSERT INTO notifications (advertisement_id, user_id_to, user_id_from, id_categorie, comment) VALUES ($1, $2, $3, $4, $5)',
-                    [
-                        notification.advertisement_id,
-                        notification.user_id_from,
-                        notification.user_id_to,
-                        2, // Категория для принятых уведомлений
-                        'Ваше предложение было принято'
-                    ]
+                const result = await pool.query(
+                    `SELECT date_of_advertisement, price, duration, channel_id,id
+                     FROM advertisements
+                     WHERE date_of_advertisement = $1 AND channel_id = $2`,
+                    [day.trim(), Number(channelId)]
                 );
 
-                await pool.query(
-                    'UPDATE notifications SET id_categorie = $1 WHERE id = $2 AND user_id_to = $3',
-                    [2, notificationId, Number(userId)]
-                );
-
-                socket.emit('notification_accepted', {
-                    success: true,
-                    notificationId: notificationId
-                });
-
+                socket.emit('advertisements_list', result.rows);
             } catch (err) {
-                console.error('Error accepting notification:', err);
-                socket.emit('error', { message: 'Failed to accept notification.' });
+                console.error('Error fetching advertisements:', err);
+                socket.emit('error', { message: 'Failed to fetch advertisements' });
             }
         });
+        socket.on('get_advertisements_payment', async (day, channelId) => {
+            try {
+                const result = await pool.query(
+                    'SELECT ' +
+                    '  all_channels.name, ' +
+                    '  all_channels.subscribers, ' +
+                    '  all_channels.channel_url, ' +
+                    '  all_channels.photo_url, ' +
+                    '  advertisements.price, ' +
+                    '  advertisements.date_of_advertisement, ' +
+                    '  advertisements.duration, ' +
+                    '  advertisements.id ' +
+                    'FROM all_channels ' +
+                    'INNER JOIN advertisements ' +
+                    '  ON all_channels.id = advertisements.channel_id ' +
+                    'WHERE ' +
+                    '  all_channels.id = $1 ' +
+                    '  AND advertisements.date_of_advertisement = $2;',
+                    [channelId, day]
+                );
+
+
+
+                socket.emit('payments_list', result.rows);
+            } catch (err) {
+                console.error('Error fetching payments:', err);
+                socket.emit('error', { message: 'Failed to fetch advertisements' });
+            }
+        });
+
 
 
 

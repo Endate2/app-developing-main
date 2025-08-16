@@ -1,116 +1,304 @@
 const { Telegraf } = require('telegraf');
 const { pool } = require('../config/db');
-const { io } = require('../server');
 
-const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
+module.exports = (io) => {
+    const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 
-bot.on('my_chat_member', async (ctx) => {
-    const chatMember = ctx.update.my_chat_member;
-    const chat = chatMember.chat;
-    const userId = ctx.from.id;
-    const newStatus = chatMember.new_chat_member.status;
-    const oldStatus = chatMember.old_chat_member.status;
+    bot.command('offer', async (ctx) => {
+        await ctx.reply(
+            'Публичная оферта: <a href="https://teletype.in/@spb_port/jmUQh4Xj9SM">Просмотреть оферту</a>',
+            { parse_mode: 'HTML' }
+        );
+    });
 
-    if (newStatus === 'administrator') {
-        try {
-            const chatInfo = await ctx.telegram.getChat(chat.id);
+    bot.command('contacts', async (ctx) => {
+        await ctx.reply(
+            '<b>ИНН:</b> 781431936886\n' +
+            '<b>Поддержка в телеграмм:</b> @spb_port\n' +
+            '<b>Контактный e-mail:</b> anton.chimirev@gmail.com',
+            { parse_mode: 'HTML' }
+        );
+    });
+    bot.command('price', async (ctx) => {
+        await ctx.reply(
+            'Сервис берет 15% от суммы вашей сделки. Пример:\n\n' +
+            'Пользователь выставил рекламный пост по цене 2000 рублей на 30 часов.\n' +
+            'После оплаты деньги поступают на промежуточный счёт.\n' +
+            'Покупатель получит 1700 рублей через 24 часа (в течение этого времени он может отменить сделку, если были нарушены её условия),\n' +
+            'а 300 рублей остаются сервису в виде комиссии.'
+        );
+    });
 
-            let photoUrl = null;
-            if (chatInfo.photo) {
-                const photoFileId = chatInfo.photo.big_file_id;
-                const photoFile = await ctx.telegram.getFile(photoFileId);
-                photoUrl = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${photoFile.file_path}`;
-            }
 
-            let subscribersCount = 0;
-            try {
-                subscribersCount = await ctx.telegram.getChatMembersCount(chat.id);
-                console.log(`Количество подписчиков для ${chat.title}: ${subscribersCount}`);
-            } catch (err) {
-                console.error('Ошибка при получении количества подписчиков:', err);
-                await ctx.telegram.sendMessage(
-                    userId,
-                    `Не удалось получить количество подписчиков для канала ${chat.title}. Убедитесь, что я имею права администратора.`
-                );
-            }
+    bot.command('start', async (ctx) => {
+        const userId = ctx.from.id;
 
-            const userResult = await pool.query(
-                'SELECT id FROM users WHERE id = $1',
-                [userId]
-            );
+        const messageText = ctx.message.text || '';
+        const parts = messageText.split(' ');
 
-            if (userResult.rows.length === 0) {
-                await pool.query(
-                    'INSERT INTO users (id, username, first_name, last_name) VALUES ($1, $2, $3, $4)',
-                    [userId, ctx.from.username, ctx.from.first_name, ctx.from.last_name]
-                );
-            }
+        const referralCode = parts.length > 1 ? parts[1] : null;
+        await pool.query(
+            'INSERT INTO users (id, username, first_name) VALUES ($1, $2, $3) ON CONFLICT (id) DO NOTHING',
+            [userId, ctx.from.username, ctx.from.first_name]
+        );
 
-            const channelResult = await pool.query(
-                'SELECT id FROM all_channels WHERE id = $1',
-                [chat.id]
-            );
-
-            if (channelResult.rows.length === 0) {
-                await pool.query(
-                    'INSERT INTO all_channels (id, name, subscribers, photo_url) VALUES ($1, $2, $3, $4)',
-                    [chat.id, chat.title, subscribersCount, photoUrl]
-                );
-            } else {
-                await pool.query(
-                    'UPDATE all_channels SET name = $1, subscribers = $2, photo_url = $3 WHERE id = $4',
-                    [chat.title, subscribersCount, photoUrl, chat.id]
-                );
-            }
-
+        if (referralCode) {
             await pool.query(
-                'INSERT INTO user_channels (user_id, channel_id) VALUES ($1, $2) ON CONFLICT (user_id, channel_id) DO NOTHING',
-                [userId, chat.id]
+                `INSERT INTO referal (user_id, is_referred) VALUES ($1, $2)
+                    ON CONFLICT (user_id) DO NOTHING`,
+                [userId, true]
             );
 
-            const message = `Бот добавлен в канал: ${chat.title} (Подписчики: ${subscribersCount})`;
-            console.log(message);
 
-            io.emit('channel_added', {
-                name: chat.title,
-                id: chat.id,
-                subscribers: subscribersCount,
-                user_id: userId
+            const chatInfo = await bot.telegram.getChat(referralCode);
+            const channelUsername = chatInfo.username;
+
+            await ctx.reply(`Вы воспользовались ссылкой на канал ${channelUsername}, нажмите кнопку ниже, чтобы перейти в него.`, {
+                reply_markup: {
+                    inline_keyboard: [
+                        [{
+                            text: `Открыть канал`,
+                            web_app: { url : `https://endate2-app-developing-fcbd.twc1.net?channel_id=${referralCode}`}
+                        }]
+                    ]
+                }
             });
-
-        } catch (err) {
-            console.error('Error saving channel to DB:', err);
+        } else {
+            await ctx.reply('Добро пожаловать! Нажмите кнопку ниже, чтобы открыть приложение.', {
+                reply_markup: {
+                    inline_keyboard: [
+                        [{
+                            text: 'Открыть приложение',
+                            web_app: { url: 'https://endate2-app-developing-fcbd.twc1.net' }
+                        }]
+                    ]
+                }
+            });
         }
-    }else if (oldStatus === 'administrator' && newStatus !== 'administrator') {
+    });
+
+    bot.on('callback_query', async (ctx) => {
         try {
-            await pool.query(
-                'DELETE FROM user_channels WHERE user_id = $1 AND channel_id = $2',
-                [userId, chat.id]
-            );
-
-            const otherUsers = await pool.query(
-                'SELECT 1 FROM user_channels WHERE channel_id = $1',
-                [chat.id]
-            );
-
-            if (otherUsers.rows.length === 0) {
-                await pool.query(
-                    'DELETE FROM all_channels WHERE id = $1',
-                    [chat.id]
-                );
+            const data = ctx.callbackQuery.data;
+            const [action, advertisementID, userIdFrom, userIdTo] = data.split('_');
+            const response = await fetch(`https://endate2-app-developing-fcbd.twc1.net/api/get_advertisement?id=${advertisementID}`);
+            if (!response.ok) throw new Error('Ошибка получения объявления');
+            const result = await response.json();
+            if (!result) {
+                throw new Error('Объявление не найдено');
             }
-            
-            io.emit('channel_removed', {
-                id: chat.id,
-                user_id: userId
+            const date = result.date_of_advertisement ? new Date(result.date_of_advertisement) : null;
+            try {
+                if (action === 'accept') {
+                    const user = await bot.telegram.getChat(userIdFrom);
+                    const userName = user.username
+                    await createMessageAndSend(
+                        userIdTo,
+                        userIdFrom,
+                        date,
+                        result.price,
+                        result.channel_id
+                    );
+                    await ctx.editMessageText(`Свыжитесь с пользователем: @${userName} и обсудите пост. 
+                    После этого нажмите кнопку, покупатель получит ссылку на оплату и при успехе вам придет уведомление. `, {
+                        reply_markup: {
+                            inline_keyboard: []
+                        }
+
+                    });
+
+                }
+
+                else if (action === 'reject') {
+                    await ctx.deleteMessage();
+                }
+
+                else {
+                    await ctx.answerCbQuery('Неизвестное действие');
+                }
+            }catch (e) {
+                await ctx.answerCbQuery('Неизвестное действие');
+            }
+
+        } catch (error) {
+            await ctx.deleteMessage();
+            await ctx.answerCbQuery('Предложение было удалено в личном кабинете канала');
+        }
+    });
+
+    bot.on('my_chat_member', async (ctx) => {
+        try {
+            const chatMember = ctx.update.my_chat_member;
+            const chat = chatMember.chat;
+            const userId = ctx.from.id;
+            const newStatus = chatMember.new_chat_member.status;
+            const oldStatus = chatMember.old_chat_member.status;
+
+            if (newStatus === 'administrator') {
+                try {
+                    let channelUrl = null;
+                    if (chat.username) {
+                        channelUrl = `https://t.me/${chat.username}`;
+                    }
+
+                    let chatInfo;
+                    try {
+                        chatInfo = await ctx.telegram.getChat(chat.id);
+                    } catch (error) {
+                        console.error(`Ошибка при получении информации о чате ${chat.id}:`, error.message);
+                        // Логируем дополнительную информацию
+                        console.error('Детали ошибки:', {
+                            chatId: chat.id,
+                            chatTitle: chat.title,
+                            userId: userId,
+                            errorCode: error.response?.error_code,
+                            errorDescription: error.response?.description
+                        });
+                        return; // Прерываем выполнение, так как без информации о чате продолжать нельзя
+                    }
+
+                    let description = null;
+                    if (chatInfo.description) {
+                        description = chatInfo.description;
+                    }
+
+                    let photoUrl = null;
+                    if (chatInfo.photo) {
+                        try {
+                            const photoFileId = chatInfo.photo.big_file_id;
+                            const photoFile = await ctx.telegram.getFile(photoFileId);
+                            photoUrl = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${photoFile.file_path}`;
+                        } catch (error) {
+                            console.error('Ошибка при получении фото канала:', error.message);
+                        }
+                    }
+
+                    let subscribersCount = 0;
+                    try {
+                        subscribersCount = await ctx.telegram.getChatMembersCount(chat.id);
+                        console.log(`Количество подписчиков для ${chat.title}: ${subscribersCount}`);
+                    } catch (err) {
+                        console.error('Ошибка при получении количества подписчиков:', {
+                            error: err.message,
+                            chatId: chat.id,
+                            chatTitle: chat.title
+                        });
+                        await ctx.telegram.sendMessage(
+                            userId,
+                            `Не удалось получить количество подписчиков для канала ${chat.title}. Убедитесь, что я имею права администратора.`
+                        );
+                    }
+
+                    // Остальной код остается без изменений
+                    const channelResult = await pool.query(
+                        'SELECT id FROM all_channels WHERE id = $1',
+                        [chat.id]
+                    );
+
+                    if (channelResult.rows.length === 0) {
+                        await pool.query(
+                            'INSERT INTO all_channels (id, name, subscribers, photo_url, channel_url,description) VALUES ($1, $2, $3, $4,$5,$6)',
+                            [chat.id, chat.title.trim().toLowerCase(), subscribersCount, photoUrl, channelUrl, description]
+                        );
+                    } else {
+                        await pool.query(
+                            'UPDATE all_channels SET name = $1, subscribers = $2, photo_url = $3 WHERE id = $4',
+                            [chat.title, subscribersCount, photoUrl, chat.id]
+                        );
+                    }
+
+                    await pool.query(
+                        'INSERT INTO user_channels (user_id, channel_id) VALUES ($1, $2) ON CONFLICT (user_id, channel_id) DO NOTHING',
+                        [userId, chat.id]
+                    );
+
+                    const message = `Бот добавлен в канал: ${chat.title} (Подписчики: ${subscribersCount})`;
+                    console.log(message);
+
+                    io.emit('channel_added', {
+                        name: chat.title,
+                        id: chat.id,
+                        subscribers: subscribersCount,
+                        user_id: userId
+                    });
+
+                } catch (err) {
+                    console.error('Error saving channel to DB:', {
+                        error: err.message,
+                        stack: err.stack,
+                        chatId: chat?.id,
+                        chatTitle: chat?.title,
+                        userId: userId
+                    });
+                }
+            } else if (oldStatus === 'administrator' && newStatus !== 'administrator') {
+                try {
+                    console.log(`Бот удален из каналаропопололо: ${chat.title}`);
+                    await pool.query(
+                        'DELETE FROM user_channels WHERE user_id = $1 AND channel_id = $2',
+                        [userId, chat.id]
+                    );
+
+                    const otherUsers = await pool.query(
+                        'SELECT 1 FROM user_channels WHERE channel_id = $1',
+                        [chat.id]
+                    );
+
+                    if (otherUsers.rows.length === 0) {
+                        await pool.query(
+                            'DELETE FROM all_channels WHERE id = $1',
+                            [chat.id]
+                        );
+                    }
+
+                    io.emit('channel_removed', {
+                        id: chat.id,
+                        user_id: userId
+                    });
+
+                    console.log(`Бот удален из канала: ${chat.title}`);
+
+                } catch (err) {
+                    console.error('Error removing channel from DB:', err);
+                }
+            }
+        }catch (e) {
+            console.log(`Бот был добавлен в приватный канал`);
+        }
+    });
+    async function createMessageAndSend(userIdTo, userIdFrom, date, price, channelId) {
+        const chatInfo = await bot.telegram.getChat(channelId);
+        const channelUsername = chatInfo.username;
+        const text = `⚡️ Ваше предложение было принято ⚡️
+
+🏷️ Канал: @${channelUsername}
+
+📅 Дата: ${date.toDateString()}
+
+💰 Цена: ${price} (Сервис берет коммисию в размере 200 рублей к стоимости)
+
+✍️ В ближайшее время с вами свяжется владелец канала, обсудите с ним пост и после этого нажмите кнопку чтоб перейти к оплате рекламного поста`;
+
+        const keyboard = {
+            inline_keyboard: [
+                [
+                    {
+                        text: 'Перейти к оплате',
+                        callback_data: `ready_to_deal`
+                    },
+                ]
+            ]
+        };
+
+
+        try {
+            await bot.telegram.sendMessage(userIdFrom, text, {
+                reply_markup: keyboard
             });
-
-            console.log(`Бот удален из канала: ${chat.title}`);
-
         } catch (err) {
-            console.error('Error removing channel from DB:', err);
+            console.error('Ошибка при отправке сообщения в Telegram:', err);
         }
     }
-});
 
-module.exports = bot;
+    return bot;
+};

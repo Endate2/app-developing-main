@@ -7,7 +7,7 @@ const nextButton = document.getElementById('nextMonth');
 
 let currentDate = new Date();
 
-function generateCalendar() {
+function generateCalendar(channelId) {
     calendarGrid.innerHTML = '';
 
 
@@ -25,14 +25,14 @@ function generateCalendar() {
 
 
     for(let i = 0; i < startDay; i++) {
-        createDayElement('', true);
+        createDayElement(channelId,'', true);
     }
 
     for(let day = 1; day <= lastDay.getDate(); day++) {
         const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
         const isCurrent = isToday(date);
         const hasEvent = day % 5 === 0;
-        createDayElement(day, false, isCurrent, hasEvent);
+        createDayElement(channelId,day, false, isCurrent, hasEvent);
     }
 
     monthYear.textContent = currentDate.toLocaleDateString('ru-RU', {
@@ -41,7 +41,7 @@ function generateCalendar() {
     }).replace(' г.', '');
 }
 
-function createDayElement(day, isOtherMonth, isCurrent = false, hasEvent = false) {
+function createDayElement(channelId,day, isOtherMonth, isCurrent = false, hasEvent = false) {
     const dayElement = document.createElement('div');
     dayElement.className = `calendar-day ${isOtherMonth ? 'other-month' : ''} ${isCurrent ? 'current-day' : ''}`;
     dayElement.innerHTML = `
@@ -52,7 +52,7 @@ function createDayElement(day, isOtherMonth, isCurrent = false, hasEvent = false
     if(day) {
 
         const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-        dayElement.addEventListener('click', () => handleDayClick(date));
+        dayElement.addEventListener('click', () => handleDayClick(date,channelId));
         dayElement.style.cursor = 'pointer';
     }
 
@@ -64,21 +64,44 @@ function isToday(date) {
     return date.toDateString() === today.toDateString();
 }
 
-function handleDayClick(date) {
-    const urlParams = new URLSearchParams(window.location.search);
-    const channelId = urlParams.get('channel_id');
-
-    const now = new Date();
-    const dateStr = date.toISOString().split('T')[0];
-    const nowStr = now.toISOString().split('T')[0];
-    if (now > date){
-        alert("На данную дату нельзя добавить предложения, так как она уже прошла")
-    }else {
-        window.location.href = `/create_advertisement?channel_id=${channelId}&date=${dateStr}`;
+function handleDayClick(date,channelId) {
+    if (window.Telegram && Telegram.WebApp) {
+        Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    } else if ('vibrate' in navigator) {
+        navigator.vibrate(50);
     }
 
+
+    const now = new Date();
+    const dateStr = formatDateToLocal(date);
+    const nowStr = formatDateToLocal(now);
+
+    if (date < now && !isSameDay(date, now)) {
+        alert("На данную дату нельзя добавить предложения, так как она уже прошла");
+    } else {
+        loadCreateAdvertisement(dateStr,channelId)
+
+        navigateTo('create-advertisement');
+    }
 }
 
+
+
+function formatDateToLocal(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+
+function isSameDay(date1, date2) {
+    return (
+        date1.getFullYear() === date2.getFullYear() &&
+        date1.getMonth() === date2.getMonth() &&
+        date1.getDate() === date2.getDate()
+    );
+}
 
 prevButton.addEventListener('click', () => {
     currentDate.setMonth(currentDate.getMonth() - 1);
@@ -91,7 +114,7 @@ nextButton.addEventListener('click', () => {
 });
 
 
-generateCalendar();
+
 
 
 window.addEventListener('resize', () => {
