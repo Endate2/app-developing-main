@@ -11,7 +11,7 @@ const channelId = urlParams.get('channel_id');
 
 
 if (user) {
-    fetch('https://endate2-app-developing-main-d2d3.twc1.net/save-user', {
+    fetch('https://endate2-app-developing-main-cf8a.twc1.net/save-user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user)
