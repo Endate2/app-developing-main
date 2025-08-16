@@ -25,7 +25,7 @@ async function loadChannelData(channelId){
                 if (titleElement) titleElement.textContent = channel.name;
                 if (subscribersElement) subscribersElement.textContent = `${channel.subscribers.toLocaleString()} подписчиков`;
                 if (descriptionElement) descriptionElement.textContent = channel.description || 'Описание отсутствует';
-                if (referralInput) referralInput.value = `t.me/appdecsssbot?start=${channelId}`;
+                if (referralInput) referralInput.value = `t.me/portad_bot?start=${channelId}`;
                 if (urlElement && channel.channel_url) {
                     urlElement.textContent = channel.channel_url;
                     urlElement.style.cursor = 'pointer';
