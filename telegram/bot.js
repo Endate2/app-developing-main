@@ -58,7 +58,7 @@ module.exports = (io) => {
                     inline_keyboard: [
                         [{
                             text: `Открыть канал`,
-                            web_app: { url : `https://endate2-app-developing-main-4120.twc1.net?channel_id=${referralCode}`}
+                            web_app: { url : `https://endate2-app-developing-main-d2d3.twc1.net?channel_id=${referralCode}`}
                         }]
                     ]
                 }
@@ -69,7 +69,7 @@ module.exports = (io) => {
                     inline_keyboard: [
                         [{
                             text: 'Открыть приложение',
-                            web_app: { url: 'https://endate2-app-developing-main-4120.twc1.net' }
+                            web_app: { url: 'https://endate2-app-developing-main-d2d3.twc1.net' }
                         }]
                     ]
                 }
@@ -81,7 +81,7 @@ module.exports = (io) => {
         try {
             const data = ctx.callbackQuery.data;
             const [action, advertisementID, userIdFrom, userIdTo] = data.split('_');
-            const response = await fetch(`https://endate2-app-developing-main-4120.twc1.net/api/get_advertisement?id=${advertisementID}`);
+            const response = await fetch(`https://endate2-app-developing-main-d2d3.twc1.net/api/get_advertisement?id=${advertisementID}`);
             if (!response.ok) throw new Error('Ошибка получения объявления');
             const result = await response.json();
             if (!result) {
