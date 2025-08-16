@@ -8,10 +8,7 @@ const avatarElement = document.querySelector('.channel-avatar-Profil');
 const urlParams = new URLSearchParams(window.location.search);
 const channelId = urlParams.get('channel_id');
 
-if (channelId) {
-    loadChannelData(channelId);
-    navigateTo('owner');
-}
+
 
 if (user) {
     fetch('https://endate2-app-developing-main-d2d3.twc1.net/save-user', {
@@ -317,6 +314,9 @@ const savedTheme = safeLocalStorage('get', 'tma_theme');
 if (savedTheme) {
     Telegram.WebApp.setHeaderColor(savedTheme);
 }
-
+if (channelId) {
+    loadChannelDataUser(channelId);
+    navigateTo('user');
+}
 // Начальная загрузка
 navigateTo('profile');
