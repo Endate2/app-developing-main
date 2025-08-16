@@ -14,7 +14,7 @@ if (channelId) {
 }
 
 if (user) {
-    fetch('https://endate2-app-developing-main-4120.twc1.net/save-user', {
+    fetch('https://endate2-app-developing-main-d2d3.twc1.net', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user)
