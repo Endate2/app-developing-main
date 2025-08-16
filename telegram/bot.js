@@ -81,7 +81,7 @@ module.exports = (io) => {
         try {
             const data = ctx.callbackQuery.data;
             const [action, advertisementID, userIdFrom, userIdTo] = data.split('_');
-            const response = await fetch(`https://endate2-app-developing-fcbd.twc1.net/api/get_advertisement?id=${advertisementID}`);
+            const response = await fetch(`https://endate2-app-developing-main-4120.twc1.net/api/get_advertisement?id=${advertisementID}`);
             if (!response.ok) throw new Error('Ошибка получения объявления');
             const result = await response.json();
             if (!result) {
