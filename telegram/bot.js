@@ -58,7 +58,7 @@ module.exports = (io) => {
                     inline_keyboard: [
                         [{
                             text: `Открыть канал`,
-                            web_app: { url : `https://endate2-app-developing-fcbd.twc1.net?channel_id=${referralCode}`}
+                            web_app: { url : `https://endate2-app-developing-main-4120.twc1.net?channel_id=${referralCode}`}
                         }]
                     ]
                 }
@@ -69,7 +69,7 @@ module.exports = (io) => {
                     inline_keyboard: [
                         [{
                             text: 'Открыть приложение',
-                            web_app: { url: 'https://endate2-app-developing-fcbd.twc1.net' }
+                            web_app: { url: 'https://endate2-app-developing-main-4120.twc1.net' }
                         }]
                     ]
                 }
