@@ -50,19 +50,32 @@ module.exports = (io) => {
             );
 
 
-            const chatInfo = await bot.telegram.getChat(referralCode);
-            const channelUsername = chatInfo.username;
+            try {
+                const chatInfo = await bot.telegram.getChat(referralCode);
+                const channelUsername = chatInfo.username;
 
-            await ctx.reply(`Вы воспользовались ссылкой на канал ${channelUsername}, нажмите кнопку ниже, чтобы перейти в него.`, {
-                reply_markup: {
-                    inline_keyboard: [
-                        [{
-                            text: `Открыть канал`,
-                            web_app: { url : `https://endate2-app-developing-main-cf8a.twc1.net?channel_id=${referralCode}`}
-                        }]
-                    ]
-                }
-            });
+                await ctx.reply(`Вы воспользовались ссылкой на канал ${channelUsername}, нажмите кнопку ниже, чтобы перейти в него.`, {
+                    reply_markup: {
+                        inline_keyboard: [
+                            [{
+                                text: `Открыть канал`,
+                                web_app: { url : `https://endate2-app-developing-main-cf8a.twc1.net?channel_id=${referralCode}`}
+                            }]
+                        ]
+                    }
+                });
+            }catch (e) {
+                await ctx.reply('Данного канала не сужествует в приложении, перейдите на главную страницу нашего приложения.', {
+                    reply_markup: {
+                        inline_keyboard: [
+                            [{
+                                text: 'Открыть приложение',
+                                web_app: { url: 'https://endate2-app-developing-main-cf8a.twc1.net' }
+                            }]
+                        ]
+                    }
+                });
+            }
         } else {
             await ctx.reply('Добро пожаловать! Нажмите кнопку ниже, чтобы открыть приложение.', {
                 reply_markup: {
