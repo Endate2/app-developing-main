@@ -216,7 +216,7 @@ module.exports = (io) => {
                     } else {
                         await pool.query(
                             'UPDATE all_channels SET name = $1, subscribers = $2, photo_url = $3 WHERE id = $4',
-                            [chat.title, subscribersCount, photoUrl, chat.id]
+                            [chat.title.trim().toLowerCase(), subscribersCount, photoUrl, chat.id]
                         );
                     }
 
