@@ -85,29 +85,49 @@ function addBlockToPayment(adData) {
     const day = adData.date_of_advertisement;
     const dateObj = new Date(day);
     payment.innerHTML = `
-    <div class="section-title-2-payment">Стоимость рекламы на ${dateObj.toDateString()}</div>
+    <div class="ad-price-container">
+  <div class="section-title-2-payment">Стоимость рекламы на ${dateObj.toLocaleDateString('ru-RU', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    })}</div>
 
-    <div class="price-item">
+  <div class="price-item">
+    <div class="price-label-container">
+      <i class="fas fa-money-bill-wave price-icon"></i>
       <span class="price-label">Цена за пост</span>
-      <span class="price-value-payment">${adData.price}</span>
     </div>
+    <span class="price-value">${adData.price} руб</span>
+  </div>
 
-    <div class="price-item">
+  <div class="price-item">
+    <div class="price-label-container">
+      <i class="fas fa-clock price-icon"></i>
       <span class="price-label">Длительность</span>
-      <label class="form-label">
-  Длительность размещения: ${adData.duration ? adData.duration + ' часов' : 'Без удаления'}
-</label>
     </div>
+    <span class="duration-value">${adData.duration ? adData.duration + ' часов' : 'Без удаления'}</span>
+  </div>
 
-    <div class="price-item">
-      <span class="price-label">Комиссия сервиса 10% от стоимости</span>
+  <div class="price-item commission">
+    <div class="price-label-container">
+      <i class="fas fa-percentage price-icon"></i>
+      <span class="price-label">Включая комиссию сервиса (10%)</span>
     </div>
-    <div class="form-group">
+    <span class="commission-value">${Math.round(adData.price * 0.1)} руб</span>
+  </div>
+
+  <div class="form-group">
+    <div class="price-label-container">
+      <i class="fas fa-comment price-icon"></i>
       <label class="form-label">Комментарий к предложению</label>
-      <textarea class="form-textarea" id="offer-comment" placeholder="Опишите ваше предложение (необязательно)"></textarea>
     </div>
-    <div class="total-price"></div>
-    <button id="purchase-button" data-advertisement-id="${adData.id}"class="purchase-button">Разместить рекламу</button>
+    <textarea class="form-textarea" id="offer-comment" placeholder="Опишите ваше предложение (необязательно)"></textarea>
+  </div>
+  
+  <button class="purchase-button" data-advertisement-id="${adData.id}">
+    <i class="fas fa-check-circle"></i> Разместить рекламу
+  </button>
+</div>
 `;
 
 
