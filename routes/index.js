@@ -115,7 +115,7 @@ module.exports = (bot) => {
             const channelUrl = chatInfo.username ? `https://t.me/${chatInfo.username}` : null;
             await pool.query(
                 'UPDATE all_channels SET name=$1, subscribers=$2, photo_url=$3, channel_url=$4, description=$5 WHERE id=$6',
-                [chatInfo.title, subscribers, photoUrl, channelUrl, description, channelId]
+                [chatInfo.title.trim().toLowerCase(), subscribers, photoUrl, channelUrl, description, channelId]
             );
             res.json({ ok: true });
         } catch (err) {
