@@ -278,7 +278,7 @@
     color: #f0f0f0;
 }
 .section-title-2-payment {
-    font-size: 15px;
+    font-size: 12px;
     font-weight: 600;
     margin-bottom: 10px;
     white-space: nowrap;
@@ -673,4 +673,260 @@ span {
 
 .action-button img {
     filter: brightness(1.5); /* Делает иконки светлее */
+}
+/* Основной контейнер */
+.ad-price-container {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    border: 1px solid #333;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Заголовок */
+.section-title-2-payment {
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #333;
+}
+
+/* Элементы цены */
+.price-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.price-label {
+    font-size: 16px;
+    color: #aaa;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.price-value-payment {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+}
+
+/* Иконки для элементов */
+.price-item:nth-child(1) .price-label::before {
+    content: "\f155"; /* Иконка денег */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    color: #27ae60;
+}
+
+.price-item:nth-child(2) .price-label::before {
+    content: "\f017"; /* Иконка часов */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    color: #3498db;
+}
+
+.price-item:nth-child(3) .price-label::before {
+    content: "\f085"; /* Иконка шестеренки */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    color: #9b59b6;
+}
+
+/* Поле комментария */
+.form-group {
+    margin: 20px 0;
+}
+
+.form-label {
+    display: block;
+    font-size: 16px;
+    color: #ddd;
+    margin-bottom: 8px;
+}
+
+.form-textarea {
+    width: 100%;
+    background: #2a2a2a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 12px;
+    color: #fff;
+    font-size: 15px;
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-textarea::placeholder {
+    color: #777;
+}
+
+/* Кнопка */
+.purchase-button {
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 15px 25px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    display: block;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3);
+}
+
+.purchase-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 117, 252, 0.4);
+}
+
+/* Итоговая цена */
+.total-price {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+    margin: 15px 0;
+    padding: 10px;
+    background: rgba(39, 174, 96, 0.15);
+    border-radius: 8px;
+}
+
+/* Основной контейнер */
+.ad-price-container {
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    border: 1px solid #333;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Заголовок */
+.section-title-2-payment {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #333;
+}
+
+/* Контейнер для элементов цены */
+.price-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+/* Контейнер для иконки и текста */
+.price-label-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Стили меток */
+.price-label {
+    font-size: 12px;
+    color: #ddd;
+}
+
+/* Стили значений */
+.price-value,
+.duration-value,
+.commission-value {
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+}
+
+/* Иконки */
+.price-icon {
+    font-size: 20px;
+    min-width: 24px;
+    text-align: center;
+}
+
+/* Цвета иконок */
+.fa-money-bill-wave { color: #27ae60; } /* Зеленый для денег */
+.fa-clock { color: #3498db; }          /* Синий для времени */
+.fa-percentage { color: #9b59b6; }     /* Фиолетовый для комиссии */
+.fa-comment { color: #f39c12; }        /* Оранжевый для комментария */
+
+/* Специальные стили для комиссии */
+.price-item.commission {
+    background: rgba(155, 89, 182, 0.1);
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin: 10px 0;
+    border: none;
+}
+
+/* Поле комментария */
+.form-group {
+    margin: 25px 0 20px;
+}
+
+.form-label {
+    display: block;
+    font-size: 17px;
+    color: #ddd;
+    margin-bottom: 8px;
+}
+
+.form-textarea {
+    width: 100%;
+    background: #2a2a2a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 14px;
+    color: #fff;
+    font-size: 16px;
+    resize: vertical;
+    min-height: 100px;
+    font-family: inherit;
+}
+
+.form-textarea:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+/* Кнопка */
+.purchase-button {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 16px 25px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    display: block;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+    margin-top: 20px;
+}
+
+.purchase-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+}
+
+.purchase-button i {
+    margin-right: 10px;
 }
