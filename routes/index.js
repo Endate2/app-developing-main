@@ -15,9 +15,6 @@ module.exports = (bot) => {
         res.sendFile(path.join(__dirname, '../views', 'index.html'));
     });
 
-    router.get('/createPaymentLink.php', (req, res) => {
-        res.sendFile(path.join(__dirname, '../views', 'createPaymentLink.php'));
-    });
 
 
 
