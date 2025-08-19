@@ -93,16 +93,21 @@ module.exports = (io) => {
     bot.on('callback_query', async (ctx) => {
         try {
             const data = ctx.callbackQuery.data;
-            const [action, advertisementID, userIdFrom, userIdTo] = data.split('_');
-            const response = await fetch(`https://endate2-app-developing-main-cf8a.twc1.net/api/get_advertisement?id=${advertisementID}`);
-            if (!response.ok) throw new Error('Ошибка получения объявления');
-            const result = await response.json();
-            if (!result) {
-                throw new Error('Объявление не найдено');
-            }
-            const date = result.date_of_advertisement ? new Date(result.date_of_advertisement) : null;
+            const parts = data.split('_');
+            const action = parts[0];
             try {
                 if (action === 'accept') {
+                    // Формат: accept_advertisementID_userIdFrom_userIdTo
+                    const advertisementID = parts[1];
+                    const userIdFrom = parts[2];
+                    const userIdTo = parts[3];
+                    const response = await fetch(`https://endate2-app-developing-main-cf8a.twc1.net/api/get_advertisement?id=${advertisementID}`);
+                    if (!response.ok) throw new Error('Ошибка получения объявления');
+                    const result = await response.json();
+                    if (!result) {
+                        throw new Error('Объявление не найдено');
+                    }
+                    const date = result.date_of_advertisement ? new Date(result.date_of_advertisement) : null;
                     const user = await bot.telegram.getChat(userIdFrom);
                     const userName = user.username
                     await createMessageAndSend(
@@ -110,20 +115,51 @@ module.exports = (io) => {
                         userIdFrom,
                         date,
                         result.price,
-                        result.channel_id
+                        result.channel_id,
+                        advertisementID
                     );
                     await ctx.editMessageText(`Свяжитесь с пользователем: @${userName} и обсудите пост.\n\nПосле этого покупатель должен подтвердить обсуждение, нажав кнопку, тогда он получит ссылку на оплату, а вам придет уведомление об успешной операции.`, {
-    reply_markup: {
-        inline_keyboard: []
-    }
-});
+                        reply_markup: {
+                            inline_keyboard: []
+                        }
+                    });
 
+                }
+                else if (data === 'pay') {
+                    try {
+                        const advertisementID = parts[1];
+                        const userIdFrom = parts[2];
+                        const price = parts[3]; // price вместо userIdTo
+
+                        const response = await fetch('https://endate2-app-developing-main-cf8a.twc1.net/createPaymentLink.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                amount: price,
+                                userId: userIdFrom,
+                                orderNumber: advertisementID
+                            })
+                        });
+
+                        const json = await response.json();
+
+                        if (json.paymentUrl) {
+                            await bot.telegram.sendMessage(chatId, `Перейдите по ссылке для оплаты:\n${json.paymentUrl}`);
+                        } else {
+                            await bot.telegram.sendMessage(chatId, 'Ошибка при создании ссылки для оплаты.');
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        await bot.telegram.sendMessage(chatId, 'Произошла ошибка, попробуйте позже.');
+                    }
+
+                    // Ответим Telegram чтобы убрать часик загрузки кнопки
+                    await bot.answerCallbackQuery(callbackQuery.id);
                 }
 
                 else if (action === 'reject') {
                     await ctx.deleteMessage();
                 }
-
                 else {
                     await ctx.answerCbQuery('Неизвестное действие');
                 }
@@ -277,7 +313,7 @@ module.exports = (io) => {
             console.log(`Бот был добавлен в приватный канал`);
         }
     });
-    async function createMessageAndSend(userIdTo, userIdFrom, date, price, channelId) {
+    async function createMessageAndSend(userIdTo, userIdFrom, date, price, channelId,advertisementID) {
         const chatInfo = await bot.telegram.getChat(channelId);
         const channelUsername = chatInfo.username;
         const text = `⚡️ Ваше предложение было принято ⚡️
@@ -295,7 +331,7 @@ module.exports = (io) => {
                 [
                     {
                         text: 'Перейти к оплате',
-                        callback_data: `ready_to_deal`
+                        callback_data: `pay_${advertisementID}_${userIdFrom}_${price}`
                     },
                 ]
             ]
