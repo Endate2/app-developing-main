@@ -53,55 +53,72 @@ module.exports = (bot) => {
         }
     });
 
-router.post('/api/create-payment-link', async (req, res) => {
-    try {
-        const { amount, userId, orderNumber } = req.body;
-        
-        // Ваша логика из PHP здесь
-        const crypto = require('crypto');
-        
-        const data = {
-            "Amount": amount * 100,
-            "Description": 'Оплата рекламы для канала',
-            "OrderId": `${userId}-n${orderNumber}`,
-            "TerminalKey": '1755596274717DEMO',
-            "Password": 'cpvaRLay%4l$UTe&'
-        };
+ router.post('/api/create-payment-link', async (req, res) => {
+        try {
+            const { amount, userId, orderNumber } = req.body;
 
-        // Сортировка и создание токена
-        const sortedKeys = Object.keys(data).sort();
-        let concatenated = '';
-        sortedKeys.forEach(key => {
-            if (key !== 'Password') {
-                concatenated += data[key];
+            const crypto = require('crypto');
+
+            const data = {
+                "Amount": amount * 100,
+                "Description": 'Оплата рекламы для канала',
+                "OrderId": `${userId}-n${orderNumber}`,
+                "TerminalKey": '1755596274717DEMO',
+                "Password": 'cpvaRLay%4l$UTe&'
+            };
+
+            // Логируем тело запроса
+            console.log("Request to Tinkoff with ", JSON.stringify(data));
+
+            const sortedKeys = Object.keys(data).sort();
+            let concatenated = '';
+            sortedKeys.forEach(key => {
+                if (key !== 'Password') {
+                    concatenated += data[key];
+                }
+            });
+
+            const token = crypto.createHash('sha256').update(concatenated).digest('hex');
+            data.Token = token;
+            delete data.Password;
+
+            // Отправляем запрос
+            const response = await fetch('https://rest-api-test.tinkoff.ru/v2/Init', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            // Логируем статус ответа и заголовки
+            console.log("Response status:", response.status);
+            console.log("Response headers:", JSON.stringify(response.headers.raw()));
+
+            // Получаем тело ответа
+            const responseBody = await response.text();
+
+            // Пытаемся распарсить JSON, если не получилось - логируем ошибку и тело
+            let result;
+            try {
+                result = JSON.parse(responseBody);
+                console.log("Response JSON body:", JSON.stringify(result));
+            } catch (err) {
+                console.error("Ошибка парсинга JSON из ответа:", err);
+                console.error("Полученный ответ:", responseBody);
+                throw err;
             }
-        });
 
-        const token = crypto.createHash('sha256').update(concatenated).digest('hex');
-        data.Token = token;
-        delete data.Password;
+            if (result.Success && result.PaymentURL) {
+                res.json({ paymentUrl: result.PaymentURL });
+            } else {
+                console.error("Ответ от Tinkoff с ошибкой:", JSON.stringify(result));
+                res.status(500).json({ error: 'Не удалось создать ссылку для оплаты' });
+            }
 
-        // Отправка запроса к Tinkoff API
-        const response = await fetch('https://securepay.tinkoff.ru/v2/Init', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        });
-
-        const result = await response.json();
-
-        if (result.Success && result.PaymentURL) {
-            res.json({ paymentUrl: result.PaymentURL });
-        } else {
-            res.status(500).json({ error: 'Не удалось создать ссылку для оплаты' });
+        } catch (error) {
+            console.error('Ошибка создания платежной ссылки:', error);
+            res.status(500).json({ error: 'Внутренняя ошибка сервера' });
         }
-    } catch (error) {
-        console.error('Ошибка создания платежной ссылки:', error);
-        res.status(500).json({ error: 'Внутренняя ошибка сервера' });
-    }
-});
+    });
     router.get('/api/channels-by-criteria', async (req, res) => {
         try {
             const { categories, sort } = req.query;
