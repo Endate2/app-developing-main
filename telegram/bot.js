@@ -129,7 +129,8 @@ module.exports = (io) => {
                     try {
                         const advertisementID = parts[1];
                         const userIdFrom = parts[2];
-                        const price = parts[3]; // price вместо userIdTo
+                        const price = parts[3];
+                        const chatId = ctx.from.id;
 
                         const response = await fetch('https://endate2-app-developing-main-cf8a.twc1.net/createPaymentLink.php', {
                             method: 'POST',
@@ -150,11 +151,11 @@ module.exports = (io) => {
                         }
                     } catch (err) {
                         console.error(err);
+                        const chatId = ctx.from.id;
                         await bot.telegram.sendMessage(chatId, 'Произошла ошибка, попробуйте позже.');
                     }
 
-                    // Ответим Telegram чтобы убрать часик загрузки кнопки
-                    await bot.answerCallbackQuery(callbackQuery.id);
+                    await bot.answerCallbackQuery(ctx.callbackQuery.id);
                 }
 
                 else if (action === 'reject') {
