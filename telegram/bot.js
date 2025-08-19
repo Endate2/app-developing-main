@@ -125,7 +125,7 @@ module.exports = (io) => {
                     });
 
                 }
-                else if (data === 'pay') {
+                else if (action === 'pay') {
                     try {
                         const advertisementID = parts[1];
                         const userIdFrom = parts[2];
