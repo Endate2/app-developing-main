@@ -53,7 +53,55 @@ module.exports = (bot) => {
         }
     });
 
+router.post('/api/create-payment-link', async (req, res) => {
+    try {
+        const { amount, userId, orderNumber } = req.body;
+        
+        // Ваша логика из PHP здесь
+        const crypto = require('crypto');
+        
+        const data = {
+            "Amount": amount * 100,
+            "Description": 'Оплата рекламы для канала',
+            "OrderId": `${userId}-n${orderNumber}`,
+            "TerminalKey": '1755596274717DEMO',
+            "Password": 'cpvaRLay%4l$UTe&'
+        };
 
+        // Сортировка и создание токена
+        const sortedKeys = Object.keys(data).sort();
+        let concatenated = '';
+        sortedKeys.forEach(key => {
+            if (key !== 'Password') {
+                concatenated += data[key];
+            }
+        });
+
+        const token = crypto.createHash('sha256').update(concatenated).digest('hex');
+        data.Token = token;
+        delete data.Password;
+
+        // Отправка запроса к Tinkoff API
+        const response = await fetch('https://securepay.tinkoff.ru/v2/Init', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (result.Success && result.PaymentURL) {
+            res.json({ paymentUrl: result.PaymentURL });
+        } else {
+            res.status(500).json({ error: 'Не удалось создать ссылку для оплаты' });
+        }
+    } catch (error) {
+        console.error('Ошибка создания платежной ссылки:', error);
+        res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+    }
+});
     router.get('/api/channels-by-criteria', async (req, res) => {
         try {
             const { categories, sort } = req.query;
