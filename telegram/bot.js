@@ -152,7 +152,8 @@ module.exports = (io) => {
                     } catch (err) {
                         console.error(err);
                         const chatId = ctx.from.id;
-                        await bot.telegram.sendMessage(chatId, 'Произошла ошибка, попробуйте позже.');
+                        console.error('Ошибка при создании ссылки на оплату:', err);
+                        await bot.telegram.sendMessage(chatId, `Произошла ошибка: ${err.message}`);
                     }
 
                     await bot.answerCallbackQuery(ctx.callbackQuery.id);
