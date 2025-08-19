@@ -20,7 +20,7 @@ function tinkoff_getLink($amount, $chatId, $orderNumber) {
     // OrderId должен быть уникальным
     $data = [
         "Amount"      => $amount*100,
-        "Description" => 'Оплата рекламы для канала"',
+        "Description" => 'Оплата рекламы для канала',
         "OrderId"     => "$chatId-n$orderNumber",
         "TerminalKey" => '1755596274717DEMO',
         "Password"    => 'cpvaRLay%4l$UTe&'
