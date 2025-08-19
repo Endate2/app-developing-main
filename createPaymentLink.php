@@ -22,8 +22,8 @@ function tinkoff_getLink($amount, $chatId, $orderNumber) {
         "Amount"      => $amount*100,
         "Description" => 'Оплата рекламы для канала"',
         "OrderId"     => "$chatId-n$orderNumber",
-        "TerminalKey" => TINKOFF_TERMINAL_KEY,
-        "Password"    => TINKOFF_TERMINAL_PASSWORD
+        "TerminalKey" => '1755596274717DEMO',
+        "Password"    => 'cpvaRLay%4l$UTe&'
     ];
 
     ksort($data);
