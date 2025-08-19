@@ -161,7 +161,7 @@ module.exports = (io) => {
                     await ctx.deleteMessage();
                 }
                 else {
-                    await ctx.answerCbQuery('Неизвестное действие');
+                    await ctx.answerCbQuery('Неизвестное действие!');
                 }
             }catch (e) {
                 await ctx.answerCbQuery('Неизвестное действие');
