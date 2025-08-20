@@ -72,7 +72,7 @@ function setupSocket(io) {
                 const result = await pool.query(
                     `SELECT date_of_advertisement, price, duration, channel_id,id
                      FROM advertisements
-                     WHERE date_of_advertisement = $1 AND channel_id = $2`,
+                     WHERE date_of_advertisement = $1 AND channel_id = $2 AND in_search = true`,
                     [day.trim(), Number(channelId)]
                 );
 
