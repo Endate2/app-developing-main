@@ -53,55 +53,50 @@ module.exports = (bot) => {
         }
     });
 
- router.post('/api/create-payment-link', async (req, res) => {
+
+
+router.post('/api/create-payment-link', async (req, res) => {
     try {
         const { amount, userId, orderNumber } = req.body;
 
-        const crypto = require('crypto');
-
         const data = {
-            "Amount": amount * 100,
+            "Amount": (amount * 100).toString(), // сумма в копейках, обязательно строка
             "Description": 'Оплата рекламы для канала',
             "OrderId": `${userId}-n${orderNumber}`,
             "TerminalKey": '1755596274717DEMO',
-            "Password": 'cpvaRLay%4l$UTe&'
+            "Password": 'cpvaRLay%4l$UTe&' // пароль для формирования токена
         };
 
-        // Логируем тело запроса (можно убрать Password ради безопасности)
-        console.log("Request to Tinkoff with ", JSON.stringify(data));
+        // Логируем тело запроса без пароля (для безопасности)
+        const logData = {...data};
+        delete logData.Password;
+        console.log("Request to Tinkoff with ", JSON.stringify(logData));
 
+        // Формирование токена: сортируем все ключи, включая Password, конкатенируем значения
         const sortedKeys = Object.keys(data).sort();
         let concatenated = '';
         sortedKeys.forEach(key => {
-            if (key !== 'Password') {
-                concatenated += data[key];
-            }
+            concatenated += data[key].toString();
         });
 
-        const token = crypto.createHash('sha256').update(concatenated).digest('hex');
+        // Хешируем конкатенированную строку SHA-256
+        const token = crypto.createHash('sha256').update(concatenated, 'utf8').digest('hex');
+
+        // Добавляем токен в объект данных и удаляем пароль
         data.Token = token;
         delete data.Password;
 
-        // Отправляем запрос на правильный метод Init
+        // Отправляем запрос на метод Init Tinkoff
         const response = await fetch('https://securepay.tinkoff.ru/v2/Init', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
 
-        // Логируем статус ответа
         console.log("Response status:", response.status);
 
-        // Логируем заголовки корректно
-        console.log("Response headers:");
-        for (const [key, value] of response.headers.entries()) {
-            console.log(`${key}: ${value}`);
-        }
-
-        // Получаем тело ответа
         const responseBody = await response.text();
 
-        // Пытаемся распарсить JSON, если не получилось - логируем ошибку и тело
         let result;
         try {
             result = JSON.parse(responseBody);
@@ -124,6 +119,9 @@ module.exports = (bot) => {
         res.status(500).json({ error: 'Внутренняя ошибка сервера' });
     }
 });
+
+
+
 
     router.get('/api/channels-by-criteria', async (req, res) => {
         try {
