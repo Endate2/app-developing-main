@@ -148,7 +148,7 @@ module.exports = (io) => {
                         if (json.paymentUrl) {
                             await bot.telegram.sendMessage(chatId, `Перейдите по ссылке для оплаты:\n${json.paymentUrl}`);
                         } else {
-                            await bot.telegram.sendMessage(chatId, 'Ошибка при создании ссылки для оплаты.');
+                            await bot.telegram.sendMessage(chatId, json.error);
                         }
                     } catch (err) {
                         console.error(err);
