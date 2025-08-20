@@ -651,7 +651,7 @@ module.exports = (bot) => {
 
         try {
             await pool.query(
-                'INSERT INTO deal (advertisement_id) VALUES ($1) ON CONFLICT (advertisement_id) DO NOTHING',
+                'INSERT INTO deal (advertisement_id) VALUES ($1)',
                 [advertisementID]
             );
 
