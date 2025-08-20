@@ -4,6 +4,7 @@ module.exports = (bot) => {
     const router = express.Router();
     const path = require('path');
     const { pool } = require('../config/db');
+    const crypto = require('crypto');
 
 
     router.get('/', (req, res) => {
