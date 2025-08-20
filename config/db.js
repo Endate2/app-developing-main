@@ -46,6 +46,7 @@ async function initDB() {
                 date_of_advertisement DATE,
                 price INTEGER,
                 duration INTEGER,
+                in_search BOOLEAN DEFAULT TRUE,
                 channel_id BIGINT REFERENCES all_channels(id)
             );
             CREATE TABLE IF NOT EXISTS notifications (
@@ -79,7 +80,10 @@ async function initDB() {
                 user_id BIGINT PRIMARY KEY REFERENCES users(id),
                 is_referred BOOLEAN DEFAULT FALSE
                 );
-
+            CREATE TABLE IF NOT EXISTS deal(
+                id SERIAL PRIMARY KEY,
+                advertisement_id BIGINT REFERENCES advertisements(id)
+            );
         `);
 
         console.log('Database initialized');
