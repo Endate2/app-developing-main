@@ -387,6 +387,8 @@ module.exports = (bot) => {
     });
 
 
+
+
     router.get('/api/create_notification', async (req, res) => {
         try {
             const user_id_to = Number(req.query.id);
@@ -444,10 +446,40 @@ module.exports = (bot) => {
         }
     });
 
+    router.get('/api/search_deals', async (req, res) => {
+        try {
+            const id = Number(req.query.id);
+
+
+            const result = await pool.query(
+                `SELECT EXISTS (
+                    SELECT 1 FROM deal
+                    WHERE advertisement_id = $1
+                );`,
+                [id]
+            );
+
+            const exists = result.rows[0].exists;
+            if (exists) {
+                return res.json({ success: true });
+            }else{
+                return res.json({ success: false });
+            }
+
+        } catch (err) {
+            console.error('Ошибка в /api/create_notification:', err);
+            res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+        }
+    });
+
     router.get('/api/get_advertisement', async (req, res) => {
         try {
             const advertisement_id = Number(req.query.id);
 
+            await pool.query(
+                'UPDATE advertisements SET in_search = false WHERE id = $1',
+                [advertisement_id]
+            );
 
             const checkResult = await pool.query(
                 'SELECT * FROM advertisements WHERE id = $1',
@@ -456,10 +488,11 @@ module.exports = (bot) => {
 
             res.json(checkResult.rows[0]);
         } catch (err) {
-            console.error('Ошибка в /api/create_notification:', err);
+            console.error('Ошибка в /api/get_advertisement:', err);
             res.status(500).json({ error: 'Внутренняя ошибка сервера' });
         }
     });
+
 
     router.get('/api/channel-categories', async (req, res) => {
         try {
@@ -561,7 +594,31 @@ module.exports = (bot) => {
             res.status(500).json({ error: 'Внутренняя ошибка сервера' });
         }
     });
+    router.post('/api/delete-deal', async (req, res) => {
+        const { advertisementID} = req.body;
 
+        if (!advertisementID) {
+            return res.status(400).json({ success: false, message: 'Не указан advertisementID' });
+        }
+        await pool.query(
+            'UPDATE advertisements SET in_search = true WHERE id = $1',
+            [advertisement_id]
+        );
+        try {
+            const result = await pool.query(
+                'DELETE FROM deal WHERE advertisement_id = $1;',
+                [advertisementID]
+            );
+
+            res.json({
+                success: true,
+                message: `Удалено сделок: ${result.rowCount}`
+            });
+        } catch (err) {
+            console.error('Ошибка при удалении сделок канала:', err);
+            res.status(500).json({ success: false, message: 'Внутренняя ошибка сервера' });
+        }
+    });
 
     router.post('/api/delete-channel-categories', async (req, res) => {
         const { channel_id } = req.body;
@@ -582,6 +639,28 @@ module.exports = (bot) => {
             });
         } catch (err) {
             console.error('Ошибка при удалении категорий канала:', err);
+            res.status(500).json({ success: false, message: 'Внутренняя ошибка сервера' });
+        }
+    });
+    router.post('/api/set-deal', async (req, res) => {
+        const { advertisementID } = req.body;
+
+        if (!advertisementID) {
+            return res.status(400).json({ success: false, message: 'Не указан channel_id' });
+        }
+
+        try {
+            await pool.query(
+                'INSERT INTO deal (advertisement_id) VALUES ($1) ON CONFLICT (advertisement_id) DO NOTHING',
+                [advertisementID]
+            );
+
+            res.json({
+                success: true,
+                message: `Добавлена сделка: ${advertisement_id}`
+            });
+        } catch (err) {
+            console.error('Ошибка при добавлении сделки:', err);
             res.status(500).json({ success: false, message: 'Внутренняя ошибка сервера' });
         }
     });
