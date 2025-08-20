@@ -167,7 +167,7 @@ module.exports = (io) => {
                                 await bot.telegram.sendMessage(chatId, json.error);
                             }
                         }else{
-                            await bot.telegram.sendMessage(chatId, advertisementID);
+                            await bot.telegram.sendMessage(chatId, "Владелец отклонил ваше предложение, поэтому оплата не доступна");
                         }
 
                     } catch (err) {
