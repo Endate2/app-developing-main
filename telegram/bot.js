@@ -191,7 +191,7 @@ module.exports = (io) => {
                             advertisementID: advertisementID
                         })
                     });
-                    await bot.telegram.sendMessage(chatId, "Вы завершили сделку до оплаты");
+                    await bot.telegram.sendMessage(chatId, "Вы завершили сделку до оплаты пользователем");
                 }
                 else {
                     await ctx.answerCbQuery('Неизвестное действие!');
