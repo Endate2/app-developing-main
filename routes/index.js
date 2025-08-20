@@ -33,7 +33,7 @@ module.exports = (bot) => {
             res.json(result.rows);
         } catch (err) {
             console.error('Error fetching channels:', err);
-            res.status(500).json({ error: 'Internal server error' });
+            res.status(500).json({ error: 'Internal server erro' });
         }
     });
 
