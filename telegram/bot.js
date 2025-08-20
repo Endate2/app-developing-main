@@ -166,7 +166,7 @@ module.exports = (io) => {
                                 await bot.telegram.sendMessage(chatId, json.error);
                             }
                         }else{
-                            await bot.telegram.sendMessage(chatId, "Продавец завершил вашу сделку");
+                            await bot.telegram.sendMessage(chatId, advertisementID);
                         }
 
                     } catch (err) {
