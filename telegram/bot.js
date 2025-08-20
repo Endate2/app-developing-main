@@ -102,6 +102,13 @@ module.exports = (io) => {
                     const userIdFrom = parts[2];
                     const userIdTo = parts[3];
                     const response = await fetch(`https://endate2-app-developing-main-cf8a.twc1.net/api/get_advertisement?id=${advertisementID}`);
+                    const resp = await fetch('https://endate2-app-developing-main-cf8a.twc1.net/api/set-deal', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            advertisementID: advertisementID
+                        })
+                    });
                     if (!response.ok) throw new Error('Ошибка получения объявления');
                     const result = await response.json();
                     if (!result) {
@@ -120,8 +127,16 @@ module.exports = (io) => {
                     );
                     await ctx.editMessageText(`Свяжитесь с пользователем: @${userName} и обсудите пост.\n\nПосле этого покупатель должен подтвердить обсуждение, нажав кнопку, тогда он получит ссылку на оплату, а вам придет уведомление об успешной операции.`, {
                         reply_markup: {
-                            inline_keyboard: []
+                            inline_keyboard: [
+                                [
+                                    {
+                                        text: 'Отклонить сделку',
+                                        callback_data: `fail_${advertisementID}`
+                                    },
+                                ]
+                            ]
                         }
+
                     });
 
                 }
@@ -131,25 +146,29 @@ module.exports = (io) => {
                         const userIdFrom = parts[2];
                         const price = parts[3];
                         const chatId = ctx.from.id;
+                        const res = await fetch(`https://endate2-app-developing-main-cf8a.twc1.net/api/search_deals?id=${advertisementID}`);
+                        if(res.success){
+                            const response = await fetch('https://endate2-app-developing-main-cf8a.twc1.net/api/create-payment-link', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    amount: price,
+                                    userId: userIdFrom,
+                                    orderNumber: advertisementID
+                                })
+                            });
 
-                    
-                        const response = await fetch('https://endate2-app-developing-main-cf8a.twc1.net/api/create-payment-link', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                amount: price,
-                                userId: userIdFrom,
-                                orderNumber: advertisementID
-                            })
-                        });
+                            const json = await response.json();
 
-                        const json = await response.json();
-
-                        if (json.paymentUrl) {
-                            await bot.telegram.sendMessage(chatId, `Перейдите по ссылке для оплаты:\n${json.paymentUrl}`);
-                        } else {
-                            await bot.telegram.sendMessage(chatId, json.error);
+                            if (json.paymentUrl) {
+                                await bot.telegram.sendMessage(chatId, `Перейдите по ссылке для оплаты:\n${json.paymentUrl}`);
+                            } else {
+                                await bot.telegram.sendMessage(chatId, json.error);
+                            }
+                        }else{
+                            await bot.telegram.sendMessage(chatId, "Продавец завершил вашу сделку");
                         }
+
                     } catch (err) {
                         console.error(err);
                         const chatId = ctx.from.id;
@@ -162,6 +181,17 @@ module.exports = (io) => {
 
                 else if (action === 'reject') {
                     await ctx.deleteMessage();
+                }else if (action === 'fail') {
+                    const advertisementID = parts[1];
+                    const chatId = ctx.from.id;
+                    const response = await fetch('https://endate2-app-developing-main-cf8a.twc1.net/api/delete-deal', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            advertisementID: advertisementID
+                        })
+                    });
+                    await bot.telegram.sendMessage(chatId, "Вы завершили сделку до оплаты");
                 }
                 else {
                     await ctx.answerCbQuery('Неизвестное действие!');
