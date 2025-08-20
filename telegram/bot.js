@@ -147,7 +147,8 @@ module.exports = (io) => {
                         const price = parts[3];
                         const chatId = ctx.from.id;
                         const res = await fetch(`https://endate2-app-developing-main-cf8a.twc1.net/api/search_deals?id=${advertisementID}`);
-                        if(res.success){
+                        const json = await res.json();
+                        if(json.success){
                             const response = await fetch('https://endate2-app-developing-main-cf8a.twc1.net/api/create-payment-link', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
