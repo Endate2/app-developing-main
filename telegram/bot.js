@@ -145,6 +145,7 @@ module.exports = (io) => {
                         const advertisementID = parts[1];
                         const userIdFrom = parts[2];
                         const price = parts[3];
+                        const userIdTo = parts[4];
                         const chatId = ctx.from.id;
                         const res = await fetch(`https://endate2-app-developing-main-cf8a.twc1.net/api/search_deals?id=${advertisementID}`);
                         const json = await res.json();
@@ -154,7 +155,8 @@ module.exports = (io) => {
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({
                                     amount: price,
-                                    userId: userIdFrom,
+                                    userIdFrom: userIdFrom,
+                                    userIdTo: userIdTo,
                                     orderNumber: advertisementID
                                 })
                             });
@@ -365,7 +367,7 @@ module.exports = (io) => {
                 [
                     {
                         text: 'Перейти к оплате',
-                        callback_data: `pay_${advertisementID}_${userIdFrom}_${price}`
+                        callback_data: `pay_${advertisementID}_${userIdFrom}_${price}_${userIdTo}`
                     },
                 ]
             ]
