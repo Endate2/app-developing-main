@@ -55,15 +55,89 @@ module.exports = (bot) => {
     });
 
 
+    router.post('/payment-status', (req, res) => {
+        try {
+            // Получаем тело запроса с учетом полей из вашего JSON
+            const {
+                Status: status,   // меняем регистр для соответствия
+                OrderId: orderId,
+                PaymentId: paymentId,
+                Amount: amount,
+                ...otherData
+            } = req.body;
 
-router.post('/api/create-payment-link', async (req, res) => {
+            // Логируем для отладки
+            console.log('Получен статус платежа:', status);
+            console.log('Данные платежа:', req.body);
+            const userIdTo = orderId.split('-n')[0];
+            const orderNumber = orderId.split('-n')[1];
+            const orderNumberNum = parseInt(orderNumber, 10);
+            const userIdToNumber = parseInt(userIdTo, 10);
+            switch (status) {
+                case 'NEW':
+                    console.log(`Платеж ${paymentId} создан и ожидает оплату.`);
+                    break;
+                case 'FORM_SHOWED':
+                    console.log(`На платежной форме клиента открыт платеж ${paymentId}.`);
+                    break;
+                case 'AUTHORIZING':
+                    console.log(`Платеж ${paymentId} обрабатывается.`);
+                    break;
+                case '3DS_CHECKING':
+                    console.log(`Платеж ${paymentId} проходит 3D Secure.`);
+                    break;
+                case '3DS_CHECKED':
+                    console.log(`Платеж ${paymentId} прошёл 3D Secure.`);
+                    break;
+                case 'AUTHORIZED':
+                    console.log(`Платеж ${paymentId} авторизован, деньги заблокированы.`);
+                    break;
+                case 'CONFIRMED':
+                    createMessageSuccsesfulPayment(userIdToNumber,orderNumberNum)
+                    break;
+                case 'REJECTED':
+                    console.log(`Платеж ${paymentId} отклонён банком.`);
+                    break;
+                case 'CANCELED':
+                    console.log(`Платеж ${paymentId} отменён мерчантом.`);
+                    break;
+                case 'REVERSING':
+                    console.log(`Идёт возврат средств по платежу ${paymentId}.`);
+                    break;
+                case 'PARTIAL_REVERSED':
+                    console.log(`Частичный возврат по платежу ${paymentId} успешно выполнен.`);
+                    break;
+                case 'REVERSED':
+                    console.log(`Полный возврат по платежу ${paymentId} успешно выполнен.`);
+                    break;
+                case 'REFUNDING':
+                    console.log(`Происходит возврат подтвержденного платежа ${paymentId}.`);
+                    break;
+                case 'PARTIAL_REFUNDED':
+                    console.log(`Частичный возврат подтвержденного платежа ${paymentId} выполнен.`);
+                    break;
+                case 'REFUNDED':
+                    console.log(`Полный возврат подтвержденного платежа ${paymentId} выполнен.`);
+                    break;
+                default:
+                    console.warn('Неизвестный статус платежа:', status);
+            }
+
+            res.status(200).send('OK');
+
+        } catch (error) {
+            console.error('Ошибка обработки статуса платежа:', error);
+            res.status(500).send('Ошибка сервера');
+        }
+    });
+    router.post('/api/create-payment-link', async (req, res) => {
     try {
-        const { amount, userId, orderNumber } = req.body;
+        const { amount, userIdFrom,userIdTo, orderNumber } = req.body;
 
         const data = {
             "Amount": (amount * 100).toString(), // сумма в копейках, обязательно строка
             "Description": 'Оплата рекламы для канала',
-            "OrderId": `${userId}-n${orderNumber}`,
+            "OrderId": `${userIdTo}-n${orderNumber}`,
             "TerminalKey": '1755596274717DEMO',
             "Password": 'cpvaRLay%4l$UTe&' // пароль для формирования токена
         };
@@ -734,6 +808,34 @@ router.post('/api/create-payment-link', async (req, res) => {
                         text: 'Отклонить',
                         callback_data: `reject_${advertisementID}_${userIdFrom}_${userIdTo}`
                     }
+                ]
+            ]
+        };
+
+
+        try {
+            await bot.telegram.sendMessage(userIdTo, text, {
+                reply_markup: keyboard
+            });
+        } catch (err) {
+            console.error('Ошибка при отправке сообщения в Telegram:', err);
+        }
+    }
+
+    async function createMessageSuccsesfulPayment(userIdTo, advertisementID) {
+        const text = `Пользователь оплатил рекламу, деньши заморожены на счете банка, после подтверждения обеями сторонами, что пост был выложен, вы сможете получить деньги через 24 часа
+        
+        ПРЕДУПРЕЖДЕНИЕ: Если ответ сторон на публикацию поста будут отличаться, то сделка будет автоматически отменена и вам нужно будет обратиться в поддержку для дальнейшего расследования.
+        `;
+
+        const keyboard = {
+            inline_keyboard: [
+                [
+                    {
+                        text: 'Пост выложен',
+                        // Замените строку с callback_data на:
+                        callback_data: `publick_${advertisementID}_${userIdFrom}_${userIdTo}}`
+                    },
                 ]
             ]
         };
