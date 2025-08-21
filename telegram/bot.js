@@ -164,7 +164,7 @@ module.exports = (io) => {
                             const json = await response.json();
 
                             if (json.paymentUrl) {
-                                await bot.telegram.sendMessage(chatId, `Перейдите по ссылке для оплаты:\n${json.paymentUrl}`);
+                                await bot.telegram.sendMessage(chatId, `Перейдите по ссылке для оплаты рекламного поста:\n${json.paymentUrl}`);
                             } else {
                                 await bot.telegram.sendMessage(chatId, json.error);
                             }
