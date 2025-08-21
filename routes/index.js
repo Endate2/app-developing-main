@@ -834,7 +834,7 @@ module.exports = (bot) => {
                     {
                         text: 'Пост выложен',
                         // Замените строку с callback_data на:
-                        callback_data: `publick_${advertisementID}_${userIdFrom}_${userIdTo}}`
+                        callback_data: `publick_${advertisementID}_${userIdTo}}`
                     },
                 ]
             ]
