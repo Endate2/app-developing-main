@@ -55,24 +55,24 @@ module.exports = (bot) => {
     });
 
 
-    router.post('/payment-status', (req, res) => {
+    router.post('/payment-status', async (req, res) => {
         try {
-            // Получаем тело запроса с учетом полей из вашего JSON
             const {
-                Status: status,   // меняем регистр для соответствия
+                Status: status,
                 OrderId: orderId,
                 PaymentId: paymentId,
                 Amount: amount,
                 ...otherData
             } = req.body;
 
-            // Логируем для отладки
             console.log('Получен статус платежа:', status);
             console.log('Данные платежа:', req.body);
+
             const userIdTo = orderId.split('-n')[0];
             const orderNumber = orderId.split('-n')[1];
             const orderNumberNum = parseInt(orderNumber, 10);
             const userIdToNumber = parseInt(userIdTo, 10);
+
             switch (status) {
                 case 'NEW':
                     console.log(`Платеж ${paymentId} создан и ожидает оплату.`);
@@ -93,7 +93,11 @@ module.exports = (bot) => {
                     console.log(`Платеж ${paymentId} авторизован, деньги заблокированы.`);
                     break;
                 case 'CONFIRMED':
-                    createMessageSuccsesfulPayment(userIdToNumber,orderNumberNum)
+                    await pool.query(
+                        'UPDATE deal SET payment_status = $3 WHERE advertisement_id = $1 AND payment_status = $2',
+                        [orderNumberNum, 'создана', 'оплачена']
+                    );
+                    await createMessageSuccsesfulPayment(userIdToNumber, orderNumberNum);
                     break;
                 case 'REJECTED':
                     console.log(`Платеж ${paymentId} отклонён банком.`);
@@ -130,6 +134,7 @@ module.exports = (bot) => {
             res.status(500).send('Ошибка сервера');
         }
     });
+
     router.post('/api/create-payment-link', async (req, res) => {
     try {
         const { amount, userIdFrom,userIdTo, orderNumber } = req.body;
@@ -178,7 +183,7 @@ module.exports = (bot) => {
             console.log("Response JSON body:", JSON.stringify(result));
         } catch (err) {
             console.error("Ошибка парсинга JSON из ответа:", err);
-            console.error("Полученнй ответ:", responseBody);
+            console.error("Полученный ответ:", responseBody);
             throw err;
         }
 
@@ -668,18 +673,29 @@ module.exports = (bot) => {
         }
     });
     router.post('/api/delete-deal', async (req, res) => {
-        const { advertisementID} = req.body;
+        const { advertisementID } = req.body;
 
         if (!advertisementID) {
             return res.status(400).json({ success: false, message: 'Не указан advertisementID' });
         }
-        await pool.query(
-            'UPDATE advertisements SET in_search = true WHERE id = $1',
-            [advertisement_id]
-        );
+
         try {
+            const checkResult = await pool.query(
+                'SELECT 1 FROM deal WHERE advertisement_id = $1 AND payment_status = $2',
+                [advertisementID, 'создана']
+            );
+
+            if (checkResult.rowCount === 0) {
+                return res.status(404).json({ success: false, message: 'Сделка со статусом "создана" не найдена' });
+            }
+
+            await pool.query(
+                'UPDATE advertisements SET in_search = true WHERE id = $1',
+                [advertisementID]
+            );
+
             const result = await pool.query(
-                'DELETE FROM deal WHERE advertisement_id = $1;',
+                'DELETE FROM deal WHERE advertisement_id = $1',
                 [advertisementID]
             );
 
@@ -687,11 +703,13 @@ module.exports = (bot) => {
                 success: true,
                 message: `Удалено сделок: ${result.rowCount}`
             });
+
         } catch (err) {
             console.error('Ошибка при удалении сделок канала:', err);
             res.status(500).json({ success: false, message: 'Внутренняя ошибка сервера' });
         }
     });
+
 
     router.post('/api/delete-channel-categories', async (req, res) => {
         const { channel_id } = req.body;
@@ -724,9 +742,10 @@ module.exports = (bot) => {
 
         try {
             await pool.query(
-                'INSERT INTO deal (advertisement_id) VALUES ($1)',
-                [advertisementID]
+                'INSERT INTO deal (advertisement_id, payment_status) VALUES ($1, $2)',
+                [advertisementID, 'создана']
             );
+
 
             res.json({
                 success: true,
@@ -792,7 +811,7 @@ module.exports = (bot) => {
 
 🕒 Длительность: ${duration} 
 
-💰 Цена: ${price} (Сервис берет 15%)
+💰 Цена: ${price} (Сервис берет 18%)
 
 ✍️ Комментарий: ${comment}`;
 
