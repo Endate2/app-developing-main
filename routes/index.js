@@ -138,8 +138,8 @@ module.exports = (bot) => {
             "Amount": (amount * 100).toString(), // сумма в копейках, обязательно строка
             "Description": 'Оплата рекламы для канала',
             "OrderId": `${userIdTo}-n${orderNumber}`,
-            "TerminalKey": '1755596274717DEMO',
-            "Password": 'cpvaRLay%4l$UTe&' // пароль для формирования токена
+            "TerminalKey": process.env.TERMINAL_KEY,
+            "Password": process.env.TERMINAL_PASSWORD
         };
 
         // Логируем тело запроса без пароля (для безопасности)
