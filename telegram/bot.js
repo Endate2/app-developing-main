@@ -194,7 +194,12 @@ module.exports = (io) => {
                             advertisementID: advertisementID
                         })
                     });
-                    await bot.telegram.sendMessage(chatId, "Вы завершили сделку до оплаты пользователем");
+                    const json = await response.json();
+                    if (json.success){
+                        await bot.telegram.sendMessage(chatId, "Вы завершили сделку до оплаты пользователем");
+                    }else{
+                        await bot.telegram.sendMessage(chatId, "Нельзя удалить сделку, так она ону уже была оплачена или вы уже получили за нее оплату");
+                    }
                 }
                 else {
                     await ctx.answerCbQuery('Неизвестное действие!');
@@ -358,7 +363,7 @@ module.exports = (io) => {
 
 📅 Дата: ${date.toDateString()}
 
-💰 Цена: ${price} (Сервис берет коммисию в размере 15% от стоимости рекламного поста)
+💰 Цена: ${price} (Сервис берет коммисию в размере 200 рублей к стоимости)
 
 ✍️ В ближайшее время с вами свяжется владелец канала, обсудите с ним пост и после этого нажмите кнопку чтоб перейти к оплате рекламного поста`;
 
