@@ -82,7 +82,8 @@ async function initDB() {
                 );
             CREATE TABLE IF NOT EXISTS deal(
                 id SERIAL PRIMARY KEY,
-                advertisement_id BIGINT REFERENCES advertisements(id)
+                advertisement_id BIGINT REFERENCES advertisements(id),
+                payment_status payment_status_enum 
             );
         `);
 
