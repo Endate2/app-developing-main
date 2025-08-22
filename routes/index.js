@@ -178,7 +178,7 @@ module.exports = (bot) => {
             console.log("Response JSON body:", JSON.stringify(result));
         } catch (err) {
             console.error("Ошибка парсинга JSON из ответа:", err);
-            console.error("Полученный ответ:", responseBody);
+            console.error("Полученнй ответ:", responseBody);
             throw err;
         }
 
