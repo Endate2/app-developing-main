@@ -111,9 +111,9 @@ function addBlockToPayment(adData) {
   <div class="price-item commission">
     <div class="price-label-container">
       <i class="fas fa-percentage price-icon"></i>
-      <span class="price-label">Включая комиссию сервиса (10%)</span>
+      <span class="price-label">Включая комиссию сервиса (15%)</span>
     </div>
-    <span class="commission-value">${Math.round(adData.price * 0.1)} руб</span>
+    <span class="commission-value">${Math.round(adData.price * 0.15)} руб</span>
   </div>
 
   <div class="form-group">
