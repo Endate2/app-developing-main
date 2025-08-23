@@ -85,6 +85,12 @@ async function initDB() {
                 advertisement_id BIGINT REFERENCES advertisements(id),
                 payment_status payment_status_enum 
             );
+            CREATE TABLE IF NOT EXISTS payment_methods(
+                id SERIAL PRIMARY KEY,
+                user_id BIGINT REFERENCES users(id),
+                card_number INTEGER,
+                phone VARCHAR(50)
+                );
         `);
 
         console.log('Database initialized');
