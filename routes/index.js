@@ -146,15 +146,14 @@ module.exports = (bot) => {
             res.status(500).send('Ошибка сервера');
         }
     });
-
     router.post('/api/create-payment-link', async (req, res) => {
-    await pool.query(
-                        'UPDATE deal SET payment_status = $3 WHERE advertisement_id = $1 AND payment_status = $2',
-                        [orderNumberNum, 'создана', 'получена ссылка на оплату']
-                    );
+
     try {
         const { amount, userIdFrom,userIdTo, orderNumber } = req.body;
-
+        await pool.query(
+            'UPDATE deal SET payment_status = $3 WHERE advertisement_id = $1 AND payment_status = $2',
+            [orderNumber, 'создана', 'получена ссылка на оплату']
+        );
         const data = {
             "Amount": (amount * 100).toString(), // сумма в копейках, обязательно строка
             "Description": 'Оплата рекламы для канала',
@@ -827,7 +826,7 @@ module.exports = (bot) => {
 
 🕒 Длительность: ${duration} 
 
-💰 Цена: ${price} (Сервис берет 18%)
+💰 Цена: ${price} (Сервис берет 15% от стоимсоти рекламного поста)
 
 ✍️ Комментарий: ${comment}`;
 
