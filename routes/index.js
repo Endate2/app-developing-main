@@ -18,8 +18,20 @@ module.exports = (bot) => {
 
 
 
-
-
+    router.get('/api/get_payment_methods', async (req, res) => {
+        try {
+            const userId = req.query.user_id;
+            const result = await pool.query(`
+                SELECT *
+                FROM payment_methods
+                WHERE user_id = $1
+            `, [userId]);
+            res.json(result.rows);
+        } catch (err) {
+            console.error('Error fetching payment_methods:', err);
+            res.status(500).json({ error: 'Internal server erro' });
+        }
+    });
 
 
     router.get('/api/channels', async (req, res) => {
@@ -50,7 +62,7 @@ module.exports = (bot) => {
             res.status(200).send({ message: 'Отзыв добавлен' });
         } catch (err) {
             console.error('Error inserting feedback:', err);
-            res.status(500).send('Internal Serv Erro');
+            res.status(500).send('Internal Server Erro');
         }
     });
 
@@ -749,10 +761,10 @@ module.exports = (bot) => {
 
             res.json({
                 success: true,
-                message: `Добавлена сделка: ${advertisementID}`
+                message: `Добавлена сделка: ${advertisement_id}`
             });
         } catch (err) {
-            console.error('Ошибка при добавлении сделки, предложение не было найдено');
+            console.error('Ошибка при добавлении сделки:', err);
             res.status(500).json({ success: false, message: 'Внутренняя ошибка сервера' });
         }
     });
@@ -811,7 +823,7 @@ module.exports = (bot) => {
 
 🕒 Длительность: ${duration} 
 
-💰 Цена: ${price} (Сервис берет 15% от рекламного поста)
+💰 Цена: ${price} (Сервис берет 18%)
 
 ✍️ Комментарий: ${comment}`;
 
