@@ -244,7 +244,7 @@ module.exports = (io) => {
                     await ctx.answerCbQuery('Неизвестное действие!');
                 }
             }catch (e) {
-                await ctx.answerCbQuery('Неизвестное действие');
+                await ctx.answerCbQuery(`Ошибка: ${e.message || e}`, { show_alert: true });
             }
 
         } catch (error) {
