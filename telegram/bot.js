@@ -29,6 +29,42 @@ module.exports = (io) => {
         );
     });
 
+    bot.command('payment_methods', async (ctx) => {
+        const userId = ctx.from.id;
+
+        await pool.query(
+            'INSERT INTO users (id, username, first_name) VALUES ($1, $2, $3) ON CONFLICT (id) DO NOTHING',
+            [userId, ctx.from.username, ctx.from.first_name]
+        );
+
+        const result = await pool.query(`
+        SELECT card_number, phone
+        FROM payment_methods
+        WHERE user_id = $1
+    `, [userId]);
+
+        if (result.rows.length === 0) {
+            await ctx.reply('Нет данных о карте или телефоне.', {
+                reply_markup: {
+                    inline_keyboard: [[{ text: 'Изменить данные', callback_data: 'change_payment_data' }]]
+                }
+            });
+        } else {
+            const paymentData = result.rows[0];
+            const cardNumber = paymentData.card_number ? `Карта: **** **** **** ${paymentData.card_number.toString().slice(-4)}` : '';
+            const phone = paymentData.phone ? `Телефон: ${paymentData.phone}` : '';
+
+            const message = [cardNumber, phone].filter(Boolean).join('\n');
+
+            await ctx.reply(`Ваши платежные данные:\n${message}`, {
+                reply_markup: {
+                    inline_keyboard: [[{ text: 'Изменить данные', callback_data: 'change_payment_data' }]]
+                }
+            });
+        }
+
+    });
+
 
     bot.command('start', async (ctx) => {
         const userId = ctx.from.id;
@@ -184,7 +220,10 @@ module.exports = (io) => {
 
                 else if (action === 'reject') {
                     await ctx.deleteMessage();
-                }else if (action === 'fail') {
+                }else if (action === 'change_payment_data') {
+
+                }
+                else if (action === 'fail') {
                     const advertisementID = parts[1];
                     const chatId = ctx.from.id;
                     const response = await fetch('https://endate2-app-developing-main-cf8a.twc1.net/api/delete-deal', {
@@ -363,7 +402,7 @@ module.exports = (io) => {
 
 📅 Дата: ${date.toDateString()}
 
-💰 Цена: ${price} (Сервис берет коммисию 15% от стоимости рекламного поста)
+💰 Цена: ${price} (Сервис берет коммисию в размере 200 рублей к стоимости)
 
 ✍️ В ближайшее время с вами свяжется владелец канала, обсудите с ним пост и после этого нажмите кнопку чтоб перейти к оплате рекламного поста`;
 
