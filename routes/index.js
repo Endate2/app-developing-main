@@ -761,7 +761,7 @@ module.exports = (bot) => {
 
             res.json({
                 success: true,
-                message: `Добавлена сделка: ${advertisement_id}`
+                message: `Добавлена сделка: ${advertisementID}`
             });
         } catch (err) {
             console.error('Ошибка при добавлении сделки:', err);
