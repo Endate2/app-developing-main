@@ -148,6 +148,10 @@ module.exports = (bot) => {
     });
 
     router.post('/api/create-payment-link', async (req, res) => {
+    await pool.query(
+                        'UPDATE deal SET payment_status = $3 WHERE advertisement_id = $1 AND payment_status = $2',
+                        [orderNumberNum, 'создана', 'оплачена']
+                    );
     try {
         const { amount, userIdFrom,userIdTo, orderNumber } = req.body;
 
