@@ -75,7 +75,7 @@ function setupSocket(io) {
                      WHERE date_of_advertisement = $1 AND channel_id = $2 AND in_search = true`,
                     [day.trim(), Number(channelId)]
                 );
-                console.log("Notifications found:", day,channelId);
+                console.error("Notifications found:", day,channelId);
                 socket.emit('advertisements_list', result.rows);
             } catch (err) {
                 console.error('Error fetching advertisements:', err);
