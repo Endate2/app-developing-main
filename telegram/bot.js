@@ -145,7 +145,7 @@ module.exports = (io) => {
                             advertisementID: advertisementID
                         })
                     });
-                    if (!response.ok) throw new Error('Ошибка получения объявления');
+
                     const result = await response.json();
                     if (!result) {
                         throw new Error('Объявление не найдено');
@@ -244,6 +244,7 @@ module.exports = (io) => {
                     await ctx.answerCbQuery('Неизвестное действие!');
                 }
             }catch (e) {
+                console.error('Ошибка:', e);
                 await ctx.answerCbQuery(`Ошибка: ${e.message || e}`, { show_alert: true });
             }
 
