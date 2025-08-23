@@ -752,7 +752,7 @@ module.exports = (bot) => {
                 message: `Добавлена сделка: ${advertisementID}`
             });
         } catch (err) {
-            console.error('Ошибка при добавлении сделки:', err);
+            console.error('Ошибка при добавлении сделки, предложение не было найдено');
             res.status(500).json({ success: false, message: 'Внутренняя ошибка сервера' });
         }
     });
