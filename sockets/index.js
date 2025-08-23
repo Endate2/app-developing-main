@@ -75,7 +75,6 @@ function setupSocket(io) {
                      WHERE date_of_advertisement = $1 AND channel_id = $2 AND in_search = true`,
                     [day.trim(), Number(channelId)]
                 );
-                console.error("Notifications found:", day,channelId);
                 socket.emit('advertisements_list', result.rows);
             } catch (err) {
                 console.error('Error fetching advertisements:', err);
@@ -84,7 +83,7 @@ function setupSocket(io) {
         });
         socket.on('get_advertisements_payment', async (day, channelId) => {
             try {
-                const result = await pool.query(
+                 const result = await pool.query(
                     'SELECT ' +
                     '  all_channels.name, ' +
                     '  all_channels.subscribers, ' +
@@ -99,7 +98,8 @@ function setupSocket(io) {
                     '  ON all_channels.id = advertisements.channel_id ' +
                     'WHERE ' +
                     '  all_channels.id = $1 ' +
-                    '  AND advertisements.date_of_advertisement = $2;',
+                    '  AND advertisements.date_of_advertisement = $2' +
+                    '  AND advertisements.in_search = true;',
                     [channelId, day]
                 );
 
