@@ -279,7 +279,7 @@ document.getElementById('share').addEventListener('click', () => {
     vibrate();
 });
 document.getElementById('userdoc')?.addEventListener('click', () => {
-    indow.open('https://telegram.org/privacy-tpa', '_blank');
+    window.open("https://telegram.org/privacy-tpa", '_blank');
     vibrate();
 });
 document.getElementById('UserId')?.addEventListener('click', () => {
