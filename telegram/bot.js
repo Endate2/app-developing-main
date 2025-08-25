@@ -3,6 +3,7 @@ const { pool } = require('../config/db');
 
 module.exports = (io) => {
     const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
+    const paymentDataState = new Map();
 
     bot.command('offer', async (ctx) => {
         await ctx.reply(
