@@ -246,6 +246,11 @@ document.getElementById('Telegram')?.addEventListener('click', () => {
     vibrate();
 });
 
+document.getElementById('about')?.addEventListener('click', () => {
+    window.open("https://t.me/port_spb_ru", '_blank');
+    vibrate();
+});
+
 document.getElementById('Git')?.addEventListener('click', () => {
     window.open("https://github.com/port-ru", '_blank');
     vibrate();
