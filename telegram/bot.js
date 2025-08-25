@@ -31,40 +31,45 @@ module.exports = (io) => {
     });
 
     bot.command('payment_methods', async (ctx) => {
-        const userId = ctx.from.id;
+    const userId = ctx.from.id;
 
-        await pool.query(
-            'INSERT INTO users (id, username, first_name) VALUES ($1, $2, $3) ON CONFLICT (id) DO NOTHING',
-            [userId, ctx.from.username, ctx.from.first_name]
-        );
+    await pool.query(
+        'INSERT INTO users (id, username, first_name) VALUES ($1, $2, $3) ON CONFLICT (id) DO NOTHING',
+        [userId, ctx.from.username, ctx.from.first_name]
+    );
 
-        const result = await pool.query(`
+    const result = await pool.query(`
         SELECT card_number, phone
         FROM payment_methods
         WHERE user_id = $1
     `, [userId]);
 
-        if (result.rows.length === 0) {
-            await ctx.reply('Нет данных о карте или телефоне.', {
-                reply_markup: {
-                    inline_keyboard: [[{ text: 'Изменить данные', callback_data: 'change_payment_data' }]]
-                }
-            });
-        } else {
-            const paymentData = result.rows[0];
-            const cardNumber = paymentData.card_number ? `Карта: **** **** **** ${paymentData.card_number.toString().slice(-4)}` : '';
-            const phone = paymentData.phone ? `Телефон: ${paymentData.phone}` : '';
+    if (result.rows.length === 0) {
+        await ctx.reply('Нет данных о карте или телефоне.', {
+            reply_markup: {
+                inline_keyboard: [[{ 
+                    text: 'Изменить данные', 
+                    callback_data: 'changepaymentdata'  // ← ИЗМЕНИТЬ ЗДЕСЬ
+                }]]
+            }
+        });
+    } else {
+        const paymentData = result.rows[0];
+        const cardNumber = paymentData.card_number ? `Карта: **** **** **** ${paymentData.card_number.toString().slice(-4)}` : '';
+        const phone = paymentData.phone ? `Телефон: ${paymentData.phone}` : '';
 
-            const message = [cardNumber, phone].filter(Boolean).join('\n');
+        const message = [cardNumber, phone].filter(Boolean).join('\n');
 
-            await ctx.reply(`Ваши платежные данные:\n${message}`, {
-                reply_markup: {
-                    inline_keyboard: [[{ text: 'Изменить данные', callback_data: 'changepaymentdata' }]]
-                }
-            });
-        }
-
-    });
+        await ctx.reply(`Ваши платежные данные:\n${message}`, {
+            reply_markup: {
+                inline_keyboard: [[{ 
+                    text: 'Изменить данные', 
+                    callback_data: 'changepaymentdata'  // ← И СОВПАДЕНИЕ ЗДЕСЬ
+                }]]
+            }
+        });
+    }
+});
 
 
     bot.command('start', async (ctx) => {
