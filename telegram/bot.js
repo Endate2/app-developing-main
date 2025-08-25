@@ -213,7 +213,7 @@ module.exports = (io) => {
                         await ctx.answerCbQuery(`Произошла ошибка: ${err.message}`);
                     }
 
-                    await ctx.answerCallbackQuery(ctx.callbackQuery.id);
+                    await ctx.answerCallbackQuery('Оплата инициирована');
                 }
 
                 else if (action === 'reject') {
