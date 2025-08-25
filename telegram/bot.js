@@ -59,7 +59,7 @@ module.exports = (io) => {
 
             await ctx.reply(`Ваши платежные данные:\n${message}`, {
                 reply_markup: {
-                    inline_keyboard: [[{ text: 'Изменить данные', callback_data: 'change_payment_data' }]]
+                    inline_keyboard: [[{ text: 'Изменить данные', callback_data: 'changepaymentdata' }]]
                 }
             });
         }
@@ -132,7 +132,7 @@ module.exports = (io) => {
             const text = ctx.message.text.trim();
 
             // Проверяем, ожидает ли пользователь ввода платежных данных
-            if (paymentDataState.get(userId) === 'awaiting_payment_data') {
+            if (paymentDataState.get(userId) === 'awaitingpaymentdata') {
                 // Убираем состояние
                 paymentDataState.delete(userId);
 
@@ -261,10 +261,10 @@ module.exports = (io) => {
 
                 else if (action === 'reject') {
                     await ctx.deleteMessage();
-                }else if (action === 'change_payment_data') {
+                }else if (action === 'changepaymentdata') {
                     // Устанавливаем состояние для пользователя
                     const userId = ctx.from.id; // ДОБАВЬТЕ ЭТУ СТРОКУ
-                    paymentDataState.set(userId, 'awaiting_payment_data');
+                    paymentDataState.set(userId, 'awaitingpaymentdata');
 
                     await ctx.reply('Пожалуйста, введите данные в формате: номер_карты,телефон (например: 4000200010000000,+79215976307)');
                     await ctx.answerCbQuery();
