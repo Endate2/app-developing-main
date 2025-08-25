@@ -286,6 +286,7 @@ document.getElementById('UserId')?.addEventListener('click', () => {
     vibrate();
 });
 document.getElementById('Screen')?.addEventListener('click', () => {
+    window.open('https://t.me/portad_bot/?startapp&addToHomeScreen', '_blank');
     vibrate();
 });
 document.addEventListener('gesturestart', function(e) {
