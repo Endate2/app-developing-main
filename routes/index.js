@@ -61,7 +61,7 @@ module.exports = (bot) => {
             );
             res.status(200).send({ message: 'Отзыв добавлен' });
         } catch (err) {
-            console.error('Error inserting feedback:', err);
+            console.error('Erro inserting feedback:', err);
             res.status(500).send('Internal Server Erro');
         }
     });
