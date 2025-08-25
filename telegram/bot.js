@@ -261,7 +261,7 @@ module.exports = (io) => {
                 return;
             }
 
-            userStates.delete(userId);
+            paymentDataState.delete(userId);
         }
 
         } catch (error) {
