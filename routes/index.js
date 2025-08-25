@@ -837,7 +837,7 @@ module.exports = (bot) => {
                     {
                         text: 'Принять',
                         // Замените строку с callback_data на:
-                        callback_data: `accept_${advertisementID}_${userIdFrom}_${userIdTo}}`
+                        callback_data: `accept_${advertisementID}_${userIdFrom}_${userIdTo}`
                     },
                     {
                         text: 'Отклонить',
