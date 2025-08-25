@@ -223,7 +223,7 @@ module.exports = (io) => {
                     [dealIdNumber]
                 );
 
-                if (!result.rows[0].exists) {
+                if (!result.rows.length) {
                     await ctx.reply('❌ Сделка с таким ID не найдена');
                     return;
                 }
