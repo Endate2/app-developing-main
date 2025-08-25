@@ -189,6 +189,9 @@ module.exports = (io) => {
                     const advertisementID = parts[1];
                     const userIdFrom = parts[2];
                     const userIdTo = parts[3];
+
+                    await ctx.answerCbQuery();
+                    
                     const response = await fetch(`https://endate2-app-developing-main-cf8a.twc1.net/api/get_advertisement?id=${advertisementID}`);
                     const resp = await fetch('https://endate2-app-developing-main-cf8a.twc1.net/api/set-deal', {
                         method: 'POST',
@@ -235,6 +238,8 @@ module.exports = (io) => {
                         const price = parts[3];
                         const userIdTo = parts[4];
                         const chatId = ctx.from.id;
+                        await ctx.answerCbQuery();
+                        
                         const res = await fetch(`https://endate2-app-developing-main-cf8a.twc1.net/api/search_deals?id=${advertisementID}`);
                         const json = await res.json();
                         if(json.success){
@@ -267,9 +272,10 @@ module.exports = (io) => {
                 }
 
                 else if (action === 'reject') {
+                    await ctx.answerCbQuery();
                     await ctx.deleteMessage();
                 }else if (action === 'changepaymentdata') {
-                    // Устанавливаем состояние для пользователя
+                    await ctx.answerCbQuery("Функция изменения платежных данных");
                     const userId = ctx.from.id; // ДОБАВЬТЕ ЭТУ СТРОКУ
                     paymentDataState.set(userId, 'awaitingpaymentdata');
 
@@ -279,6 +285,7 @@ module.exports = (io) => {
                 else if (action === 'fail') {
                     const advertisementID = parts[1];
                     const chatId = ctx.from.id;
+                    await ctx.answerCbQuery();
                     const response = await fetch('https://endate2-app-developing-main-cf8a.twc1.net/api/delete-deal', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
