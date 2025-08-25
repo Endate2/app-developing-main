@@ -543,27 +543,28 @@ module.exports = (bot) => {
         try {
             const id = Number(req.query.id);
 
-
             const result = await pool.query(
-                `SELECT EXISTS (
-                    SELECT 1 FROM deal
-                    WHERE advertisement_id = $1
-                );`,
+                `SELECT payment_status FROM deal WHERE advertisement_id = $1 LIMIT 1;`,
                 [id]
             );
 
-            const exists = result.rows[0].exists;
-            if (exists) {
-                return res.json({ success: true });
-            }else{
+            if (result.rows.length > 0) {
+                const paymentStatus = result.rows[0].payment_status;
+                if (paymentStatus === "получена ссылка на оплату") {
+                    return res.json({ success: true });
+                } else {
+                    return res.json({ success: false });
+                }
+            } else {
                 return res.json({ success: false });
             }
 
         } catch (err) {
-            console.error('Ошибка в /api/create_notification:', err);
+            console.error('Ошибка в /api/search_deals:', err);
             res.status(500).json({ error: 'Внутренняя ошибка сервера' });
         }
     });
+
 
     router.get('/api/get_advertisement', async (req, res) => {
         try {
