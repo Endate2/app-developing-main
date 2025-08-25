@@ -29,7 +29,7 @@ module.exports = (io) => {
             'а 300 рублей остаются сервису в виде комиссии.'
         );
     });
-    bot.command('/accepted_posts', async (ctx) => {
+    bot.command('accepted_posts', async (ctx) => {
         const userId = ctx.from.id;
         paymentDataState.set(userId, { type: 'posts', data: null });
 
