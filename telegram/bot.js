@@ -217,6 +217,43 @@ module.exports = (io) => {
                 else if (action === 'reject') {
                     await ctx.deleteMessage();
                 }else if (action === 'change_payment_data') {
+                    await ctx.reply('Пожалуйста, введите данные в формате: номер_карты,телефон (например: 4000200010000000,+79215976307)');
+
+                    bot.on('text', async (ctx) => {
+                        const input = ctx.message.text.trim();
+                        const parts = input.split(',');
+
+                        if (parts.length !== 2) {
+                            await ctx.reply('Неверный формат. Введите данные в формате: номер_карты,телефон');
+                            return;
+                        }
+
+                        const cardNumber = parts[0].trim();
+                        const phone = parts[1].trim();
+
+                        // Проверка номера карты: 16 цифр (пример простой проверки длины и цифр)
+                        const cardValid = /^\d{16}$/.test(cardNumber);
+
+                        // Проверка номера телефона: должен начинаться с + и далее цифры
+                        const phoneValid = /^\+\d{10,15}$/.test(phone);
+
+                        if (!cardValid || !phoneValid) {
+                            await ctx.reply('Данные не совпадают с требуемым форматом.\nНомер карты должен быть 16 цифр.\nТелефон должен начинаться с + и содержать от 10 до 15 цифр.');
+                            return;
+                        }
+
+                        // Теперь обновим или вставим данные по пользователю в БД
+                        await pool.query(
+                            `INSERT INTO payment_methods (user_id, card_number, phone) 
+             VALUES ($1, $2, $3)
+             ON CONFLICT (user_id) DO UPDATE SET card_number = EXCLUDED.card_number, phone = EXCLUDED.phone`,
+                            [ctx.from.id, cardNumber, phone]
+                        );
+
+                        await ctx.reply('Данные успешно сохранены.');
+
+                        // Можно отписать обработчик, чтобы не ловить лишние сообщения
+                    });
 
                 }
                 else if (action === 'fail') {
