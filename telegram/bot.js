@@ -164,8 +164,10 @@ module.exports = (io) => {
                 // Обновляем данные в БД
                 await pool.query(
                     `INSERT INTO payment_methods (user_id, card_number, phone) 
-                 VALUES ($1, $2, $3)
-                 ON CONFLICT (user_id) DO UPDATE SET card_number = EXCLUDED.card_number, phone = EXCLUDED.phone`,
+                    VALUES ($1, $2, $3)
+                    ON CONFLICT (user_id)
+                    DO UPDATE SET card_number = EXCLUDED.card_number, phone = EXCLUDED.phone
+                    `,
                     [userId, cardNumber, phone]
                 );
 
