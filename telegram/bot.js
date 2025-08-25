@@ -213,7 +213,7 @@ module.exports = (io) => {
                         await ctx.answerCbQuery(`Произошла ошибка: ${err.message}`);
                     }
 
-                    await bot.answerCallbackQuery(ctx.callbackQuery.id);
+                    await ctx.answerCallbackQuery(ctx.callbackQuery.id);
                 }
 
                 else if (action === 'reject') {
