@@ -83,7 +83,8 @@ async function initDB() {
             CREATE TABLE IF NOT EXISTS deal(
                 id SERIAL PRIMARY KEY,
                 advertisement_id BIGINT REFERENCES advertisements(id),
-                payment_status payment_status_enum 
+                payment_status payment_status_enum,
+                owner_channel_id BIGINT REFERENCES users(id)
             );
             CREATE TABLE IF NOT EXISTS payment_methods(
                 id SERIAL PRIMARY KEY,
