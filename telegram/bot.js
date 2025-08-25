@@ -219,7 +219,7 @@ module.exports = (io) => {
 
             try {
                 const result = await pool.query(
-                    'SELECT * FROM deals WHERE advertisement_id = $1 LIMIT 1',
+                    'SELECT * FROM deal WHERE advertisement_id = $1 LIMIT 1',
                     [dealIdNumber]
                 );
 
