@@ -107,7 +107,7 @@ module.exports = (bot) => {
                 case 'CONFIRMED':
                     await pool.query(
                         'UPDATE deal SET payment_status = $3 WHERE advertisement_id = $1 AND payment_status = $2',
-                        [orderNumberNum, 'создана', 'оплачена']
+                        [orderNumberNum, 'получена ссылка на оплату', 'оплачена']
                     );
                     await createMessageSuccsesfulPayment(userIdToNumber, orderNumberNum);
                     break;
