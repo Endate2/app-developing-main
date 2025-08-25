@@ -202,17 +202,15 @@ module.exports = (io) => {
                             if (json.paymentUrl) {
                                 await bot.telegram.sendMessage(chatId, `Перейдите по ссылке для оплаты рекламного поста:\n${json.paymentUrl}`);
                             } else {
-                                await bot.telegram.sendMessage(chatId, json.error);
+                                await ctx.answerCbQuery("Ошибка создании ссылки на оплату");
                             }
                         }else{
-                            await bot.telegram.sendMessage(chatId, "Владелец отклонил ваше предложение, поэтому оплата не доступна");
+                            await ctx.answerCbQuery("Владелец отклонил ваше предложение, поэтому оплата не доступна, либо вы уже получили ссылку на оплату");
                         }
 
-                    } catch (err) {
-                        console.error(err);
-                        const chatId = ctx.from.id;
+                    } catch (err) {;
                         console.error('Ошибка при создании ссылки на оплату:', err);
-                        await bot.telegram.sendMessage(chatId, `Произошла ошибка: ${err.message}`);
+                        await ctx.answerCbQuery(`Произошла ошибка: ${err.message}`);
                     }
 
                     await bot.answerCallbackQuery(ctx.callbackQuery.id);
