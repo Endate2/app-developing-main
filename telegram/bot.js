@@ -263,6 +263,7 @@ module.exports = (io) => {
                     await ctx.deleteMessage();
                 }else if (action === 'change_payment_data') {
                     // Устанавливаем состояние для пользователя
+                    const userId = ctx.from.id; // ДОБАВЬТЕ ЭТУ СТРОКУ
                     paymentDataState.set(userId, 'awaiting_payment_data');
 
                     await ctx.reply('Пожалуйста, введите данные в формате: номер_карты,телефон (например: 4000200010000000,+79215976307)');
