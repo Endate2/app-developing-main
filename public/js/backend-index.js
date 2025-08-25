@@ -281,9 +281,6 @@ document.getElementById('share').addEventListener('click', () => {
 document.getElementById('userdoc')?.addEventListener('click', () => {
     vibrate();
 });
-document.getElementById('about')?.addEventListener('click', () => {
-    vibrate();
-});
 document.getElementById('UserId')?.addEventListener('click', () => {
     alert(userId);
     vibrate();
