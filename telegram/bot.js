@@ -29,6 +29,14 @@ module.exports = (io) => {
             'а 300 рублей остаются сервису в виде комиссии.'
         );
     });
+    bot.command('/accepted_posts', async (ctx) => {
+        const userId = ctx.from.id;
+        paymentDataState.set(userId, { type: 'posts', data: null });
+
+        await ctx.reply(
+            'Введите id сделки или введите /cancel для отмены'
+        );
+    });
 
     bot.command('payment_methods', async (ctx) => {
     const userId = ctx.from.id;
@@ -131,20 +139,27 @@ module.exports = (io) => {
             });
         }
     });
+    bot.command('cancel', async (ctx) => {
+        const userId = ctx.from.id;
+        if (paymentDataState.has(userId)) {
+            paymentDataState.delete(userId);
+            await ctx.reply('Операция отменена');
+        } else {
+            await ctx.reply('Нет активных операций для отмены');
+        }
+    });
     bot.on('text', async (ctx) => {
         try {
             const userId = ctx.from.id;
             const text = ctx.message.text.trim();
-
+            const state = paymentDataState.get(userId);
             // Проверяем, ожидает ли пользователь ввода платежных данных
-            if (paymentDataState.get(userId) === 'awaitingpaymentdata') {
-                // Убираем состояние
-                paymentDataState.delete(userId);
+            if (state?.type === 'payment') {
 
                 const parts = text.split(',');
 
                 if (parts.length !== 2) {
-                    await ctx.reply('Неверный формат. Введите данные в формате: номер_карты,телефон');
+                    await ctx.reply('Неверный формат. Введите данные в формате: номер_карты,телефон или введите /cancel для отмены');
                     return;
                 }
 
@@ -170,9 +185,85 @@ module.exports = (io) => {
                     `,
                     [userId, cardNumber, phone]
                 );
-
+                paymentDataState.delete(userId);
                 await ctx.reply('Данные успешно сохранены.');
+            } else if (state?.type === 'posts') {
+            const dealId = text.trim();
+
+            if (!dealId) {
+                await ctx.reply('❌ Введите ID сделки');
+                return;
             }
+
+            if (!/^\d+$/.test(dealId)) {
+                await ctx.reply('❌ ID сделки должен содержать только цифры (0-9)');
+                return;
+            }
+
+            if (dealId.startsWith('0') && dealId.length > 1) {
+                await ctx.reply('❌ ID сделки не должен начинаться с нуля');
+                return;
+            }
+
+            const dealIdNumber = Number(dealId);
+
+            if (!Number.isInteger(dealIdNumber)) {
+                await ctx.reply('❌ ID сделки должен быть целым числом');
+                return;
+            }
+
+            if (dealIdNumber <= 0) {
+                await ctx.reply('❌ ID сделки должен быть положительным числом');
+                return;
+            }
+
+            try {
+                const result = await pool.query(
+                    'SELECT * FROM deals WHERE advertisement_id = $1 LIMIT 1',
+                    [dealIdNumber]
+                );
+
+                if (!result.rows[0].exists) {
+                    await ctx.reply('❌ Сделка с таким ID не найдена');
+                    return;
+                }
+                const paymentStatus = result.rows[0].payment_status;
+                if(paymentStatus === "получить оплату"){
+                    await ctx.reply(`⚡️Можете получить оплату за сделку ⚡️`, {
+                        reply_markup: {
+                            inline_keyboard: [
+                                [
+                                    {
+                                        text: 'Перейти к получению оплаты',
+                                        callback_data: `takepayment`
+                                    },
+                                ]
+                            ]
+                        }
+                    });
+                }else if(paymentStatus === "оплачена"){
+                    await ctx.reply('Подтвердите, что пост был выложен️.', {
+                        reply_markup: {
+                            inline_keyboard: [
+                                [
+                                    {
+                                        text: 'Подтвердить',
+                                        callback_data: `confirmpost`
+                                    },
+                                ]
+                            ]
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Database error:', error);
+                await ctx.reply('⚠️ Ошибка при проверке сделки. Попробуйте позже.');
+                return;
+            }
+
+            userStates.delete(userId);
+        }
+
         } catch (error) {
             console.error('Error in text handler:', error);
         }
@@ -197,7 +288,8 @@ module.exports = (io) => {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            advertisementID: advertisementID
+                            advertisementID: advertisementID,
+                            userIdTo: userIdTo
                         })
                     });
 
@@ -277,7 +369,7 @@ module.exports = (io) => {
                 }else if (action === 'changepaymentdata') {
                     await ctx.answerCbQuery("Функция изменения платежных данных");
                     const userId = ctx.from.id; // ДОБАВЬТЕ ЭТУ СТРОКУ
-                    paymentDataState.set(userId, 'awaitingpaymentdata');
+                    paymentDataState.set(userId, { type: 'payment', data: null });
 
                     await ctx.reply('Пожалуйста, введите данные в формате: номер_карты,телефон (например: 4000200010000000,+79215976307)');
                     await ctx.answerCbQuery();
