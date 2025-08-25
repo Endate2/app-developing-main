@@ -125,6 +125,50 @@ module.exports = (io) => {
             });
         }
     });
+    bot.on('text', async (ctx) => {
+        try {
+            const userId = ctx.from.id;
+            const text = ctx.message.text.trim();
+
+            // Проверяем, ожидает ли пользователь ввода платежных данных
+            if (paymentDataState.get(userId) === 'awaiting_payment_data') {
+                // Убираем состояние
+                paymentDataState.delete(userId);
+
+                const parts = text.split(',');
+
+                if (parts.length !== 2) {
+                    await ctx.reply('Неверный формат. Введите данные в формате: номер_карты,телефон');
+                    return;
+                }
+
+                const cardNumber = parts[0].trim();
+                const phone = parts[1].trim();
+
+                // Проверка номера карты
+                const cardValid = /^\d{16}$/.test(cardNumber);
+                // Проверка номера телефона
+                const phoneValid = /^\+\d{10,15}$/.test(phone);
+
+                if (!cardValid || !phoneValid) {
+                    await ctx.reply('Данные не совпадают с требуемым форматом.\nНомер карты должен быть 16 цифр.\nТелефон должен начинаться с + и содержать от 10 до 15 цифр.');
+                    return;
+                }
+
+                // Обновляем данные в БД
+                await pool.query(
+                    `INSERT INTO payment_methods (user_id, card_number, phone) 
+                 VALUES ($1, $2, $3)
+                 ON CONFLICT (user_id) DO UPDATE SET card_number = EXCLUDED.card_number, phone = EXCLUDED.phone`,
+                    [userId, cardNumber, phone]
+                );
+
+                await ctx.reply('Данные успешно сохранены.');
+            }
+        } catch (error) {
+            console.error('Error in text handler:', error);
+        }
+    });
 
     bot.on('callback_query', async (ctx) => {
         try {
