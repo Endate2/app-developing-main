@@ -551,9 +551,9 @@ module.exports = (bot) => {
             if (result.rows.length > 0) {
                 const paymentStatus = result.rows[0].payment_status;
                 if (paymentStatus === "получена ссылка на оплату") {
-                    return res.json({ success: true });
-                } else {
                     return res.json({ success: false });
+                } else {
+                    return res.json({ success: true });
                 }
             } else {
                 return res.json({ success: false });
