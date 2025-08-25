@@ -750,7 +750,7 @@ module.exports = (bot) => {
         }
     });
     router.post('/api/set-deal', async (req, res) => {
-        const { advertisementID } = req.body;
+        const { advertisementID,userIdTo } = req.body;
 
         if (!advertisementID) {
             return res.status(400).json({ success: false, message: 'Не указан channel_id' });
@@ -758,8 +758,8 @@ module.exports = (bot) => {
 
         try {
             await pool.query(
-                'INSERT INTO deal (advertisement_id, payment_status) VALUES ($1, $2)',
-                [advertisementID, 'создана']
+                'INSERT INTO deal (advertisement_id, payment_status,owner_channel_id) VALUES ($1, $2, $3)',
+                [advertisementID, 'создана',userIdTo]
             );
 
 
@@ -858,22 +858,11 @@ module.exports = (bot) => {
     }
 
     async function createMessageSuccsesfulPayment(userIdTo, advertisementID) {
-        const text = `Пользователь оплатил рекламу, деньши заморожены на счете банка, после подтверждения обеями сторонами, что пост был выложен, вы сможете получить деньги через 24 часа
+        const text = `Пользователь оплатил рекламу, деньши заморожены на счете банка, после подтверждения обеями сторонами, что пост был выложен, вы сможете получить деньги через 24 часа, чтобы подтвердить, что пост был выложен нажмите команду /accepted_posts и введите сделки - ${advertisementID}  
         
         ПРЕДУПРЕЖДЕНИЕ: Если ответ сторон на публикацию поста будут отличаться, то сделка будет автоматически отменена и вам нужно будет обратиться в поддержку для дальнейшего расследования.
         `;
 
-        const keyboard = {
-            inline_keyboard: [
-                [
-                    {
-                        text: 'Пост выложен',
-                        // Замените строку с callback_data на:
-                        callback_data: `publick_${advertisementID}_${userIdTo}}`
-                    },
-                ]
-            ]
-        };
 
 
         try {
