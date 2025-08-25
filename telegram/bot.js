@@ -212,8 +212,6 @@ module.exports = (io) => {
                         console.error('Ошибка при создании ссылки на оплату:', err);
                         await ctx.answerCbQuery(`Произошла ошибка: ${err.message}`);
                     }
-
-                    await ctx.answerCallbackQuery('Оплата инициирована');
                 }
 
                 else if (action === 'reject') {
