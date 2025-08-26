@@ -329,7 +329,7 @@ module.exports = (io) => {
                     🕐 Статус: ${payment_status}
                     `;
                     try {
-                        await ctx.telegram.sendMessage(userIdFrom, text);
+                        await ctx.telegram.sendMessage(userId, text);
                     } catch (err) {
                         console.error('Ошибка при отправке сообщения в Telegram:', err);
                     }
