@@ -630,7 +630,19 @@ module.exports = (io) => {
             await ctx.answerCbQuery('Предложение было удалено в личном кабинете канала');
         }
     });
+    bot.action('show_my_posts', async (ctx) => {
+        await ctx.answerCbQuery();
+        const userId = ctx.from.id;
+        paymentDataState.set(userId, { type: 'userPosts', data: null });
 
+        await ctx.replyWithHTML(
+            `📊 <b>Просмотр моих сделок</b>\n\n` +
+            `Для получения информации о сделке введите её ID:\n` +
+            `➖➖➖➖➖➖➖➖➖➖\n` +
+            `❕ Для отмены введите /cancel\n\n` +
+            `💡 <i>ID сделки можно найти в уведомлениях о принятых предложениях</i>`
+        );
+    });
     bot.on('my_chat_member', async (ctx) => {
         try {
             const chatMember = ctx.update.my_chat_member;
@@ -771,39 +783,49 @@ module.exports = (io) => {
             console.log(`Бот был добавлен в приватный канал`);
         }
     });
-    async function createMessageAndSend(userIdTo, userIdFrom, date, price, channelId,advertisementID) {
+    async function createMessageAndSend(userIdTo, userIdFrom, date, price, channelId, advertisementID) {
         const chatInfo = await bot.telegram.getChat(channelId);
         const channelUsername = chatInfo.username;
-        const text = `⚡️ Ваше предложение было принято ⚡️
 
-🏷️ Канал: @${channelUsername}
-
-📅 Дата: ${date.toDateString()}
-
-💰 Цена: ${price} (Сервис берет коммисию в размере 15% к стоимости)
-
-✍️ В ближайшее время с вами свяжется владелец канала, обсудите с ним пост и после этого нажмите кнопку чтоб перейти к оплате рекламного поста
-
-ВАЖНО: Владелец канала может отклонить сделку. После успешной оплаты продавец и вы должены будете подтвердить, что пост был выложен и п через 24 часа владелец сможет получить свои деньги. Вы также можете после оплаты ввести команду /myposts и ввести id сделки - *${advertisementID}* и получить о ней информацию`;
+        const text = `🎉 <b>Ваше предложение было принято!</b>\n\n` +
+            `🏷️ <b>Канал:</b> @${channelUsername}\n` +
+            `📅 <b>Дата размещения:</b> ${new Date(date).toLocaleDateString('ru-RU')}\n` +
+            `💰 <b>Стоимость:</b> ${price} рублей\n` +
+            `📊 <b>Комиссия сервиса:</b> 15%\n\n` +
+            `📋 <b>Что дальше?</b>\n` +
+            `1. Владелец канала свяжется с вами\n` +
+            `2. Обсудите детали и содержание поста\n` +
+            `3. Перейдите к оплате\n\n` +
+            `⚠️ <b>Важная информация:</b>\n` +
+            `• Владелец может отклонить сделку до оплаты\n` +
+            `• После оплаты обе стороны подтверждают размещение\n` +
+            `• Через 24 часа после подтверждения владелец получит оплату\n\n` +
+            `🔍 <b>Для отслеживания статуса сделки:</b>\n` +
+            `Используйте команду: <code>/myposts</code>\n` +
+            `Затем введите ID сделки: <code>${advertisementID}</code>\n\n` +
+            `🆔 <b>ID вашей сделки:</b> <code>${advertisementID}</code>\n\n` +
+            `💡 <i>Сохраните этот ID для отслеживания статуса!</i>`;
 
         const keyboard = {
             inline_keyboard: [
-                [
-                    {
-                        text: 'Перейти к оплате',
-                        callback_data: `pay_${advertisementID}_${userIdFrom}_${price}_${userIdTo}`
-                    },
-                ]
+                [{
+                    text: '💳 Перейти к оплате',
+                    callback_data: `pay_${advertisementID}_${userIdFrom}_${price}_${userIdTo}`
+                }],
+                [{
+                    text: '📋 Мои сделки (/myposts)',
+                    callback_data: 'show_my_posts'
+                }]
             ]
         };
 
-
         try {
             await bot.telegram.sendMessage(userIdFrom, text, {
+                parse_mode: 'HTML',
                 reply_markup: keyboard
             });
         } catch (err) {
-            console.error('Ошибка при отправке сообщения в Telegram:', err);
+            console.error('Ошибка при отправке сообщения:', err);
         }
     }
 
