@@ -1,5 +1,5 @@
 async function loadChannelDataUser(channelId) {
-    generateUserCalendar(channelId)
+    initUserCalendar(channelId)
     if (channelId) {
         window.socket.emit('get_feedbacks',channelId);
         try {
