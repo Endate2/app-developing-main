@@ -874,7 +874,7 @@ module.exports = (bot) => {
 В этом случае необходимо будет обратиться в поддержку для дальнейшего расследования.`;
 
     try {
-        await bot.telegram.sendMessage(userIdTo, text, { parse_mode: 'MarkdownV2' });
+        await bot.telegram.sendMessage(userIdTo, text);
     } catch (err) {
         console.error('Ошибка при отправке сообщения в Telegram:', err);
     }
