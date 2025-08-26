@@ -57,7 +57,7 @@ async function initDB() {
                 user_id_from BIGINT REFERENCES users(id),
                 id_categorie  BIGINT REFERENCES notification_categories(id)
                 );
-            CREATE TABLE IF NOT EXISTS   (
+            CREATE TABLE IF NOT EXISTS  notification_categories (
                 id SERIAL PRIMARY KEY,
                 description VARCHAR(50)
                 );
