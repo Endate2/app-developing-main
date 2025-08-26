@@ -6,27 +6,35 @@ module.exports = (io) => {
     const paymentDataState = new Map();
 
     bot.command('offer', async (ctx) => {
-        await ctx.reply(
-            'Публичная оферта: <a href="https://teletype.in/@spb_port/jmUQh4Xj9SM">Просмотреть оферту</a>',
-            { parse_mode: 'HTML' }
+        await ctx.replyWithHTML(
+            `📄 <b>Публичная оферта</b>\n\n` +
+            `Для ознакомления с публичной офертой перейдите по ссылке:\n` +
+            `🔗 <a href="https://teletype.in/@spb_port/jmUQh4Xj9SM">Просмотреть оферту</a>`
         );
     });
 
+
     bot.command('contacts', async (ctx) => {
-        await ctx.reply(
-            '<b>ИНН:</b> 781431936886\n' +
-            '<b>Поддержка в телеграмм:</b> @spb_port\n' +
-            '<b>Контактный e-mail:</b> anton.chimirev@gmail.com',
-            { parse_mode: 'HTML' }
+        await ctx.replyWithHTML(
+            `📞 <b>Контактная информация</b>\n\n` +
+            `🏢 <b>ИНН:</b> 781431936886\n` +
+            `💬 <b>Поддержка в телеграмм:</b> @spb_port\n` +
+            `📧 <b>Контактный e-mail:</b> anton.chimirev@gmail.com\n\n` +
+            `<i>Мы всегда рады помочь вам!</i>`
         );
     });
+
     bot.command('price', async (ctx) => {
         await ctx.reply(
-            'Сервис берет 15% от суммы вашей сделки. Пример:\n\n' +
-            'Пользователь выставил рекламный пост по цене 2000 рублей на 30 часов.\n' +
-            'После оплаты деньги поступают на промежуточный счёт.\n' +
-            'Покупатель получит 1700 рублей через 24 часа (в течение этого времени он может отменить сделку, если были нарушены её условия),\n' +
-            'а 300 рублей остаются сервису в виде комиссии.'
+            `💰 <b>Тарифы и комиссии</b>\n\n` +
+            `Сервис берет <b>15%</b> от суммы вашей сделки.\n\n` +
+            `<b>Пример расчета:</b>\n` +
+            `• Пользователь выставил рекламный пост: <b>2000 рублей</b> на 30 часов\n` +
+            `• После оплаты деньги поступают на промежуточный счёт\n` +
+            `• Покупатель получит: <b>1700 рублей</b> через 24 часа\n` +
+            `• Комиссия сервиса: <b>300 рублей</b>\n\n` +
+            `⏰ <i>В течение 24 часов покупатель может отменить сделку при нарушении условий</i>`,
+            { parse_mode: 'HTML' }
         );
     });
     bot.command('accepted_posts', async (ctx) => {
@@ -34,7 +42,11 @@ module.exports = (io) => {
         paymentDataState.set(userId, { type: 'posts', data: null });
 
         await ctx.reply(
-            'Введите id сделки или введите /cancel для отмены'
+            `📋 <b>Проверка принятых постов</b>\n\n` +
+            `Введите ID сделки для получения информации:\n` +
+            `➖➖➖➖➖➖➖➖➖➖\n` +
+            `❕ Для отмены введите /cancel`,
+            { parse_mode: 'HTML' }
         );
     });
     bot.command('myposts', async (ctx) => {
@@ -42,7 +54,11 @@ module.exports = (io) => {
         paymentDataState.set(userId, { type: 'userPosts', data: null });
 
         await ctx.reply(
-            'Введите id для получения информации сделки или введите /cancel для отмены'
+            `📊 <b>Мои сделки</b>\n\n` +
+            `Введите ID сделки для получения информации:\n` +
+            `➖➖➖➖➖➖➖➖➖➖\n` +
+            `❕ Для отмены введите /cancel`,
+            { parse_mode: 'HTML' }
         );
     });
 
@@ -61,29 +77,39 @@ module.exports = (io) => {
     `, [userId]);
 
     if (result.rows.length === 0) {
-        await ctx.reply('Нет данных о карте или телефоне.', {
-            reply_markup: {
-                inline_keyboard: [[{ 
-                    text: 'Изменить данные', 
-                    callback_data: 'changepaymentdata'  // ← ИЗМЕНИТЬ ЗДЕСЬ
-                }]]
-            }
-        });
+        await ctx.replyWithHTML(
+            `💳 <b>Платежные данные</b>\n\n` +
+            `❌ Нет сохраненных платежных данных\n\n` +
+            `Нажмите кнопку ниже чтобы добавить данные:`
+            , {
+                reply_markup: {
+                    inline_keyboard: [[{
+                        text: '➕ Добавить данные',
+                        callback_data: 'changepaymentdata'
+                    }]]
+                }
+            });
     } else {
         const paymentData = result.rows[0];
-        const cardNumber = paymentData.card_number ? `Карта: **** **** **** ${paymentData.card_number.toString().slice(-4)}` : '';
-        const phone = paymentData.phone ? `Телефон: ${paymentData.phone}` : '';
+        const cardNumber = paymentData.card_number ?
+            `💳 Карта: **** **** **** ${paymentData.card_number.toString().slice(-4)}` : '';
+        const phone = paymentData.phone ?
+            `📱 Телефон: ${paymentData.phone}` : '';
 
         const message = [cardNumber, phone].filter(Boolean).join('\n');
 
-        await ctx.reply(`Ваши платежные данные:\n${message}`, {
-            reply_markup: {
-                inline_keyboard: [[{ 
-                    text: 'Изменить данные', 
-                    callback_data: 'changepaymentdata'  // ← И СОВПАДЕНИЕ ЗДЕСЬ
-                }]]
-            }
-        });
+        await ctx.replyWithHTML(
+            `💳 <b>Ваши платежные данные</b>\n\n` +
+            `${message}\n\n` +
+            `🛠 Для изменения данных нажмите кнопку ниже:`
+            , {
+                reply_markup: {
+                    inline_keyboard: [[{
+                        text: '✏️ Изменить данные',
+                        callback_data: 'changepaymentdata'
+                    }]]
+                }
+            });
     }
 });
 
@@ -112,48 +138,62 @@ module.exports = (io) => {
                 const chatInfo = await bot.telegram.getChat(referralCode);
                 const channelUsername = chatInfo.username;
 
-                await ctx.reply(`Вы воспользовались ссылкой на канал ${channelUsername}, нажмите кнопку ниже, чтобы перейти в него.`, {
-                    reply_markup: {
-                        inline_keyboard: [
-                            [{
-                                text: `Открыть канал`,
-                                web_app: { url : `https://endate2-app-developing-main-cf8a.twc1.net?channel_id=${referralCode}`}
-                            }]
-                        ]
-                    }
-                });
+                await ctx.replyWithHTML(
+                    `🎉 <b>Добро пожаловать!</b>\n\n` +
+                    `Вы воспользовались ссылкой на канал <b>@${channelUsername}</b>\n\n` +
+                    `Нажмите кнопку ниже чтобы перейти в приложение:`
+                    , {
+                        reply_markup: {
+                            inline_keyboard: [[{
+                                text: `🚀 Открыть канал`,
+                                web_app: { url: `https://endate2-app-developing-main-cf8a.twc1.net?channel_id=${referralCode}`}
+                            }]]
+                        }
+                    });
             }catch (e) {
-                await ctx.reply('Данного канала не сужествует в приложении, перейдите на главную страницу нашего приложения.', {
-                    reply_markup: {
-                        inline_keyboard: [
-                            [{
-                                text: 'Открыть приложение',
+                await ctx.replyWithHTML(
+                    `⚠️ <b>Внимание</b>\n\n` +
+                    `Данного канала не существует в приложении.\n\n` +
+                    `Перейдите на главную страницу нашего приложения:`
+                    , {
+                        reply_markup: {
+                            inline_keyboard: [[{
+                                text: '🌐 Открыть приложение',
                                 web_app: { url: 'https://endate2-app-developing-main-cf8a.twc1.net' }
-                            }]
-                        ]
-                    }
-                });
+                            }]]
+                        }
+                    });
             }
         } else {
-            await ctx.reply('Добро пожаловать! Нажмите кнопку ниже, чтобы открыть приложение.', {
-                reply_markup: {
-                    inline_keyboard: [
-                        [{
-                            text: 'Открыть приложение',
+            await ctx.replyWithHTML(
+                `👋 <b>Добро пожаловать!</b>\n\n` +
+                `Рады приветствовать вас в нашем сервисе!\n\n` +
+                `Нажмите кнопку ниже чтобы открыть приложение:`
+                , {
+                    reply_markup: {
+                        inline_keyboard: [[{
+                            text: '📱 Открыть приложение',
                             web_app: { url: 'https://endate2-app-developing-main-cf8a.twc1.net' }
-                        }]
-                    ]
-                }
-            });
+                        }]]
+                    }
+                });
         }
     });
     bot.command('cancel', async (ctx) => {
         const userId = ctx.from.id;
         if (paymentDataState.has(userId)) {
             paymentDataState.delete(userId);
-            await ctx.reply('Операция отменена');
+            await ctx.reply(
+                `❌ <b>Операция отменена</b>\n\n` +
+                `Вы можете начать новую операцию с помощью команд меню.`,
+                { parse_mode: 'HTML' }
+            );
         } else {
-            await ctx.reply('Нет активных операций для отмены');
+            await ctx.reply(
+                `ℹ️ <b>Нет активных операций</b>\n\n` +
+                `Нечего отменять.`,
+                { parse_mode: 'HTML' }
+            );
         }
     });
     bot.on('text', async (ctx) => {
@@ -167,7 +207,12 @@ module.exports = (io) => {
                 const parts = text.split(',');
 
                 if (parts.length !== 2) {
-                    await ctx.reply('Неверный формат. Введите данные в формате: номер_карты,телефон или введите /cancel для отмены');
+                    await ctx.replyWithHTML(
+                        `⚠️ <b>Неверный формат</b>\n\n` +
+                        `Введите данные в формате: <code>номер_карты,телефон</code>\n\n` +
+                        `<b>Пример:</b> <code>4000200010000000,+79215976307</code>\n\n` +
+                        `❕ Для отмены введите /cancel`
+                    );
                     return;
                 }
 
@@ -180,7 +225,13 @@ module.exports = (io) => {
                 const phoneValid = /^\+\d{10,15}$/.test(phone);
 
                 if (!cardValid || !phoneValid) {
-                    await ctx.reply('Данные не совпадают с требуемым форматом.\nНомер карты должен быть 16 цифр.\nТелефон должен начинаться с + и содержать от 10 до 15 цифр.');
+                    await ctx.replyWithHTML(
+                        `❌ <b>Ошибка валидации</b>\n\n` +
+                        `Проверьте введенные данные:\n` +
+                        `• Номер карты: 16 цифр\n` +
+                        `• Телефон: начинается с + и содержит 10-15 цифр\n\n` +
+                        `❕ Для отмены введите /cancel`
+                    );
                     return;
                 }
 
@@ -194,7 +245,12 @@ module.exports = (io) => {
                     [userId, cardNumber, phone]
                 );
                 paymentDataState.delete(userId);
-                await ctx.reply('Данные успешно сохранены.');
+                await ctx.replyWithHTML(
+                    `✅ <b>Данные успешно сохранены!</b>\n\n` +
+                    `💳 Карта: **** **** **** ${cardNumber.slice(-4)}\n` +
+                    `📱 Телефон: ${phone}\n\n` +
+                    `Теперь вы можете использовать эти данные для платежей.`
+                );
             } else if (state?.type === 'posts') {
                 const dealId = text.trim();
 
@@ -318,9 +374,7 @@ module.exports = (io) => {
                     const { price, channel_id, date_of_advertisement, payment_status } = result.rows[0];
                     const chatInfo = await ctx.telegram.getChat(channel_id);
                     const channelUsername = chatInfo.username;
-                    const text = `⚡️ Ваше предложение было принято ⚡️
-
-🏷️ Канал: @${channelUsername}
+                    const text = `🏷️ Канал: @${channelUsername}
 
 📅 Дата: ${new Date(date_of_advertisement).toDateString()}
 
