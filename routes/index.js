@@ -330,7 +330,7 @@ module.exports = (bot) => {
                 res.status(404).json({ error: 'Канал не найден' });
             }
         } catch (err) {
-            console.error('Error fetching channel:', err);
+            console.error('Error fetching channel:', err,channelId,day);
             res.status(500).json({ error: 'Internal server error' });
         }
     });
