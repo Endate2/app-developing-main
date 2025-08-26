@@ -37,6 +37,14 @@ module.exports = (io) => {
             'Введите id сделки или введите /cancel для отмены'
         );
     });
+    bot.command('myposts', async (ctx) => {
+        const userId = ctx.from.id;
+        paymentDataState.set(userId, { type: 'userPosts', data: null });
+
+        await ctx.reply(
+            'Введите id для получения информации сделки или введите /cancel для отмены'
+        );
+    });
 
     bot.command('payment_methods', async (ctx) => {
     const userId = ctx.from.id;
@@ -188,81 +196,150 @@ module.exports = (io) => {
                 paymentDataState.delete(userId);
                 await ctx.reply('Данные успешно сохранены.');
             } else if (state?.type === 'posts') {
-            const dealId = text.trim();
+                const dealId = text.trim();
 
-            if (!dealId) {
-                await ctx.reply('❌ Введите ID сделки');
-                return;
-            }
-
-            if (!/^\d+$/.test(dealId)) {
-                await ctx.reply('❌ ID сделки должен содержать только цифры (0-9)');
-                return;
-            }
-
-            if (dealId.startsWith('0') && dealId.length > 1) {
-                await ctx.reply('❌ ID сделки не должен начинаться с нуля');
-                return;
-            }
-
-            const dealIdNumber = Number(dealId);
-
-            if (!Number.isInteger(dealIdNumber)) {
-                await ctx.reply('❌ ID сделки должен быть целым числом');
-                return;
-            }
-
-            if (dealIdNumber <= 0) {
-                await ctx.reply('❌ ID сделки должен быть положительным числом');
-                return;
-            }
-
-            try {
-                const result = await pool.query(
-                    'SELECT * FROM deal WHERE advertisement_id = $1 LIMIT 1',
-                    [dealIdNumber]
-                );
-
-                if (!result.rows.length) {
-                    await ctx.reply('❌ Сделка с таким ID не найдена');
+                if (!dealId) {
+                    await ctx.reply('❌ Введите ID сделки');
                     return;
                 }
-                const paymentStatus = result.rows[0].payment_status;
-                if(paymentStatus === "получить оплату"){
-                    await ctx.reply(`⚡️Можете получить оплату за сделку ⚡️`, {
-                        reply_markup: {
-                            inline_keyboard: [
-                                [
-                                    {
-                                        text: 'Перейти к получению оплаты',
-                                        callback_data: `takepayment`
-                                    },
-                                ]
-                            ]
-                        }
-                    });
-                }else if(paymentStatus === "оплачена"){
-                    await ctx.reply('Подтвердите, что пост был выложен️.', {
-                        reply_markup: {
-                            inline_keyboard: [
-                                [
-                                    {
-                                        text: 'Подтвердить',
-                                        callback_data: `confirmpost`
-                                    },
-                                ]
-                            ]
-                        }
-                    });
-                }
-            } catch (error) {
-                console.error('Database error:', error);
-                await ctx.reply('⚠️ Ошибка при проверке сделки. Попробуйте позже.');
-                return;
-            }
 
-            paymentDataState.delete(userId);
-        }
+                if (!/^\d+$/.test(dealId)) {
+                    await ctx.reply('❌ ID сделки должен содержать только цифры (0-9)');
+                    return;
+                }
+
+                if (dealId.startsWith('0') && dealId.length > 1) {
+                    await ctx.reply('❌ ID сделки не должен начинаться с нуля');
+                    return;
+                }
+
+                const dealIdNumber = Number(dealId);
+
+                if (!Number.isInteger(dealIdNumber)) {
+                    await ctx.reply('❌ ID сделки должен быть целым числом');
+                    return;
+                }
+
+                if (dealIdNumber <= 0) {
+                    await ctx.reply('❌ ID сделки должен быть положительным числом');
+                    return;
+                }
+
+                try {
+                    const result = await pool.query(
+                        'SELECT * FROM deal WHERE advertisement_id = $1 LIMIT 1',
+                        [dealIdNumber]
+                    );
+
+                    if (!result.rows.length) {
+                        await ctx.reply('❌ Сделка с таким ID не найдена');
+                        return;
+                    }
+                    const paymentStatus = result.rows[0].payment_status;
+                    const clientId = result.rows[0].client_id;
+                    const ownerId = result.rows[0].owner_channel_id;
+                    if(paymentStatus === "получить оплату"){
+                        await ctx.reply(`⚡️Можете получить оплату за сделку ⚡️`, {
+                            reply_markup: {
+                                inline_keyboard: [
+                                    [
+                                        {
+                                            text: 'Перейти к получению оплаты',
+                                            callback_data: `takepayment`
+                                        },
+                                    ]
+                                ]
+                            }
+                        });
+                    }else if(paymentStatus === "оплачена"){
+                        await ctx.reply(`Подтвердите, что пост на сделку с id = ${dealIdNumber} был выложен️.`, {
+                            reply_markup: {
+                                inline_keyboard: [
+                                    [
+                                        {
+                                            text: 'Подтвердить',
+                                            callback_data: `confirmpost_${clientId}_${ownerId}`
+                                        },
+                                    ]
+                                ]
+                            }
+                        });
+                    }
+                } catch (error) {
+                    console.error('Database error:', error);
+                    await ctx.reply('⚠️ Ошибка при проверке сделки. Попробуйте позже.');
+                    return;
+                }
+
+                paymentDataState.delete(userId);
+            }else if(state?.type === 'userPosts'){
+                const dealId = text.trim();
+
+                if (!dealId) {
+                    await ctx.reply('❌ Введите ID сделки');
+                    return;
+                }
+
+                if (!/^\d+$/.test(dealId)) {
+                    await ctx.reply('❌ ID сделки должен содержать только цифры (0-9)');
+                    return;
+                }
+
+                if (dealId.startsWith('0') && dealId.length > 1) {
+                    await ctx.reply('❌ ID сделки не должен начинаться с нуля');
+                    return;
+                }
+
+                const dealIdNumber = Number(dealId);
+
+                if (!Number.isInteger(dealIdNumber)) {
+                    await ctx.reply('❌ ID сделки должен быть целым числом');
+                    return;
+                }
+
+                if (dealIdNumber <= 0) {
+                    await ctx.reply('❌ ID сделки должен быть положительным числом');
+                    return;
+                }
+                try {
+                    const result = await pool.query(
+                        `SELECT advertisements.price, advertisements.channel_id, advertisements.date_of_advertisement, d.payment_status
+                        FROM advertisements 
+                        JOIN deal d ON advertisements.id = d.advertisement_id 
+                        WHERE d.client_id = $1 AND d.advertisement_id = $2`,
+                        [userId,dealIdNumber]
+                    );
+
+
+                    if (!result.rows.length) {
+                        await ctx.reply('❌ Сделка с таким ID не найдена');
+                        return;
+                    }
+                    const { price, channel_id, date_of_advertisement, payment_status } = result.rows[0];
+                    const chatInfo = await ctx.telegram.getChat(channel_id);
+                    const channelUsername = chatInfo.username;
+                    const text = `⚡️ Ваше предложение было принято ⚡️
+
+                    🏷️ Канал: @${channelUsername}
+
+                    📅 Дата: ${new Date(date_of_advertisement).toDateString()}
+
+                    💰 Цена: ${price}
+                    
+                    🕐 Статус: ${payment_status}
+                    `;
+                    try {
+                        await ctx.telegram.sendMessage(userIdFrom, text);
+                    } catch (err) {
+                        console.error('Ошибка при отправке сообщения в Telegram:', err);
+                    }
+
+                } catch (error) {
+                    console.error('Database error:', error);
+                    await ctx.reply('⚠️ Ошибка при проверке сделки. Попробуйте позже.');
+                    return;
+                }
+            }
 
         } catch (error) {
             console.error('Error in text handler:', error);
@@ -289,7 +366,8 @@ module.exports = (io) => {
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             advertisementID: advertisementID,
-                            userIdTo: userIdTo
+                            userIdTo: userIdTo,
+                            userIdFrom: userIdFrom
                         })
                     });
 
@@ -315,6 +393,7 @@ module.exports = (io) => {
                                     {
                                         text: 'Отклонить сделку',
                                         callback_data: `fail_${advertisementID}`
+
                                     },
                                 ]
                             ]
@@ -391,6 +470,13 @@ module.exports = (io) => {
                     }else{
                         await bot.telegram.sendMessage(chatId, "Нельзя удалить сделку, так она ону уже была оплачена или вы уже получили за нее оплату");
                     }
+                }
+                else if (action === 'confirmpost') {
+                    const clientID = parts[1];
+                    const ownerID = parts[1];
+                    const chatId = ctx.from.id;
+                    await ctx.answerCbQuery();
+
                 }
                 else {
                     await ctx.answerCbQuery('Неизвестное действие!');
@@ -559,7 +645,7 @@ module.exports = (io) => {
 
 ✍️ В ближайшее время с вами свяжется владелец канала, обсудите с ним пост и после этого нажмите кнопку чтоб перейти к оплате рекламного поста
 
-ВАЖНО: Владелец канала может отклонить сделку. После успешной оплаты продавец и вы должены будете подтвердить, что пост был выложен и п через 24 часа владелец сможет получить свои деньги. `;
+ВАЖНО: Владелец канала может отклонить сделку. После успешной оплаты продавец и вы должены будете подтвердить, что пост был выложен и п через 24 часа владелец сможет получить свои деньги. Вы также можете после оплаты ввести команду /myposts и ввести id сделки - *${advertisementID}* и получить о ней информацию`;
 
         const keyboard = {
             inline_keyboard: [
