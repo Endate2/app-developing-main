@@ -84,15 +84,8 @@ async function handleUserDayClick(channelId, date) {
     if (date < now && !isUserSameDay(date, now)) {
         alert("На данную дату нельзя посмотреть предложения, так как она уже прошла");
     } else {
-        const response = await fetch(`/api/channel-payment-selector?id=${channelId}&date=${dateStr}`);
-        const channel = await response.json();
-        if (channel && Object.keys(channel).length > 1) {
-            await loadChannelDataPayment(channelId,dateStr);
-            navigateTo('payment');
-        } else {
-            loadNooffers(channelId);
-            navigateTo('no-offers');
-        }
+        alert(channelId);
+        alert(dare);
     }
 }
 
