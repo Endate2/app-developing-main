@@ -811,10 +811,6 @@ module.exports = (io) => {
                 [{
                     text: '💳 Перейти к оплате',
                     callback_data: `pay_${advertisementID}_${userIdFrom}_${price}_${userIdTo}`
-                }],
-                [{
-                    text: '📋 Мои сделки (/myposts)',
-                    callback_data: 'show_my_posts'
                 }]
             ]
         };
