@@ -819,13 +819,14 @@ module.exports = (bot) => {
     async function createNotificationAndSend(userIdTo, comment, userIdFrom, date, price, duration, channelId, advertisementID) {
         const chatInfo = await bot.telegram.getChat(channelId);
         const channelUsername = chatInfo.username;
+        const durationText = duration === 0 ? 'без удаления' : duration;
         const text = `⚡️ Предложения по рекламе ⚡️
 
 🏷️ Канал: @${channelUsername}
 
 📅 Дата: ${date.toDateString()}
 
-🕒 Длительность: ${duration} 
+🕒 Длительность: ${durationText} 
 
 💰 Цена: ${price} (Сервис берет 15% от стоимсоти рекламного поста)
 
