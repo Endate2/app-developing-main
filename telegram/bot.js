@@ -320,13 +320,13 @@ module.exports = (io) => {
                     const channelUsername = chatInfo.username;
                     const text = `⚡️ Ваше предложение было принято ⚡️
 
-                    🏷️ Канал: @${channelUsername}
+🏷️ Канал: @${channelUsername}
 
-                    📅 Дата: ${new Date(date_of_advertisement).toDateString()}
+📅 Дата: ${new Date(date_of_advertisement).toDateString()}
 
-                    💰 Цена: ${price}
+💰 Цена: ${price}
                     
-                    🕐 Статус: ${payment_status}
+🕐 Статус: ${payment_status}
                     `;
                     try {
                         await ctx.telegram.sendMessage(userId, text);
