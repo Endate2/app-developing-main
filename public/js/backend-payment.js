@@ -37,7 +37,7 @@ async function loadChannelDataPayment(channelId,day) {
             }
             titleElement.textContent = channel.name;
             subscribersElement.textContent = `${channel.subscribers.toLocaleString()} подписчиков`;
-            descriptionElement.textContent = 'Описание отсутствует';
+            descriptionElement.textContent = channel.description || 'Описание отсутствует';
         } catch (error) {
             console.error('Ошибка при загрузке данных канала:', error);
         }
