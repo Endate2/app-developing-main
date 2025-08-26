@@ -562,7 +562,19 @@ module.exports = (io) => {
                     const json = await response.json();
 
                     if (json.success){
-                        await bot.telegram.sendMessage(ownerID, `Покупатель подтвердил, что пост был выложен по сделке id = ${dealIdNumber}, оплату можно будет получить через ровно через 24 часа по команде /accepted_posts`);
+                        await bot.telegram.sendMessage(ownerID,
+                            `✅ <b>Подтверждение получения поста</b>\n\n` +
+                            `🎉 Покупатель подтвердил, что рекламный пост был успешно выложен!\n\n` +
+                            `📋 <b>Детали сделки:</b>\n` +
+                            `├ ID сделки: <code>${dealIdNumber}</code>\n` +
+                            `├ Статус: ✅ Подтверждено\n` +
+                            `└ Дата подтверждения: ${new Date().toLocaleString('ru-RU')}\n\n` +
+                            `💰 <b>Информация о выплате:</b>\n` +
+                            `• Средства будут доступны через: <b>24 часа</b>\n` +
+                            `• Для получения оплаты используйте команду:\n` +
+                            `  <code>/accepted_posts</code>\n\n`,
+                            { parse_mode: 'HTML' }
+                        );
                         await ctx.deleteMessage();
                     }else{
                         await ctx.answerCbQuery(json.message);
