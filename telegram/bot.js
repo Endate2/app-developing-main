@@ -630,19 +630,6 @@ module.exports = (io) => {
             await ctx.answerCbQuery('Предложение было удалено в личном кабинете канала');
         }
     });
-    bot.action('show_my_posts', async (ctx) => {
-        await ctx.answerCbQuery();
-        const userId = ctx.from.id;
-        paymentDataState.set(userId, { type: 'userPosts', data: null });
-
-        await ctx.replyWithHTML(
-            `📊 <b>Просмотр моих сделок</b>\n\n` +
-            `Для получения информации о сделке введите её ID:\n` +
-            `➖➖➖➖➖➖➖➖➖➖\n` +
-            `❕ Для отмены введите /cancel\n\n` +
-            `💡 <i>ID сделки можно найти в уведомлениях о принятых предложениях</i>`
-        );
-    });
     bot.on('my_chat_member', async (ctx) => {
         try {
             const chatMember = ctx.update.my_chat_member;
