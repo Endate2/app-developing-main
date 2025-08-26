@@ -750,7 +750,7 @@ module.exports = (bot) => {
         }
     });
     router.post('/api/set-deal', async (req, res) => {
-        const { advertisementID,userIdTo,userIdFrom } = req.body;
+        const { advertisementID,userIdTo,userIdFrom,price} = req.body;
 
         if (!advertisementID) {
             return res.status(400).json({ success: false, message: 'Не указан channel_id' });
@@ -758,14 +758,62 @@ module.exports = (bot) => {
 
         try {
             await pool.query(
-                'INSERT INTO deal (advertisement_id, payment_status,owner_channel_id,client_id) VALUES ($1, $2, $3,$4)',
-                [advertisementID, 'создана',userIdTo,userIdFrom]
+                'INSERT INTO deal (advertisement_id, payment_status,owner_channel_id,client_id,payment,DATE_PAYMENT) VALUES ($1, $2, $3,$4,$5, NULL)',
+                [advertisementID, 'создана',userIdTo,userIdFrom,price]
             );
 
 
             res.json({
                 success: true,
                 message: `Добавлена сделка: ${advertisementID}`
+            });
+        } catch (err) {
+            console.error('Ошибка при добавлении сделки:', err);
+            res.status(500).json({ success: false, message: 'Внутренняя ошибка сервера' });
+        }
+    });
+
+    router.post('/api/set-deal-type', async (req, res) => {
+        const { advertisementID} = req.body;
+
+        if (!advertisementID) {
+            return res.status(400).json({ success: false, message: 'Не указан advertisementID' });
+        }
+
+        try {
+            await pool.query(
+                'UPDATE deal SET payment_status = $2 WHERE advertisement_id = $1 AND payment_status = $3',
+                [advertisementID, 'идет расследование', 'оплачена']
+            );
+
+
+            res.json({
+                success: true,
+                message: `Изменено состояние сделки: ${advertisementID}`
+            });
+        } catch (err) {
+            console.error('Ошибка при добавлении сделки:', err);
+            res.status(500).json({ success: false, message: 'Внутренняя ошибка сервера' });
+        }
+    });
+
+    router.post('/api/set-deal-type-yes', async (req, res) => {
+        const { advertisementID} = req.body;
+
+        if (!advertisementID) {
+            return res.status(400).json({ success: false, message: 'Не указан advertisementID' });
+        }
+
+        try {
+            await pool.query(
+                'UPDATE deal SET payment_status = $2, DATE_PAYMENT = NOW() WHERE advertisement_id = $1 AND payment_status = $3',
+                [advertisementID, 'пост подтвержден', 'оплачена']
+            );
+
+
+            res.json({
+                success: true,
+                message: `Изменено состояние сделки: ${advertisementID}`
             });
         } catch (err) {
             console.error('Ошибка при добавлении сделки:', err);
