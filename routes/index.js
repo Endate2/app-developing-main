@@ -750,7 +750,7 @@ module.exports = (bot) => {
         }
     });
     router.post('/api/set-deal', async (req, res) => {
-        const { advertisementID,userIdTo } = req.body;
+        const { advertisementID,userIdTo,userIdFrom } = req.body;
 
         if (!advertisementID) {
             return res.status(400).json({ success: false, message: 'Не указан channel_id' });
@@ -758,8 +758,8 @@ module.exports = (bot) => {
 
         try {
             await pool.query(
-                'INSERT INTO deal (advertisement_id, payment_status,owner_channel_id) VALUES ($1, $2, $3)',
-                [advertisementID, 'создана',userIdTo]
+                'INSERT INTO deal (advertisement_id, payment_status,owner_channel_id,client_id) VALUES ($1, $2, $3,$4)',
+                [advertisementID, 'создана',userIdTo,userIdFrom]
             );
 
 
