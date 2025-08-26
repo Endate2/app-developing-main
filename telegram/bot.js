@@ -258,7 +258,7 @@ module.exports = (io) => {
                                     [
                                         {
                                             text: 'Подтвердить',
-                                            callback_data: `confirmpost_${clientId}_${ownerId}`
+                                            callback_data: `confirmpost_${clientId}_${ownerId}_${dealIdNumber}`
                                         },
                                     ]
                                 ]
@@ -361,17 +361,18 @@ module.exports = (io) => {
                     await ctx.answerCbQuery();
                     
                     const response = await fetch(`https://endate2-app-developing-main-cf8a.twc1.net/api/get_advertisement?id=${advertisementID}`);
+                    const result = await response.json();
                     const resp = await fetch('https://endate2-app-developing-main-cf8a.twc1.net/api/set-deal', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             advertisementID: advertisementID,
                             userIdTo: userIdTo,
-                            userIdFrom: userIdFrom
+                            userIdFrom: userIdFrom,
+                            price: result.price - Math.round(result.price * 0.15)
                         })
                     });
 
-                    const result = await response.json();
                     if (!result) {
                         throw new Error('Объявление не найдено');
                     }
@@ -471,11 +472,82 @@ module.exports = (io) => {
                         await bot.telegram.sendMessage(chatId, "Нельзя удалить сделку, так она ону уже была оплачена или вы уже получили за нее оплату");
                     }
                 }
+                else if (action === 'no') {
+                    const dealIdNumber = parts[1];
+                    const clientID = parts[2];
+                    const ownerID = parts[3];
+                    await ctx.answerCbQuery();
+                    const response = await fetch('https://endate2-app-developing-main-cf8a.twc1.net/api/set-deal-type', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            advertisementID: advertisementID
+                        })
+                    });
+                    const json = await response.json();
+
+                    if (json.success){
+                        await bot.telegram.sendMessage(clientID, `Мнения разошлись, обратитесь в поддержку @spb_port по поводу сделки id = ${dealIdNumber}`);
+                        await bot.telegram.sendMessage(ownerID, `Мнения разошлись, обратитесь в поддержку @spb_port по поводу сделки id = ${dealIdNumber}`);
+                    }else{
+                        await ctx.answerCbQuery(json.message);
+                    }
+                }
+                else if (action === 'yes') {
+                    const dealIdNumber = parts[1];
+                    const clientID = parts[2];
+                    const ownerID = parts[3];
+                    await ctx.answerCbQuery();
+                    const response = await fetch('https://endate2-app-developing-main-cf8a.twc1.net/api/set-deal-type-yes', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            advertisementID: advertisementID
+                        })
+                    });
+                    const json = await response.json();
+
+                    if (json.success){
+                        await bot.telegram.sendMessage(ownerID, `Покупатель подтвердил, что пост был выложен по сделке id = ${dealIdNumber}, оплату можно будет получить через ровно через 24 часа по команде /accepted_posts`);
+                        await ctx.deleteMessage();
+                    }else{
+                        await ctx.answerCbQuery(json.message);
+                    }
+                }
                 else if (action === 'confirmpost') {
                     const clientID = parts[1];
-                    const ownerID = parts[1];
-                    const chatId = ctx.from.id;
+                    const ownerID = parts[2];
+                    const dealIdNumber = parts[3];
+                    const owner = await ctx.telegram.getChat(ownerID);
                     await ctx.answerCbQuery();
+                    const text = `Владелец канала @${owner} подтвердил, что пост был выложен. Вы согласны?
+
+ПРЕДУПРЕЖДЕНИЕ: Если мнение сторон будут отличаться, то вам нужно будет обратиться в поддержку для дальнейшего расследования.
+                  `;
+
+                    const keyboard = {
+                        inline_keyboard: [
+                            [
+                                {
+                                    text: 'Да',
+                                    callback_data: `yes_${dealIdNumber}_${clientID}_${ownerID}`
+                                },
+                                {
+                                    text: 'Нет',
+                                    callback_data: `no_${dealIdNumber}_${clientID}_${ownerID}`
+                                }
+                            ]
+                        ]
+                    };
+
+
+                    try {
+                        await bot.telegram.sendMessage(clientID, text, {
+                            reply_markup: keyboard
+                        });
+                    } catch (err) {
+                        console.error('Ошибка при отправке сообщения в Telegram:', err);
+                    }
 
                 }
                 else {
