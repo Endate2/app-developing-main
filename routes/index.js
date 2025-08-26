@@ -157,7 +157,7 @@ module.exports = (bot) => {
         const data = {
             "Amount": (amount * 100).toString(), // сумма в копейках, обязательно строка
             "Description": 'Оплата рекламы для канала',
-            "OrderId": `${userIdTo}-n${orderNumber}`,
+            "OrderId": `${userIdTo}-n${orderNumber}-${userIdFrom}`,
             "TerminalKey": process.env.TERMINAL_KEY,
             "Password": process.env.TERMINAL_PASSWORD
         };
