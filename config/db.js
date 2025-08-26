@@ -57,7 +57,7 @@ async function initDB() {
                 user_id_from BIGINT REFERENCES users(id),
                 id_categorie  BIGINT REFERENCES notification_categories(id)
                 );
-            CREATE TABLE IF NOT EXISTS notification_categories (
+            CREATE TABLE IF NOT EXISTS   (
                 id SERIAL PRIMARY KEY,
                 description VARCHAR(50)
                 );
@@ -85,8 +85,11 @@ async function initDB() {
                 advertisement_id BIGINT REFERENCES advertisements(id),
                 payment_status payment_status_enum,
                 owner_channel_id BIGINT REFERENCES users(id),
-                client_id BIGINT REFERENCES users(id)
-            );
+                client_id BIGINT REFERENCES users(id),
+                payment INTEGER,
+                DATE_PAYMENT TIMESTAMP
+                );
+
             CREATE TABLE IF NOT EXISTS payment_methods(
                 id SERIAL PRIMARY KEY,
                 user_id BIGINT REFERENCES users(id),
