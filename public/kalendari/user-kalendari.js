@@ -6,6 +6,11 @@ const userNextButton = document.getElementById('nextMonth-user');
 
 let userCurrentDate = new Date();
 
+function initUserCalendar(channelId) {
+    userCalendarGrid.setAttribute('data-channel-id', channelId);
+    generateUserCalendar(channelId);
+}
+
 function generateUserCalendar(channelId) {
     if (!userCalendarGrid) return;
 
@@ -84,8 +89,15 @@ async function handleUserDayClick(channelId, date) {
     if (date < now && !isUserSameDay(date, now)) {
         alert("На данную дату нельзя посмотреть предложения, так как она уже прошла");
     } else {
-        alert(channelId);
-        alert(dare);
+        const response = await fetch(`/api/channel-payment-selector?id=${channelId}&date=${dateStr}`);
+        const channel = await response.json();
+        if (channel && Object.keys(channel).length > 1) {
+            await loadChannelDataPayment(channelId,dateStr);
+            navigateTo('payment');
+        } else {
+            loadNooffers(channelId);
+            navigateTo('no-offers');
+        }
     }
 }
 
@@ -108,12 +120,14 @@ function isUserSameDay(date1, date2) {
 if (userPrevButton && userNextButton) {
     userPrevButton.addEventListener('click', () => {
         userCurrentDate.setMonth(userCurrentDate.getMonth() - 1);
-        generateUserCalendar();
+        const channelId = userCalendarGrid.getAttribute('data-channel-id');
+        generateUserCalendar(channelId);
     });
 
     userNextButton.addEventListener('click', () => {
         userCurrentDate.setMonth(userCurrentDate.getMonth() + 1);
-        generateUserCalendar();
+        const channelId = userCalendarGrid.getAttribute('data-channel-id');
+        generateUserCalendar(channelId);
     });
 }
 
