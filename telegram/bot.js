@@ -481,7 +481,7 @@ module.exports = (io) => {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            advertisementID: advertisementID
+                            advertisementID: dealIdNumber
                         })
                     });
                     const json = await response.json();
@@ -502,7 +502,7 @@ module.exports = (io) => {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            advertisementID: advertisementID
+                            advertisementID: dealIdNumber
                         })
                     });
                     const json = await response.json();
@@ -519,8 +519,9 @@ module.exports = (io) => {
                     const ownerID = parts[2];
                     const dealIdNumber = parts[3];
                     const owner = await ctx.telegram.getChat(ownerID);
+                    const ownerUsername = owner.username
                     await ctx.answerCbQuery();
-                    const text = `Владелец канала @${owner} подтвердил, что пост был выложен. Вы согласны?
+                    const text = `Владелец канала @${ownerUsername} подтвердил, что пост был выложен. Вы согласны?
 
 ПРЕДУПРЕЖДЕНИЕ: Если мнение сторон будут отличаться, то вам нужно будет обратиться в поддержку для дальнейшего расследования.
                   `;
