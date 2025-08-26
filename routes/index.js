@@ -29,7 +29,7 @@ module.exports = (bot) => {
             res.json(result.rows);
         } catch (err) {
             console.error('Error fetching payment_methods:', err);
-            res.status(500).json({ error: 'Internal server err' });
+            res.status(500).json({ error: 'Internal server rr' });
         }
     });
 
