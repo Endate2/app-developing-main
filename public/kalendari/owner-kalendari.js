@@ -7,6 +7,11 @@ const nextButton = document.getElementById('nextMonth');
 
 let currentDate = new Date();
 
+function initOwnerCalendar(channelId) {
+    userCalendarGrid.setAttribute('data-channel-id', channelId);
+    generateCalendar(channelId);
+}
+
 function generateCalendar(channelId) {
     calendarGrid.innerHTML = '';
 
@@ -105,12 +110,14 @@ function isSameDay(date1, date2) {
 
 prevButton.addEventListener('click', () => {
     currentDate.setMonth(currentDate.getMonth() - 1);
-    generateCalendar();
+    const channelId = calendarGrid.getAttribute('data-channel-id');
+    generateCalendar(channelId);
 });
 
 nextButton.addEventListener('click', () => {
     currentDate.setMonth(currentDate.getMonth() + 1);
-    generateCalendar();
+    const channelId = calendarGrid.getAttribute('data-channel-id');
+    generateCalendar(channelId);
 });
 
 
