@@ -503,6 +503,7 @@ module.exports = (io) => {
                 }else if (action === 'takepayment') {
                     const advertisementID = parts[1];
                     const userId = ctx.from.id;
+                    const chatId = ctx.from.id;
                     const result = await pool.query(
                         'SELECT * FROM deal WHERE advertisement_id = $1 AND owner_channel_id = $2 LIMIT 1',
                         [advertisementID, userId]
@@ -519,7 +520,7 @@ module.exports = (io) => {
                             await ctx.answerCbQuery("Можно забрать только через 24 часа");
                         }
                     } else {
-                        await ctx.answerCbQuery(advertisementID);
+                        await bot.telegram.sendMessage(chatId, advertisementID);
                     }
 
                 }else if (action === 'changepaymentdata') {
