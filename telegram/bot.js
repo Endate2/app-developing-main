@@ -505,18 +505,23 @@ module.exports = (io) => {
                     const userId = ctx.from.id;
                     const result = await pool.query(
                         'SELECT * FROM deal WHERE advertisement_id = $1 AND owner_channel_id = $2 LIMIT 1',
-                        [advertisementID,userId]
+                        [advertisementID, userId]
                     );
+
                     const row = result.rows[0];
-                    const paymentDate = new Date(row.date_payment);
-                    const now = new Date();
-                    const paymentDatePlusOneDay = new Date(paymentDate.getTime() + 24 * 60 * 60 * 1000);
-                    if (now >= paymentDatePlusOneDay) {
-                        await ctx.answerCbQuery("Можно забирать");
+                    if (row && row.date_payment) {
+                        const paymentDate = new Date(row.date_payment);
+                        const now = new Date();
+                        const paymentDatePlusOneDay = new Date(paymentDate.getTime() + 24 * 60 * 60 * 1000);
+                        if (now >= paymentDatePlusOneDay) {
+                            await ctx.answerCbQuery("Можно забирать");
+                        } else {
+                            await ctx.answerCbQuery("Можно забрать только через 24 часа");
+                        }
                     } else {
-                        await ctx.answerCbQuery("Можно забрать только через 24 часа");
+                        await ctx.answerCbQuery("Данные по оплате отсутствуют");
                     }
-                    await ctx.answerCbQuery();
+
                 }else if (action === 'changepaymentdata') {
                     await ctx.answerCbQuery("Функция изменения платежных данных");
                     const userId = ctx.from.id; // ДОБАВЬТЕ ЭТУ СТРОКУ
