@@ -8,7 +8,7 @@ const nextButton = document.getElementById('nextMonth');
 let currentDate = new Date();
 
 function initOwnerCalendar(channelId) {
-    userCalendarGrid.setAttribute('data-channel-id', channelId);
+    calendarGrid.setAttribute('data-channel-id', channelId);
     generateCalendar(channelId);
 }
 
@@ -70,7 +70,24 @@ function isToday(date) {
 }
 
 function handleDayClick(date,channelId) {
-    alert(channelId)
+    if (window.Telegram && Telegram.WebApp) {
+        Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    } else if ('vibrate' in navigator) {
+        navigator.vibrate(50);
+    }
+
+
+    const now = new Date();
+    const dateStr = formatDateToLocal(date);
+    const nowStr = formatDateToLocal(now);
+
+    if (date < now && !isSameDay(date, now)) {
+        alert("На данную дату нельзя добавить предложения, так как она уже прошла");
+    } else {
+        loadCreateAdvertisement(dateStr,channelId)
+
+        navigateTo('create-advertisement');
+    }
 }
 
 
