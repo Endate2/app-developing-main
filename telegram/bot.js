@@ -519,7 +519,7 @@ module.exports = (io) => {
                             await ctx.answerCbQuery("Можно забрать только через 24 часа");
                         }
                     } else {
-                        await ctx.answerCbQuery("Данные по оплате отсутствуют");
+                        await ctx.answerCbQuery(row);
                     }
 
                 }else if (action === 'changepaymentdata') {
