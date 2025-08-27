@@ -63,55 +63,55 @@ module.exports = (io) => {
     });
 
     bot.command('payment_methods', async (ctx) => {
-    const userId = ctx.from.id;
+        const userId = ctx.from.id;
 
-    await pool.query(
-        'INSERT INTO users (id, username, first_name) VALUES ($1, $2, $3) ON CONFLICT (id) DO NOTHING',
-        [userId, ctx.from.username, ctx.from.first_name]
-    );
+        await pool.query(
+            'INSERT INTO users (id, username, first_name) VALUES ($1, $2, $3) ON CONFLICT (id) DO NOTHING',
+            [userId, ctx.from.username, ctx.from.first_name]
+        );
 
-    const result = await pool.query(`
-        SELECT card_number, phone
-        FROM payment_methods
-        WHERE user_id = $1
-    `, [userId]);
+        const result = await pool.query(`
+            SELECT card_number, phone
+            FROM payment_methods
+            WHERE user_id = $1
+        `, [userId]);
 
-    if (result.rows.length === 0) {
-        await ctx.replyWithHTML(
-            `💳 <b>Платежные данные</b>\n\n` +
-            `❌ Нет сохраненных платежных данных\n\n` +
-            `Нажмите кнопку ниже чтобы добавить данные:`
-            , {
-                reply_markup: {
-                    inline_keyboard: [[{
-                        text: '➕ Добавить данные',
-                        callback_data: 'changepaymentdata'
-                    }]]
-                }
-            });
-    } else {
-        const paymentData = result.rows[0];
-        const cardNumber = paymentData.card_number ?
-            `💳 Карта: **** **** **** ${paymentData.card_number.toString().slice(-4)}` : '';
-        const phone = paymentData.phone ?
-            `📱 Телефон: ${paymentData.phone}` : '';
+        if (result.rows.length === 0) {
+            await ctx.replyWithHTML(
+                `💳 <b>Платежные данные</b>\n\n` +
+                `❌ Нет сохраненных платежных данных\n\n` +
+                `Нажмите кнопку ниже чтобы добавить данные:`
+                , {
+                    reply_markup: {
+                        inline_keyboard: [[{
+                            text: '➕ Добавить данные',
+                            callback_data: 'changepaymentdata'
+                        }]]
+                    }
+                });
+        } else {
+            const paymentData = result.rows[0];
+            const cardNumber = paymentData.card_number ?
+                `💳 Карта: **** **** **** ${paymentData.card_number.toString().slice(-4)}` : '';
+            const phone = paymentData.phone ?
+                `📱 Телефон: ${paymentData.phone}` : '';
 
-        const message = [cardNumber, phone].filter(Boolean).join('\n');
+            const message = [cardNumber, phone].filter(Boolean).join('\n');
 
-        await ctx.replyWithHTML(
-            `💳 <b>Ваши платежные данные</b>\n\n` +
-            `${message}\n\n` +
-            `🛠 Для изменения данных нажмите кнопку ниже:`
-            , {
-                reply_markup: {
-                    inline_keyboard: [[{
-                        text: '✏️ Изменить данные',
-                        callback_data: 'changepaymentdata'
-                    }]]
-                }
-            });
-    }
-});
+            await ctx.replyWithHTML(
+                `💳 <b>Ваши платежные данные</b>\n\n` +
+                `${message}\n\n` +
+                `🛠 Для изменения данных нажмите кнопку ниже:`
+                , {
+                    reply_markup: {
+                        inline_keyboard: [[{
+                            text: '✏️ Изменить данные',
+                            callback_data: 'changepaymentdata'
+                        }]]
+                    }
+                });
+        }
+    });
 
 
     bot.command('start', async (ctx) => {
@@ -237,9 +237,9 @@ module.exports = (io) => {
 
                 // Обновляем данные в БД
                 await pool.query(
-                    `INSERT INTO payment_methods (user_id, card_number, phone) 
-                    VALUES ($1, $2, $3)
-                    ON CONFLICT (user_id)
+                    `INSERT INTO payment_methods (user_id, card_number, phone)
+                     VALUES ($1, $2, $3)
+                         ON CONFLICT (user_id)
                     DO UPDATE SET card_number = EXCLUDED.card_number, phone = EXCLUDED.phone
                     `,
                     [userId, cardNumber, phone]
@@ -301,7 +301,7 @@ module.exports = (io) => {
                                     [
                                         {
                                             text: 'Перейти к получению оплаты',
-                                            callback_data: `takepayment`
+                                            callback_data: `takepayment_${dealIdNumber}`
                                         },
                                     ]
                                 ]
@@ -413,7 +413,7 @@ module.exports = (io) => {
                     const userIdTo = parts[3];
 
                     await ctx.answerCbQuery();
-                    
+
                     const response = await fetch(`https://endate2-app-developing-main-cf8a.twc1.net/api/get_advertisement?id=${advertisementID}`);
                     const result = await response.json();
                     const resp = await fetch('https://endate2-app-developing-main-cf8a.twc1.net/api/set-deal', {
@@ -465,7 +465,7 @@ module.exports = (io) => {
                         const userIdTo = parts[4];
                         const chatId = ctx.from.id;
                         await ctx.answerCbQuery();
-                        
+
                         const res = await fetch(`https://endate2-app-developing-main-cf8a.twc1.net/api/search_deals?id=${advertisementID}`);
                         const json = await res.json();
                         if(json.success){
@@ -500,6 +500,23 @@ module.exports = (io) => {
                 else if (action === 'reject') {
                     await ctx.answerCbQuery();
                     await ctx.deleteMessage();
+                }else if (action === 'takepayment') {
+                    const advertisementID = parts[1];
+                    const userId = ctx.from.id;
+                    const result = await pool.query(
+                        'SELECT * FROM deal WHERE advertisement_id = $1 AND owner_channel_id = $2 LIMIT 1',
+                        [advertisementID,userId]
+                    );
+                    const row = result.rows[0];
+                    const paymentDate = new Date(row.date_payment);
+                    const now = new Date();
+                    const paymentDatePlusOneDay = new Date(paymentDate.getTime() + 24 * 60 * 60 * 1000);
+                    if (now >= paymentDatePlusOneDay) {
+                        await ctx.answerCbQuery("Можно забирать");
+                    } else {
+                        await ctx.answerCbQuery("Можно забрать только через 24 часа");
+                    }
+                    await ctx.answerCbQuery();
                 }else if (action === 'changepaymentdata') {
                     await ctx.answerCbQuery("Функция изменения платежных данных");
                     const userId = ctx.from.id; // ДОБАВЬТЕ ЭТУ СТРОКУ
