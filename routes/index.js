@@ -321,6 +321,7 @@ module.exports = (bot) => {
                 '  ON all_channels.id = advertisements.channel_id ' +
                 'WHERE ' +
                 '  all_channels.id = $1 ' +
+                '  AND advertisements.in_search = TRUE ' +
                 '  AND advertisements.date_of_advertisement = $2;',
                 [channelId, date]
             );
