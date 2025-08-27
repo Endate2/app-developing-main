@@ -1,7 +1,7 @@
 async function loadChannelData(channelId){
     if (channelId) {
         try {
-            generateCalendar(channelId);
+            initOwnerCalendar(channelId);
             const response = await fetch(`/api/channel?id=${channelId}`);
             if (!response.ok) throw new Error('Ошибка при запросе данных канала');
             const channel = await response.json();
