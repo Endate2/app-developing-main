@@ -24,34 +24,61 @@ function generateUserCalendar(channelId) {
         userCalendarGrid.appendChild(dayElement);
     });
 
-    // Расчет дней месяца
-    const firstDay = new Date(userCurrentDate.getFullYear(), userCurrentDate.getMonth(), 1);
-    const lastDay = new Date(userCurrentDate.getFullYear(), userCurrentDate.getMonth() + 1, 0);
-    const startDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
-
-    // Пустые дни в начале календаря
-    for (let i = 0; i < startDay; i++) {
+    // Получаем даты текущей недели (понедельник - воскресенье)
+    const weekDates = getCurrentWeekDates();
+    
+    // Пустые дни в начале календаря (если нужно)
+    const firstDayOfWeek = weekDates[0].getDay() === 0 ? 6 : weekDates[0].getDay() - 1;
+    for (let i = 0; i < firstDayOfWeek; i++) {
         createUserDayElement(channelId, '', true);
     }
 
-    // Дни месяца
-    for (let day = 1; day <= lastDay.getDate(); day++) {
-        const date = new Date(userCurrentDate.getFullYear(), userCurrentDate.getMonth(), day);
+    // Дни текущей недели
+    weekDates.forEach(date => {
+        const day = date.getDate();
         const isCurrent = isUserToday(date);
         const hasEvent = day % 5 === 0; // Пример: отмечаем каждый 5-й день
-        createUserDayElement(channelId, day, false, isCurrent, hasEvent);
-    }
+        createUserDayElement(channelId, day, false, isCurrent, hasEvent, date);
+    });
 
-    // Обновление заголовка месяца и года
+    // Обновление заголовка с информацией о неделе
     if (userMonthYear) {
-        userMonthYear.textContent = userCurrentDate.toLocaleDateString('ru-RU', {
-            month: 'long',
-            year: 'numeric'
-        }).replace(' г.', '');
+        const startDate = weekDates[0];
+        const endDate = weekDates[6];
+        userMonthYear.textContent = `${formatWeekDate(startDate)} - ${formatWeekDate(endDate)}`;
     }
 }
 
-function createUserDayElement(channelId, day, isOtherMonth, isCurrent = false, hasEvent = false) {
+// Функция для получения дат текущей недели (понедельник - воскресенье)
+function getCurrentWeekDates() {
+    const today = new Date();
+    const currentDay = today.getDay();
+    
+    // Находим понедельник текущей недели
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - (currentDay === 0 ? 6 : currentDay - 1));
+    
+    const weekDates = [];
+    
+    // Заполняем массив датами недели (7 дней)
+    for (let i = 0; i < 7; i++) {
+        const date = new Date(monday);
+        date.setDate(monday.getDate() + i);
+        weekDates.push(date);
+    }
+    
+    return weekDates;
+}
+
+// Форматирование даты для отображения в заголовке
+function formatWeekDate(date) {
+    return date.toLocaleDateString('ru-RU', {
+        day: 'numeric',
+        month: 'short'
+    });
+}
+
+function createUserDayElement(channelId, day, isOtherMonth, isCurrent = false, hasEvent = false, date = null) {
     const dayElement = document.createElement('div');
     dayElement.className = `calendar-day ${isOtherMonth ? 'other-month' : ''} ${isCurrent ? 'current-day' : ''}`;
     dayElement.innerHTML = `
@@ -59,10 +86,22 @@ function createUserDayElement(channelId, day, isOtherMonth, isCurrent = false, h
             ${hasEvent ? '<div class="event-marker"></div>' : ''}
         `;
 
-    if (day) {
-        const date = new Date(userCurrentDate.getFullYear(), userCurrentDate.getMonth(), day);
+    if (day && date) {
         dayElement.addEventListener('click', () => handleUserDayClick(channelId, date));
         dayElement.style.cursor = 'pointer';
+        
+        // Блокируем даты вне текущей недели
+        const today = new Date();
+        const weekDates = getCurrentWeekDates();
+        const isInCurrentWeek = weekDates.some(weekDate => 
+            weekDate.toDateString() === date.toDateString()
+        );
+        
+        if (!isInCurrentWeek) {
+            dayElement.style.opacity = '0.5';
+            dayElement.style.cursor = 'not-allowed';
+            dayElement.onclick = null;
+        }
     }
 
     if (userCalendarGrid) {
@@ -85,6 +124,17 @@ async function handleUserDayClick(channelId, date) {
     const now = new Date();
     const dateStr = formatUserDateToLocal(date);
     const nowStr = formatUserDateToLocal(now);
+
+    // Проверяем, что дата в пределах текущей недели
+    const weekDates = getCurrentWeekDates();
+    const isInCurrentWeek = weekDates.some(weekDate => 
+        weekDate.toDateString() === date.toDateString()
+    );
+
+    if (!isInCurrentWeek) {
+        alert("Вы можете выбрать только даты текущей недели");
+        return;
+    }
 
     if (date < now && !isUserSameDay(date, now)) {
         alert("На данную дату нельзя посмотреть предложения, так как она уже прошла");
@@ -116,19 +166,10 @@ function isUserSameDay(date1, date2) {
     );
 }
 
-// Инициализация календаря
+// Убираем обработчики переключения месяцев, так как теперь показываем только неделю
 if (userPrevButton && userNextButton) {
-    userPrevButton.addEventListener('click', () => {
-        userCurrentDate.setMonth(userCurrentDate.getMonth() - 1);
-        const channelId = userCalendarGrid.getAttribute('data-channel-id');
-        generateUserCalendar(channelId);
-    });
-
-    userNextButton.addEventListener('click', () => {
-        userCurrentDate.setMonth(userCurrentDate.getMonth() + 1);
-        const channelId = userCalendarGrid.getAttribute('data-channel-id');
-        generateUserCalendar(channelId);
-    });
+    userPrevButton.style.display = 'none';
+    userNextButton.style.display = 'none';
 }
 
 // Обработчик изменения размера окна
