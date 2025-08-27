@@ -294,7 +294,7 @@ module.exports = (io) => {
                     const paymentStatus = result.rows[0].payment_status;
                     const clientId = result.rows[0].client_id;
                     const ownerId = result.rows[0].owner_channel_id;
-                    if(paymentStatus === "получить оплату"){
+                    if(paymentStatus === "пост подтвержден"){
                         await ctx.reply(`⚡️Можете получить оплату за сделку ⚡️`, {
                             reply_markup: {
                                 inline_keyboard: [
