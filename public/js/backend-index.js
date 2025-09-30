@@ -12,7 +12,7 @@ const channelId = urlParams.get('channel_id');
 
 async function checkUserAgreement(user, userId) {
     if (user) {
-        fetch('https://endate2-app-developing-main-cf8a.twc1.net/save-user', {
+        fetch('https://endate2-app-developing-main-24e3.twc1.net/save-user', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(user)
@@ -21,7 +21,7 @@ async function checkUserAgreement(user, userId) {
             .then(data => console.log('User saved:', data))
             .catch(err => console.error('Ошибка при сохранении пользователя:', err));
 
-        const res = await fetch(` https://b2a5247b73f2cc.lhr.life/api/get_accepted_user_agreement?user_id=${userId}`);
+        const res = await fetch(` https://endate2-app-developing-main-24e3.twc1.net/api/get_accepted_user_agreement?user_id=${userId}`);
         const json = await res.json();
         const confirmationModal = document.getElementById('confirmationModal');
         const acceptConfirmBtn = document.getElementById('acceptConfirmBtn');
@@ -29,7 +29,7 @@ async function checkUserAgreement(user, userId) {
             confirmationModal.style.display = 'flex';
             acceptConfirmBtn.addEventListener('click', async () => {
                 try {
-                    await fetch(' https://b2a5247b73f2cc.lhr.life/save-user-agreement', {
+                    await fetch(' https://endate2-app-developing-main-24e3.twc1.net/save-user-agreement', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ user_id: userId, accepted_user_agreement: true })
