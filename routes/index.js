@@ -66,6 +66,58 @@ module.exports = (bot) => {
         }
     });
 
+    router.post('/api/submit-complaint', async (req, res) => {
+        const { reason, description, channel_id, user_id } = req.body;
+
+        try {
+            if (!reason || !channel_id || !user_id) {
+                return res.status(400).json({
+                    error: 'Необходимо указать причину, ID канала и ID пользователя'
+                });
+            }
+
+            const insertQuery = `
+                INSERT INTO complaint (user_id, channel_id, text, complaint_id)
+                VALUES ($1, $2, $3, $4)
+                    RETURNING id, created_at
+            `;
+
+            const insertResult = await pool.query(insertQuery, [
+                user_id,
+                channel_id,
+                description || null,
+                reason
+            ]);
+
+            // Проверяем количество жалоб на канал
+            const countResult = await pool.query(
+                'SELECT COUNT(*) AS complaint_count FROM complaint WHERE channel_id = $1',
+                [channel_id]
+            );
+            const complaintCount = parseInt(countResult.rows[0].complaint_count, 10);
+
+            // Если жалоб >= 50, блокируем канал
+            if (complaintCount >= 50) {
+                await pool.query(
+                    'UPDATE all_channels SET blocked = TRUE WHERE id = $1',
+                    [channel_id]
+                );
+            }
+
+            res.status(201).json({
+                success: true,
+                complaint_id: insertResult.rows[0].id,
+                created_at: insertResult.rows[0].created_at,
+                message: 'Жалоба успешно отправлена'
+            });
+
+        } catch (error) {
+            console.error('Ошибка при сохранении жалобы:', error);
+            res.status(500).json({
+                error: "Произошла ошибка при сохранении жалобы"
+            });
+        }
+    });
 
     router.post('/payment-status', async (req, res) => {
         try {
@@ -376,6 +428,29 @@ module.exports = (bot) => {
             res.status(500).json({ error: 'Internal server error' });
         }
     });
+
+    router.get('/api/get_accepted_user_agreement', async (req, res) => {
+        try {
+            const userId = Number(req.query.user_id);
+
+            const result = await pool.query(
+                `SELECT accepted_user_agreement
+                 FROM users
+                 WHERE id = $1`,
+                [userId]
+            );
+
+            if (result.rows.length > 0) {
+                res.json({ success: true, accepted_user_agreement: result.rows[0].accepted_user_agreement });
+            } else {
+                res.json({ success: false, message: 'Пользователь не найден' });
+            }
+        } catch (err) {
+            console.error('Error processing request:', err);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    });
+
 
     router.post('/api/reklama-delete', async (req, res) => {
         try {
