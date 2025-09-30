@@ -18,14 +18,17 @@ async function initDB() {
                 photo_url TEXT,
                 channel_url TEXT,
                 description text,
-                in_search BOOLEAN DEFAULT TRUE
+                in_search BOOLEAN DEFAULT TRUE,
+                blocked BOOLEAN DEFAULT FALSE
             );
 
             CREATE TABLE IF NOT EXISTS users (
                 id BIGINT PRIMARY KEY,
                 username TEXT,
                 first_name TEXT,
-                created_at TIMESTAMP DEFAULT NOW()
+                activate_message_bot BOOLEAN DEFAULT FALSE,
+                created_at TIMESTAMP DEFAULT NOW(),
+                accepted_user_agreement BOOLEAN DEFAULT FALSE
             );
 
             CREATE TABLE IF NOT EXISTS user_channels (
@@ -95,6 +98,26 @@ async function initDB() {
                 user_id BIGINT REFERENCES users(id),
                 card_number INTEGER,
                 phone VARCHAR(50)
+                );
+
+            CREATE TABLE IF NOT EXISTS complaint_type(
+                id SERIAL PRIMARY KEY,
+                type VARCHAR(50) UNIQUE NOT NULL
+                );
+
+            CREATE TABLE IF NOT EXISTS complaint(
+                id SERIAL PRIMARY KEY,
+                user_id BIGINT REFERENCES users(id),
+                channel_id BIGINT REFERENCES all_channels(id),
+                text TEXT,
+                complaint_id INTEGER REFERENCES complaint_type(id),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+            CREATE TABLE IF NOT EXISTS chats(
+                id SERIAL PRIMARY KEY,
+                seller_id BIGINT REFERENCES users(id),
+                buyer_id BIGINT REFERENCES users(id),
+                advertisement_id BIGINT REFERENCES advertisements(id)
                 );
         `);
 
