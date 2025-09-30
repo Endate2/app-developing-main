@@ -10,27 +10,52 @@ const channelId = urlParams.get('channel_id');
 
 
 
-if (user) {
-    fetch('https://endate2-app-developing-main-cf8a.twc1.net/save-user', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
-    })
-        .then(res => res.json())
-        .then(data => console.log('User saved:', data))
-        .catch(err => console.error('Ошибка при сохранении пользователя:', err));
+async function checkUserAgreement(user, userId) {
+    if (user) {
+        fetch('https://endate2-app-developing-main-cf8a.twc1.net/save-user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(user)
+        })
+            .then(res => res.json())
+            .then(data => console.log('User saved:', data))
+            .catch(err => console.error('Ошибка при сохранении пользователя:', err));
 
-    if (user.photo_url) {
-        avatarElement.innerHTML = '';
-        avatarElement.style.backgroundImage = `url(${user.photo_url})`;
-        avatarElement.style.backgroundSize = 'cover';
-        avatarElement.style.backgroundPosition = 'center';
-    } else {
-        const firstNameLetter = user.first_name ? user.first_name[0] : '';
-        const lastNameLetter = user.last_name ? user.last_name[0] : '';
-        avatarElement.textContent = (firstNameLetter + lastNameLetter).toUpperCase();
+        const res = await fetch(` https://b2a5247b73f2cc.lhr.life/api/get_accepted_user_agreement?user_id=${userId}`);
+        const json = await res.json();
+        const confirmationModal = document.getElementById('confirmationModal');
+        const acceptConfirmBtn = document.getElementById('acceptConfirmBtn');
+        if (!json.accepted_user_agreement) {
+            confirmationModal.style.display = 'flex';
+            acceptConfirmBtn.addEventListener('click', async () => {
+                try {
+                    await fetch(' https://b2a5247b73f2cc.lhr.life/save-user-agreement', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ user_id: userId, accepted_user_agreement: true })
+                    });
+                    confirmationModal.style.display = 'none';
+                } catch (e) {
+                    console.log('Ошибка добавления запроса')
+                }
+            });
+        }
+
+        if (user.photo_url) {
+            avatarElement.innerHTML = '';
+            avatarElement.style.backgroundImage = `url(${user.photo_url})`;
+            avatarElement.style.backgroundSize = 'cover';
+            avatarElement.style.backgroundPosition = 'center';
+        } else {
+            const firstNameLetter = user.first_name ? user.first_name[0] : '';
+            const lastNameLetter = user.last_name ? user.last_name[0] : '';
+            avatarElement.textContent = (firstNameLetter + lastNameLetter).toUpperCase();
+        }
     }
 }
+
+checkUserAgreement(user, userId);
+
 
 function safeLocalStorage(method, key, value) {
     try {
