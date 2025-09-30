@@ -17,6 +17,19 @@
 </head>
 <body>
 <div id="profile-page" class="page-container active">
+  <div class="confirmation-modal" id="confirmationModal">
+    <div class="confirmation-modal-content">
+      <h3>Подтверждение пользовательского соглашения</h3>
+      <p>Пожалуйста,перед использование платформой ознакомьтесь с <a href="https://teletype.in/@spb_port/GGeKL8u5uho" target="_blank" rel="noopener noreferrer">пользовательским соглашением</a> перед продолжением.</p>
+      <div class="confirmation-checkbox">
+        <input type="checkbox" id="agreeCheckbox" />
+        <label for="agreeCheckbox">Я прочитал(а) и согласен(на) с пользовательским соглашением</label>
+      </div>
+      <div class="confirmation-buttons">
+        <button class="confirmation-accept-btn" id="acceptConfirmBtn" disabled>Подтвердить</button>
+      </div>
+    </div>
+  </div>
   <div class="header">
     <div class="app-title">PORT ADVERTISEMENT</div>
     <div class="channel-avatar-Profil">L2</div>
@@ -348,47 +361,47 @@
 
   </div>
 </div>
-<div class="page-container" id = "user-page">
-<div class="header">
-  <div class="app-title">Информация о канале</div>
-  <button id="backButton" style="
-    background-color: #007bff; color: white;
-    border: none; padding: 8px 12px;
-    border-radius: 6px; cursor: pointer;
-    font-size: 14px; margin-top: 10px;">
-    ← Назад
-  </button>
-</div>
+<div class="page-container" id="user-page">
+  <div class="header">
+    <div class="app-title">Информация о канале</div>
+    <button id="backButton" style="
+      background-color: #007bff; color: white;
+      border: none; padding: 8px 12px;
+      border-radius: 6px; cursor: pointer;
+      font-size: 14px; margin-top: 10px;">
+      ← Назад
+    </button>
+  </div>
 
-<div class="channel-info-section">
-  <div class="channel-info-container">
-    <div class="channel-avatar-large-user">
-    </div>
-    <div class="channel-details">
-      <div class="channel-title-user"></div>
-      <div class="channel-subscribers-user"></div>
+  <div class="channel-info-section">
+    <div class="channel-info-container">
+      <div class="channel-avatar-large-user">
+      </div>
+      <div class="channel-details">
+        <div class="channel-title-user"></div>
+        <div class="channel-subscribers-user"></div>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="content-row">
-  <div class="favorites-section">
-    <div class="section-title">Описание канала</div>
-    <div class="channel-info-block">
+  <div class="content-row">
+    <div class="favorites-section">
+      <div class="section-title">Описание канала</div>
+      <div class="channel-info-block">
+        <div class="channel-meta">
+          <div class="channel-description-user">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="calendar-section">
+      <div class="section-title">Страница канала</div>
       <div class="channel-meta">
-        <div class="channel-description-user">
+        <div class="channel-url-user">
         </div>
       </div>
     </div>
   </div>
-  <div class="calendar-section">
-    <div class="section-title">Страница канала</div>
-    <div class="channel-meta">
-      <div class="channel-url-user">
-      </div>
-    </div>
-  </div>
-</div>
 
   <div class="calendar-section">
     <div class="calendar-header">
@@ -401,25 +414,54 @@
     <div class="calendar-grid" id="calendarGrid-user"></div>
   </div>
 
-<div class="review-section">
-  <div class="section-title">ОТЗЫВЫ</div>
-  <button class="add-review-btn" id="addReviewBtn">
-    <i class="fas fa-plus"></i> Добавить отзыв
-  </button>
+  <div class="review-section">
+    <div class="section-title">ОТЗЫВЫ</div>
+    <div class="review-actions">
+      <button class="add-review-btn" id="addReviewBtn">
+        <i class="fas fa-plus"></i> Добавить отзыв
+      </button>
+      <button class="report-btn" id="reportBtn" title="Пожаловаться на канал">
+        <i class="fas fa-flag"></i>
+      </button>
+    </div>
 
-  <div class="reviews-container" id="reviewsContainer">
-  </div>
-</div>
-<div class="review-modal" id="reviewModal">
-  <div class="review-modal-content">
-    <h3>Оставить отзыв</h3>
-    <textarea class="review-textarea" id="reviewText" placeholder="Напишите ваш отзыв здесь..."></textarea>
-    <div class="review-buttons">
-      <button class="review-cancel-btn" id="cancelReviewBtn">Отмена</button>
-      <button class="review-submit-btn" id="submitReviewBtn">Отправить</button>
+    <div class="reviews-container" id="reviewsContainer">
     </div>
   </div>
-</div>
+
+  <div class="review-modal" id="reviewModal">
+    <div class="review-modal-content">
+      <h3>Оставить отзыв</h3>
+      <textarea class="review-textarea" id="reviewText" placeholder="Напишите ваш отзыв здесь..."></textarea>
+      <div class="review-buttons">
+        <button class="review-cancel-btn" id="cancelReviewBtn">Отмена</button>
+        <button class="review-submit-btn" id="submitReviewBtn">Отправить</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="report-modal" id="reportModal">
+    <div class="report-modal-content">
+      <h3>Пожаловаться на канал (так же можете обращаться в поддержку @spb_port)</h3>
+      <select class="report-reason" id="reportReason">
+        <option value="">Выберите причину жалобы</option>
+        <option value="1">Жестокое обращение с детьми</option>
+        <option value="2">Насилие</option>
+        <option value="3">Незаконные товары</option>
+        <option value="4">Незаконный контент для взрослых</option>
+        <option value="5">Личные данные</option>
+        <option value="6">Терроризм</option>
+        <option value="7">Мошенничество или спам</option>
+        <option value="8">Авторсое право</option>
+        <option value="9">Другое</option>
+      </select>
+      <textarea class="report-textarea" id="reportText" placeholder="Опишите проблему подробнее..."></textarea>
+      <div class="report-buttons">
+        <button class="report-cancel-btn" id="cancelReportBtn">Отмена</button>
+        <button class="report-submit-btn" id="submitReportBtn">Отправить жалобу</button>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="page-container" id="no-offers-page">
 
@@ -428,6 +470,15 @@
     <div class="no-offers-title">Нет доступных предложений</div>
     <div class="no-offers-description">На выбранную дату нет доступных предложений по рекламе. Попробуйте выбрать другую дату.</div>
     <a class="back-button-offers" id = "backButton-offers">Вернуться на главную страницу</a>
+  </div>
+</div>
+<div class="page-container" id="blocked-page">
+
+  <div class="no-offers-container">
+    <div class="no-offers-icon">❌</div>
+    <div class="no-offers-title">Канал заблокирован из-за большого кодичесва жалоб</div>
+    <div class="no-offers-description">Обратитесь в поддержку для расследования ситуации (@spb_port)</div>
+    <a class="back-button-offers" id = "blocked-offers">Вернуться на главную страницу</a>
   </div>
 </div>
 <div class="page-container" id="payment-page">
@@ -508,7 +559,18 @@
       navigateTo('user');
     });
   }
+  function loadBlocked(channelId){
+    document.getElementById('blocked-offers').addEventListener('click', () => {
 
+
+      navigateTo('reklama');
+    });
+  }
+  const agreeCheckbox = document.getElementById('agreeCheckbox');
+  const acceptButton = document.getElementById('acceptConfirmBtn');
+  agreeCheckbox.addEventListener('change', () => {
+    acceptButton.disabled = !agreeCheckbox.checked;
+  });
 
 </script>
 <script src="/js/backend-payment.js"></script>
