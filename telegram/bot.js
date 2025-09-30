@@ -414,6 +414,11 @@ module.exports = (io) => {
 
                     await ctx.answerCbQuery();
 
+                    await pool.query(
+                        'INSERT INTO chats (seller_id, buyer_id, advertisement_id) VALUES ($1, $2, $3) ON CONFLICT (id) DO NOTHING',
+                        [userIdFrom, userIdTo, advertisementID]
+                    );
+
                     const response = await fetch(`https://endate2-app-developing-main-cf8a.twc1.net/api/get_advertisement?id=${advertisementID}`);
                     const result = await response.json();
                     const resp = await fetch('https://endate2-app-developing-main-cf8a.twc1.net/api/set-deal', {
@@ -426,6 +431,7 @@ module.exports = (io) => {
                             price: result.price - Math.round(result.price * 0.15)
                         })
                     });
+
 
                     if (!result) {
                         throw new Error('Объявление не найдено');
@@ -441,7 +447,7 @@ module.exports = (io) => {
                         result.channel_id,
                         advertisementID
                     );
-                    await ctx.editMessageText(`Свяжитесь с пользователем: @${userName} и обсудите пост.\n\nПосле этого покупатель должен подтвердить обсуждение, нажав кнопку, тогда он получит ссылку на оплату, а вам придет уведомление об успешной операции. ВАЖНО: Сделку можно отменить только до того как пользователь получил ссылку на оплату!`, {
+                    await ctx.editMessageText(`Свяжитесь с пользователем через бота и обсудите пост.\n\nПосле этого покупатель должен подтвердить обсуждение, нажав кнопку, тогда он получит ссылку на оплату, а вам придет уведомление об успешной операции. ВАЖНО: Сделку можно отменить только до того как пользователь получил ссылку на оплату!`, {
                         reply_markup: {
                             inline_keyboard: [
                                 [
@@ -496,10 +502,16 @@ module.exports = (io) => {
                         await ctx.answerCbQuery(`Произошла ошибка: ${err.message}`);
                     }
                 }
-
                 else if (action === 'reject') {
+                    const advertisementID = parts[1];
+                    const userIdFrom = parts[2];
+                    const userIdTo = parts[3];
                     await ctx.answerCbQuery();
                     await ctx.deleteMessage();
+                    await pool.query(
+                        'DELETE FROM notifications WHERE user_id_to = $1 AND user_id_from = $2 AND advertisement_id = $3',
+                        [userIdTo, userIdFrom,advertisementID]
+                    );
                 }else if (action === 'takepayment') {
                     const advertisementID = parts[1];
                     const userId = ctx.from.id;
@@ -803,7 +815,7 @@ module.exports = (io) => {
             `💰 <b>Стоимость:</b> ${price} рублей\n` +
             `📊 <b>Комиссия сервиса:</b> 15%\n\n` +
             `📋 <b>Что дальше?</b>\n` +
-            `1. Владелец канала свяжется с вами\n` +
+            `1. Владелец канала свяжется с вами через бота (если вы никогда не коммуницировали с ним, то вы не получите сообщение, поэтому чтобы активировать его отправьте команду /start)\n` +
             `2. Обсудите детали и содержание поста\n` +
             `3. Перейдите к оплате\n\n` +
             `⚠️ <b>Важная информация:</b>\n` +
