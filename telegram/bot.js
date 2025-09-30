@@ -146,7 +146,7 @@ module.exports = (io) => {
                         reply_markup: {
                             inline_keyboard: [[{
                                 text: `🚀 Открыть канал`,
-                                web_app: { url: `https://endate2-app-developing-main-cf8a.twc1.net?channel_id=${referralCode}`}
+                                web_app: { url: `https://endate2-app-developing-main-24e3.twc1.net?channel_id=${referralCode}`}
                             }]]
                         }
                     });
@@ -159,7 +159,7 @@ module.exports = (io) => {
                         reply_markup: {
                             inline_keyboard: [[{
                                 text: '🌐 Открыть приложение',
-                                web_app: { url: 'https://endate2-app-developing-main-cf8a.twc1.net' }
+                                web_app: { url: 'https://endate2-app-developing-main-24e3.twc1.net' }
                             }]]
                         }
                     });
@@ -173,7 +173,7 @@ module.exports = (io) => {
                     reply_markup: {
                         inline_keyboard: [[{
                             text: '📱 Открыть приложение',
-                            web_app: { url: 'https://endate2-app-developing-main-cf8a.twc1.net' }
+                            web_app: { url: 'https://endate2-app-developing-main-24e3.twc1.net' }
                         }]]
                     }
                 });
@@ -419,9 +419,9 @@ module.exports = (io) => {
                         [userIdFrom, userIdTo, advertisementID]
                     );
 
-                    const response = await fetch(`https://endate2-app-developing-main-cf8a.twc1.net/api/get_advertisement?id=${advertisementID}`);
+                    const response = await fetch(`https://endate2-app-developing-main-24e3.twc1.net/api/get_advertisement?id=${advertisementID}`);
                     const result = await response.json();
-                    const resp = await fetch('https://endate2-app-developing-main-cf8a.twc1.net/api/set-deal', {
+                    const resp = await fetch('https://endate2-app-developing-main-24e3.twc1.net/api/set-deal', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -472,10 +472,10 @@ module.exports = (io) => {
                         const chatId = ctx.from.id;
                         await ctx.answerCbQuery();
 
-                        const res = await fetch(`https://endate2-app-developing-main-cf8a.twc1.net/api/search_deals?id=${advertisementID}`);
+                        const res = await fetch(`https://endate2-app-developing-main-24e3.twc1.net/api/search_deals?id=${advertisementID}`);
                         const json = await res.json();
                         if(json.success){
-                            const response = await fetch('https://endate2-app-developing-main-cf8a.twc1.net/api/create-payment-link', {
+                            const response = await fetch('https://endate2-app-developing-main-24e3.twc1.net/api/create-payment-link', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({
@@ -547,7 +547,7 @@ module.exports = (io) => {
                     const advertisementID = parts[1];
                     const chatId = ctx.from.id;
                     await ctx.answerCbQuery();
-                    const response = await fetch('https://endate2-app-developing-main-cf8a.twc1.net/api/delete-deal', {
+                    const response = await fetch('https://endate2-app-developing-main-24e3.twc1.net/api/delete-deal', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -566,7 +566,7 @@ module.exports = (io) => {
                     const clientID = parts[2];
                     const ownerID = parts[3];
                     await ctx.answerCbQuery();
-                    const response = await fetch('https://endate2-app-developing-main-cf8a.twc1.net/api/set-deal-type', {
+                    const response = await fetch('https://endate2-app-developing-main-24e3.twc1.net/api/set-deal-type', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -587,7 +587,7 @@ module.exports = (io) => {
                     const clientID = parts[2];
                     const ownerID = parts[3];
                     await ctx.answerCbQuery();
-                    const response = await fetch('https://endate2-app-developing-main-cf8a.twc1.net/api/set-deal-type-yes', {
+                    const response = await fetch('https://endate2-app-developing-main-24e3.twc1.net/api/set-deal-type-yes', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
