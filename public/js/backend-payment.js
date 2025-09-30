@@ -57,7 +57,7 @@ async function loadChannelDataPayment(channelId,day) {
                 if (data.success) {
                     alert("Ваше предложение отправлено!");
                 } else {
-                    alert('Вы уже отправили предложение');
+                    alert(data.message);
                 }
             } catch (error) {
                 alert('Произошла ошибка при отправке предложения.');
