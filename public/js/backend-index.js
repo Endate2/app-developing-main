@@ -23,6 +23,7 @@ async function checkUserAgreement(user, userId) {
 
         const res = await fetch(` https://endate2-app-developing-main-24e3.twc1.net/api/get_accepted_user_agreement?user_id=${userId}`);
         const json = await res.json();
+        alert(json);
         const confirmationModal = document.getElementById('confirmationModal');
         const acceptConfirmBtn = document.getElementById('acceptConfirmBtn');
         if (!json.accepted_user_agreement) {
@@ -37,6 +38,7 @@ async function checkUserAgreement(user, userId) {
                     confirmationModal.style.display = 'none';
                 } catch (e) {
                     console.log('Ошибка добавления запроса')
+                    alert(e);
                 }
             });
         }
