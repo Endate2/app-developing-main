@@ -16,7 +16,32 @@ module.exports = (bot) => {
         res.sendFile(path.join(__dirname, '../views', 'index.html'));
     });
 
-
+    router.post('/api/submit-complaint', async (req, res) => {
+            const {user_id } = req.body;
+    
+            try {
+                if (!user_id) {
+                    return res.status(400).json({
+                        error: 'Необходимо указать причину, ID канала и ID пользователя'
+                    });
+                }
+                await pool.query(
+                        'UPDATE all_channels SET blocked = TRUE WHERE id = $1',
+                        [user_id]
+                    );
+    
+                res.status(201).json({
+                    success: true,
+                    message: 'Статус пользователя обнавлен'
+                });
+    
+            } catch (error) {
+                console.error('Ошибка при сохранении жалобы:', error);
+                res.status(500).json({
+                    error: "Произошла ошибка при сохранении жалобы"
+                });
+            }
+        });
 
     router.get('/api/get_payment_methods', async (req, res) => {
         try {
