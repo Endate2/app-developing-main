@@ -16,7 +16,7 @@ module.exports = (bot) => {
         res.sendFile(path.join(__dirname, '../views', 'index.html'));
     });
 
-    router.post('/api/submit-complaint', async (req, res) => {
+    router.post('/api/save-user-agreement', async (req, res) => {
             const {user_id, accepted_user_agreement} = req.body;
             try {
                 if (!user_id) {
