@@ -29,6 +29,7 @@ async function checkUserAgreement(user, userId) {
         if (!json.accepted_user_agreement) {
             acceptConfirmBtn.addEventListener('click', async () => {
                 try {
+                    confirmationModal.style.display = 'flex';
                     await fetch('/api/save-user-agreement', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
