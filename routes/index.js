@@ -17,8 +17,7 @@ module.exports = (bot) => {
     });
 
     router.post('/api/submit-complaint', async (req, res) => {
-            const {user_id } = req.body;
-    
+            const {user_id, accepted_user_agreement} = req.body;
             try {
                 if (!user_id) {
                     return res.status(400).json({
