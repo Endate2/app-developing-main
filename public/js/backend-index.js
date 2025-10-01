@@ -23,7 +23,7 @@ async function checkUserAgreement(user, userId) {
 
         const res = await fetch(`/api/get_accepted_user_agreement?user_id=${userId}`);
         const json = await res.json();
-        alert(json.succes);
+        alert(json.success);
         const confirmationModal = document.getElementById('confirmationModal');
         const acceptConfirmBtn = document.getElementById('acceptConfirmBtn');
         if (!json.accepted_user_agreement) {
