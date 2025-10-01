@@ -30,7 +30,7 @@ async function checkUserAgreement(user, userId) {
             confirmationModal.style.display = 'flex';
             acceptConfirmBtn.addEventListener('click', async () => {
                 try {
-                    await fetch(' https://endate2-app-developing-main-24e3.twc1.net/save-user-agreement', {
+                    await fetch('/api/save-user-agreement', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ user_id: userId, accepted_user_agreement: true })
