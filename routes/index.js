@@ -25,7 +25,7 @@ module.exports = (bot) => {
                     });
                 }
                 await pool.query(
-                        'UPDATE all_channels SET blocked = TRUE WHERE id = $1',
+                        'UPDATE users SET accepted_user_agreement = TRUE WHERE id = $1',
                         [user_id]
                     );
     
