@@ -21,7 +21,7 @@ async function checkUserAgreement(user, userId) {
             .then(data => console.log('User saved:', data))
             .catch(err => console.error('Ошибка при сохранении пользователя:', err));
 
-        const res = await fetch(` https://endate2-app-developing-main-24e3.twc1.net/api/get_accepted_user_agreement?user_id=${userId}`);
+        const res = await fetch(` /api/get_accepted_user_agreement?user_id=${userId}`);
         const json = await res.json();
         alert(json);
         const confirmationModal = document.getElementById('confirmationModal');
