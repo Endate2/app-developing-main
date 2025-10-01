@@ -27,7 +27,6 @@ async function checkUserAgreement(user, userId) {
         const acceptConfirmBtn = document.getElementById('acceptConfirmBtn');
         alert(!json.accepted_user_agreement);
         if (!json.accepted_user_agreement) {
-            confirmationModal.style.display = 'flex';
             acceptConfirmBtn.addEventListener('click', async () => {
                 try {
                     await fetch('/api/save-user-agreement', {
