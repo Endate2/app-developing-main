@@ -30,12 +30,7 @@ async function checkUserAgreement(user, userId) {
             confirmationModal.style.display = 'flex';
             acceptConfirmBtn.addEventListener('click', async () => {
                 try {
-                    await fetch('/api/save-user-agreement', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ user_id: userId, accepted_user_agreement: true })
-                    });
-                    confirmationModal.style.display = 'none';
+                    alert("dwcerwf");
                 } catch (e) {
                     console.log('Ошибка добавления запроса')
                     alert(e);
