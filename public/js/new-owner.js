@@ -195,13 +195,14 @@ async function saveSelectedCategories(channelId) {
 
         const data = await response.json();
 
-        if (response.ok && data.success) {
+        if (data.success) {
             const categoriesResponse = await fetch(`/api/channel-categories?id=${channelId}`);
             if (!categoriesResponse.ok) throw new Error('Ошибка при запросе категорий');
             const data = await categoriesResponse.json();
             ChannelCategories(data,channelId);
         } else {
             alert("Не нужно нажимать кнопку несколько раз");
+            alert
         }
     } catch (error) {
         console.error('Ошибка при отправке категорий:', error);
