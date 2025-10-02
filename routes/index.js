@@ -759,7 +759,7 @@ module.exports = (bot) => {
             } catch (error) {
                 await client.query('ROLLBACK');
                 console.error('Ошибка при обновлении категорий:', error);
-                return res.status(500).json({ success: false, message: 'Ошибка при сохранении категорий' });
+                return res.status(500).json({ success: false, message: 'Ошибка при сохранении категорий',error:error });
             } finally {
                 client.release();
             }
