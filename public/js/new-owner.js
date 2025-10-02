@@ -202,7 +202,7 @@ async function saveSelectedCategories(channelId) {
             ChannelCategories(data,channelId);
         } else {
             alert("Не нужно нажимать кнопку несколько раз");
-            alert
+            alert(data.message);
         }
     } catch (error) {
         console.error('Ошибка при отправке категорий:', error);
