@@ -101,7 +101,7 @@ async function loadChannelDataUser(channelId) {
 
                     // Отправить жалобу
                     submitReportBtn.addEventListener('click', async function() {
-                        alert("wedfkbj3rj3f4");
+                        alert('wedfkbj3rj3f4');
                         const reason = document.getElementById('reportReason').value;
                         const description = document.getElementById('reportText').value;
 
