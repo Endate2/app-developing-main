@@ -102,46 +102,7 @@ async function loadChannelDataUser(channelId) {
                     // Отправить жалобу
                     submitReportBtn.addEventListener('click', async function() {
                         alert('wedfkbj3rj3f4');
-                        const reason = document.getElementById('reportReason').value;
-                        const description = document.getElementById('reportText').value;
-
-                        if (!reason) {
-                            alert('Пожалуйста, выберите причину жалобы');
-                            return;
-                        }
-
-                        try {
-                            // Отправляем жалобу на сервер
-                            const response = await fetch('/api/submit-complaint', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    reason: reason,
-                                    description: description,
-                                    channel_id: channelId, // Предполагается, что у вас есть ID канала
-                                    user_id: userId // Предполагается, что у вас есть ID пользователя
-                                })
-                            });
-
-                            const result = await response.json();
-
-                            if (result.success) {
-                                alert('Жалоба отправлена. Спасибо за ваше сообщение!');
-                                console.log('Номер жалобы:', result.complaint_id);
-                                reportModal.style.display = 'none';
-
-                                // Очистить форму
-                                document.getElementById('reportReason').value = '';
-                                document.getElementById('reportText').value = '';
-                            } else {
-                                alert('Ошибка при отправке жалобы: ' + result.error);
-                            }
-                        } catch (error) {
-                            console.error('Ошибка:', error);
-                            alert(error);
-                        }
+                        
                     });
 
                     // Закрыть модальное окно при клике вне его
