@@ -52,7 +52,23 @@ async function loadChannelDataUser(channelId) {
                     });
 
                     submitReviewBtn.addEventListener('click', async () => {
-                        alert("f34ioh34");
+                        const text = reviewText.value.trim();
+                        if (text) {
+                            try {
+                                await fetch('/api/feedback', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ id: channelId, user_id: userId, text: text })
+                                });
+                                reviewText.value = '';
+                                reviewModal.style.display = 'none';
+                                window.socket.emit('get_feedbacks',channelId);
+                            } catch (e) {
+                                console.log('Ошибка добавления запроса')
+                            }
+                        } else {
+                            alert('Пожалуйста, введите текст отзыва');
+                        }
                     });
                     document.getElementById('backButton').addEventListener('click', function() {
                         navigateTo('search');
