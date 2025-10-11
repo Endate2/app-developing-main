@@ -201,9 +201,7 @@ async function saveSelectedCategories(channelId) {
             const data = await categoriesResponse.json();
             ChannelCategories(data,channelId);
         } else {
-            alert("Не нужно нажимать кнопку несколько раз");
-            alert(data.message);
-            alert(data.error);
+            alert("Ошибка добавления категорий, попробуйте еще раз");
         }
     } catch (error) {
         console.error('Ошибка при отправке категорий:', error);
