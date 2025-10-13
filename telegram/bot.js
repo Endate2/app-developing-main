@@ -501,7 +501,6 @@ module.exports = (io) => {
                                             }]]
                                         }
                                     });
-                                await bot.telegram.sendMessage(chatId, `Перейдите по ссылке для оплаты рекламного поста:\n${json.paymentUrl}`);
                             } else {
                                 await ctx.answerCbQuery("Ошибка создании ссылки на оплату");
                             }
