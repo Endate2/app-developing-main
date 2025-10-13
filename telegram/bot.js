@@ -490,6 +490,16 @@ module.exports = (io) => {
                             const json = await response.json();
 
                             if (json.paymentUrl) {
+                                await ctx.replyWithHTML(
+                                    `Ссылка на оплату`
+                                    , {
+                                        reply_markup: {
+                                            inline_keyboard: [[{
+                                                text: `Оплатить`,
+                                                web_app: { url: `${json.paymentUrl}`}
+                                            }]]
+                                        }
+                                    });
                                 await bot.telegram.sendMessage(chatId, `Перейдите по ссылке для оплаты рекламного поста:\n${json.paymentUrl}`);
                             } else {
                                 await ctx.answerCbQuery("Ошибка создании ссылки на оплату");
