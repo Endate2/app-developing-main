@@ -475,6 +475,7 @@ module.exports = (io) => {
                         const res = await fetch(`https://endate2-app-developing-main-24e3.twc1.net/api/search_deals?id=${advertisementID}`);
                         const json = await res.json();
                         if(json.success){
+                            const currentDate = new Date();
                             const response = await fetch('https://endate2-app-developing-main-24e3.twc1.net/api/create-payment-link', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
