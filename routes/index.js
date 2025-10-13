@@ -225,20 +225,19 @@ module.exports = (bot) => {
     router.post('/api/create-payment-link', async (req, res) => {
 
     try {
-        const { amount, userIdFrom,userIdTo, orderNumber } = req.body;
+        const { amount, userIdFrom,userIdTo, orderNumber,date } = req.body;
         await pool.query(
             'UPDATE deal SET payment_status = $3 WHERE advertisement_id = $1 AND payment_status = $2',
             [orderNumber, 'создана', 'получена ссылка на оплату']
         );
         const data = {
-            "Amount": (amount * 100).toString(), // сумма в копейках, обязательно строка
+            "Amount": (amount * 100).toString(),
             "Description": 'Оплата рекламы для канала',
-            "OrderId": `${userIdTo}-n${orderNumber}-${userIdFrom}`,
+            "OrderId": `${userIdTo}-n${orderNumber}-${userIdFrom}-${date}`,
             "TerminalKey": process.env.TERMINAL_KEY,
             "Password": process.env.TERMINAL_PASSWORD
         };
 
-        // Логируем тело запроса без пароля (для безопасности)
         const logData = {...data};
         delete logData.Password;
         console.log("Request to Tinkoff with ", JSON.stringify(logData));

@@ -482,7 +482,8 @@ module.exports = (io) => {
                                     amount: price,
                                     userIdFrom: userIdFrom,
                                     userIdTo: userIdTo,
-                                    orderNumber: advertisementID
+                                    orderNumber: advertisementID,
+                                    date:currentDate
                                 })
                             });
 
